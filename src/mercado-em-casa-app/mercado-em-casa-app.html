@@ -1,0 +1,277 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/app-layout/app-layout.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+
+<link rel="import" href="app-pages.html">
+<link rel="lazy-import" href="products-view.html">
+<link rel="lazy-import" href="view-404.html">
+
+<dom-module id="mercado-em-casa-app">
+  <template>
+    <style>
+      
+      paper-toolbar{
+        width: 100%;                  
+        --paper-toolbar-background: #9c27b0;
+      }      
+
+      iron-icon {
+        margin-right: 0.5em;
+        background: white;
+      }
+
+
+      :host {
+          display: block;          
+        }
+
+        app-header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1;
+          background-color: #9c27b0;
+          color: white;
+          --app-header-background-front-layer: {
+            background-color: #4285f4;
+          };
+        }
+
+        app-header paper-icon-button {
+          --paper-icon-button-ink-color: white;
+        }
+
+        [main-title] {
+          font-weight: 400;
+          margin: 0 0 0 50px;
+        }
+
+        [condensed-title] {
+          font-size: 18px;
+          font-weight: 400;
+          margin-left: 30px;
+        }
+
+        [condensed-title] i {
+          font-style: normal;
+          font-weight: 100;
+        }
+
+        app-toolbar.tall {
+          height: 148px;
+        }
+
+        iron-list {
+          padding-top: 20px;
+          margin-top: 64px;
+          padding-bottom: 10px;                    
+        }
+
+        .item {
+          @apply --layout-horizontal;
+          padding: 10px;
+          border-radius: 8px;
+          background-color: white;
+          border: 1px solid #9c27b0;
+          max-width: 800px;
+          margin: 16px auto 0 auto;
+        }
+
+        .item:focus {
+          outline: 0;
+          border-color: #333;
+        }
+
+        .avatar {
+          height: 60px;
+          width: 60px;
+          border-radius: 20px;
+          box-sizing: border-box;
+          background-color: #DDD;
+        }        
+
+        .pad {          
+          padding: 0 16px;          
+          @apply --layout-flex;
+          @apply --layout-vertical;
+          align-self: center;          
+        }
+
+        .primary {
+          font-size: 16px;
+          font-weight: bold;
+        }
+
+        .secondary {
+          font-size: 14px;
+        }
+
+        .dim {
+          color: gray;
+        }
+
+        .spacer {
+          @apply --layout-flex;
+        }
+      
+        app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;        
+        }
+        
+        .iron-selected{          
+          color: black;
+          background: green;
+        }
+
+    </style>   
+
+    <iron-ajax
+        auto
+        url="../../data/categorieslist.json"
+        handler-as="json"
+        on-response="_handlerCategories"></iron-ajax>
+
+    <app-location
+      route="{{route}}"
+      use-hash-as-path>
+    </app-location>    
+
+    <app-route
+      route="{{route}}"
+      pattern="/:category"
+      data="{{categoryData}}"
+      tail="{{categoryTail}}">      
+    </app-route>
+    
+    <!-- <iron-selector 
+      selected="[[categoryData.category]]" 
+      attr-for-selected="name">
+    
+      <a name="frios" href="#/frios/list">Frios</a>
+      <a name="limpeza" href="#/limpeza/list">Limpeza</a>
+      <a name="higiene" href="#/higiene/list">Higiene</a>      
+    </iron-selector> -->
+    
+    <!-- <app-pages category="{{categoryData.category}}"
+               route="{{categoryTail}}"></app-pages> 
+    <app-drawer-layout fullbleed narrow="{{narrow}}">
+      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+        <app-toolbar> Drawer Content</app-toolbar>
+      </app-drawer> -->
+      <app-header-layout has-scrolling-region>
+        <app-header condenses fixed reveals effects="waterfall">
+            <paper-icon-button icon="menu" drawer-toogle></paper-icon-button>
+            <div main-title>
+              Mercado em Casa
+            </div>
+            <paper-icon-button icon="search"></paper-icon-button>
+          </app-toolbar>
+        </app-header>
+      </app-header-layout> 
+    <!-- </app-drawer-layout> -->
+    
+    <iron-list items="[[categoriesList]]" as="item" scroll-target"document">
+      <template>
+        <div>
+          <div class="item">
+            <iron-image class="avatar" sizing="cover" src="[[item.image]]"></iron-image>            
+            <div class="pad">
+              <!-- <span class="primary">[[item.name]]</span>
+              <span class="secondary">[[item.description]]</span> -->
+              <a href="#/[[item.name]]">[[item.name]]</a>
+              <a href="#/[[item.name]]">[[item.description]]</a>
+            </div>
+          </div>
+        </div>
+      </template>      
+    </iron-list>   
+        
+    <ul>
+      <li>Route = {{route}}</li>
+      <li>Category Data = {{categoryData.category}}</li>
+      <li>Category Tail = {{categoryTail}}</li>
+    </ul>
+
+    <iron-pages
+      selected="[[categoryData]]"
+      attr-for-selected="name"
+      fallback-selection="view-404"
+      role="main">
+      <products-view name="{{categoryData}}"></products-view>
+      <view-404 name="view-404"></view-404>
+    </iron-pages>
+  </template>
+
+  <script>
+    
+    class MercadoEmCasaApp extends Polymer.Element {
+      static get is() { return 'mercado-em-casa-app'; }
+      static get properties() {
+        return {
+          categoriesList: {
+            type: Object            
+          },
+
+          page:{
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged'
+          },
+
+          routeData: Object,
+          sunRoute: String,
+          rootPath: String
+        };
+      }
+      
+      static get observers(){
+        return [
+          '_routePageChanged(route.data)'
+        ];
+      }
+
+      _routePageChanged(page){
+        this.page = page    
+      }
+
+      _pageChanged(page){
+        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          this._showPage404.bind(this),
+          true);
+      }
+
+      _showPage404(){
+        this.page = 'view-404';
+      }
+      _handlerCategories(event){
+        this.categoriesList = event.detail.response.categorieslist;
+        for(let i = 0 ; i < this.categoriesList.length ; i++){
+          console.log("item = " + this.categoriesList[i].name);
+        }
+      }
+
+      _handlerClick(){
+        console.log("Click");
+      }
+      
+    }    
+    window.customElements.define(MercadoEmCasaApp.is, MercadoEmCasaApp);
+  </script>
+</dom-module>

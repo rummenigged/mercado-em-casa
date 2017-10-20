@@ -1,0 +1,23 @@
+<dom-module id="products-view">
+    <template>
+        <style>
+        </style>
+
+        <h1>Products Page of {{name}}</h1>
+    </template>
+    <script>
+        class ProductsView extends Polymer.Element{
+            static get is(){ return 'products-view'}
+
+            static get properties(){
+                return{
+                    category:{
+                        type: String,
+                        reflectToAttribute: true
+                    }
+                }
+            }
+        }
+        window.customElements.define(ProductsView.is, ProductsView);
+    </script>
+</dom-module>

@@ -1,0 +1,7 @@
+{
+  "name": "mercado-em-casa",
+  "short_name": "mercado-em-casa",
+  "description": "Delivery de Supermercado com Seleção de Menor Preço",
+  "start_url": "/",
+  "display": "standalone"
+}

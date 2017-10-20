@@ -1,0 +1,27 @@
+{ "categorieslist":[
+    { 
+      "name": "Frios",
+      "description": "Frios",
+      "image": "http://picsum.photos/200/300"
+    },
+    { 
+      "name": "Limpeza",
+      "description": "Produtos de Limpeza",
+      "image": "http://picsum.photos/200/300"
+    },
+    { 
+      "name": "Higiene Pessoal",
+      "description": "Higiene Pessoal",
+      "image": "http://picsum.photos/200/300"
+    },
+    { 
+      "name": "Utilitários",
+      "description": "Utilitários em Geral",
+      "image": "http://picsum.photos/200/300"
+    },
+    { 
+      "name": "Doces",
+      "description": "Utilitários em Geral",
+      "image": "http://picsum.photos/200/300"
+    }    
+    ]}
