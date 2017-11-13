@@ -1,28 +1,26 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
-<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 
-<link rel="import" href="app-pages.html">
-<link rel="lazy-import" href="products-view.html">
+<link rel="import" href="category-view.html">
+<link rel="import" href="home-view.html">
+<link rel="import" href="product-detail.html">
 <link rel="lazy-import" href="view-404.html">
 
 <dom-module id="mercado-em-casa-app">
   <template>
     <style>
-      
+            
       paper-toolbar{
         width: 100%;                  
         --paper-toolbar-background: #9c27b0;
@@ -129,12 +127,16 @@
         }
       
         app-drawer-layout:not([narrow]) [drawer-toggle] {
-        display: none;        
+          display: none;
         }
         
         .iron-selected{          
-          color: black;
-          background: green;
+          color: white;
+          /* background: gray; */
+        }
+
+        paper-tabs{
+          background-color: #9c27b0;
         }
 
     </style>   
@@ -143,75 +145,54 @@
         auto
         url="../../data/categorieslist.json"
         handler-as="json"
-        on-response="_handlerCategories"></iron-ajax>
+        on-response="_handlerCategories">
+    </iron-ajax>
 
     <app-location
-      route="{{route}}"
-      use-hash-as-path>
+      route="{{route}}">
     </app-location>    
 
     <app-route
       route="{{route}}"
-      pattern="/:category"
-      data="{{categoryData}}"
-      tail="{{categoryTail}}">      
+      pattern="/:page"
+      data="{{routeData}}"
+      tail="{{subroute}}"
+      active="{{pageActive}}">
     </app-route>
-    
-    <!-- <iron-selector 
-      selected="[[categoryData.category]]" 
-      attr-for-selected="name">
-    
-      <a name="frios" href="#/frios/list">Frios</a>
-      <a name="limpeza" href="#/limpeza/list">Limpeza</a>
-      <a name="higiene" href="#/higiene/list">Higiene</a>      
-    </iron-selector> -->
-    
-    <!-- <app-pages category="{{categoryData.category}}"
-               route="{{categoryTail}}"></app-pages> 
-    <app-drawer-layout fullbleed narrow="{{narrow}}">
-      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-        <app-toolbar> Drawer Content</app-toolbar>
+          
+    <!-- <app-drawer-layout fullbleed>
+      <app-drawer slot="drawer" opened>
+        <app-toolbar> Drawer Content</app-toolbar>        
       </app-drawer> -->
-      <app-header-layout has-scrolling-region>
-        <app-header condenses fixed reveals effects="waterfall">
+
+      <app-header-layout >
+        <app-header slot="header">
+          <app-toolbar>
             <paper-icon-button icon="menu" drawer-toogle></paper-icon-button>
             <div main-title>
               Mercado em Casa
             </div>
             <paper-icon-button icon="search"></paper-icon-button>
-          </app-toolbar>
-        </app-header>
-      </app-header-layout> 
+          </app-toolbar>          
+          <!-- <paper-tabs selected="{{routeData.page}}" attr-for-selected="name">
+              <template is="dom-repeat" items="[[categoriesList]]" as="categorie"> 
+                  <paper-tab name="[[categorie.name]]">[[categorie.name]]</paper-tab>                  
+              </template>
+          </paper-tabs>             -->
+        </app-header>                      
+      </app-header-layout>
     <!-- </app-drawer-layout> -->
     
-    <iron-list items="[[categoriesList]]" as="item" scroll-target"document">
-      <template>
-        <div>
-          <div class="item">
-            <iron-image class="avatar" sizing="cover" src="[[item.image]]"></iron-image>            
-            <div class="pad">
-              <!-- <span class="primary">[[item.name]]</span>
-              <span class="secondary">[[item.description]]</span> -->
-              <a href="#/[[item.name]]">[[item.name]]</a>
-              <a href="#/[[item.name]]">[[item.description]]</a>
-            </div>
-          </div>
-        </div>
-      </template>      
-    </iron-list>   
-        
-    <ul>
-      <li>Route = {{route}}</li>
-      <li>Category Data = {{categoryData.category}}</li>
-      <li>Category Tail = {{categoryTail}}</li>
-    </ul>
-
     <iron-pages
-      selected="[[categoryData]]"
-      attr-for-selected="name"
-      fallback-selection="view-404"
-      role="main">
-      <products-view name="{{categoryData}}"></products-view>
+        selected="[[page]]"
+        attr-for-selected="name"
+        fallback-selection="view-404"
+        role="main"
+        style="margin-top: 100px">   
+
+      <home-view name="home" categories="[[categoriesList]]"></home-view>
+      <category-view name="list" route="[[subroute]]"></category-view>
+      <product-detail name="detail" route="[[subroute]]"></product-detail>
       <view-404 name="view-404"></view-404>
     </iron-pages>
   </template>
@@ -223,54 +204,42 @@
       static get properties() {
         return {
           categoriesList: {
-            type: Object            
+            type: Object,
+            notify: true            
           },
 
           page:{
             type: String,
             reflectToAttribute: true,
+            notify: true,
             observer: '_pageChanged'
-          },
-
-          routeData: Object,
-          sunRoute: String,
-          rootPath: String
+          }           
         };
       }
-      
+                  
       static get observers(){
         return [
-          '_routePageChanged(route.data)'
+          '_routePageChanged(routeData.page)'          
         ];
       }
-
-      _routePageChanged(page){
-        this.page = page    
+      
+      _routePageChanged(page) {         
+        this.page = page || 'home';                
       }
-
-      _pageChanged(page){
-        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
-        Polymer.importHref(
-          resolvedPageUrl,
-          null,
-          this._showPage404.bind(this),
-          true);
+      
+      _pageChanged(){        
       }
-
       _showPage404(){
         this.page = 'view-404';
       }
+
       _handlerCategories(event){
-        this.categoriesList = event.detail.response.categorieslist;
-        for(let i = 0 ; i < this.categoriesList.length ; i++){
-          console.log("item = " + this.categoriesList[i].name);
-        }
+        this.categoriesList = event.detail.response.categorieslist;        
       }
 
       _handlerClick(){
         console.log("Click");
-      }
-      
+      }       
     }    
     window.customElements.define(MercadoEmCasaApp.is, MercadoEmCasaApp);
   </script>

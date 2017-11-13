@@ -1,0 +1,69 @@
+<link rel="import" href="product-image.html">
+
+<dom-module id="product-detail">
+    <template>
+        <style>
+            p{
+                color: black;                
+            }
+        </style>
+
+        <app-route
+            route=[[route]]
+            pattern="/:category/:item"
+            data="{{routeData}}">
+        </app-route>
+
+        <iron-ajax
+            auto
+            url="../../data/{{routeData.category}}.json"
+            handler-as="json"
+            on-response="_handlerProducts">
+        </iron-ajax>
+        
+        <div id="content">
+            <p>The Name's Product is {{item.name}}, 
+                the description is {{item.description}}, the price is R${{item.price}} 
+                and the image's path is {{item.image}}</p>
+            <product-image
+                alt="[[item.name]]"
+                src="[[item.image-large]]"></product-image>    
+        </div>
+    </template>
+    <script>
+        class ProductDetail extends Polymer.Element{
+            static get is(){ return 'product-detail'}
+
+            static get properties(){
+                return{
+                    item: {
+                        type:Object,
+                        readOnly: true                        
+                    },
+                    itemPathName: String,
+                    route: Object                
+                }
+            }
+
+            static get observers(){
+                return [
+                    '_routePageChanged(routeData.item)'
+                ] ;
+            }
+
+            _routePageChanged(item){
+                this.itemPathName = item;                
+            }
+
+            _handlerProducts(event){                   
+                let productsList = event.detail.response.productslist;                
+                for(let i = 0 ; i < productsList.length ; i++){                    
+                    if(this.itemPathName === productsList[i].name){                        
+                        this._setItem(productsList[i]);
+                    }
+                }
+            }
+        }
+        window.customElements.define(ProductDetail.is, ProductDetail);
+    </script>
+</dom-module>

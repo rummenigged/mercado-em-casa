@@ -1,27 +1,21 @@
 { "categorieslist":[
     { 
-      "name": "Frios",
-      "description": "Frios",
+      "name": "Alimentos",
+      "description": "Alimentos Diversos",
+      "category": "alimentos_list",
       "image": "http://picsum.photos/200/300"
     },
+    { 
+      "name": "Bebidas",
+      "description": "Bebidas Diversas",
+      "category": "bebidas_list",
+      "image": "http://picsum.photos/200/300"
+    }
+    ,
     { 
       "name": "Limpeza",
-      "description": "Produtos de Limpeza",
+      "description": "Limpeza",
+      "category": "limpeza_list",
       "image": "http://picsum.photos/200/300"
-    },
-    { 
-      "name": "Higiene Pessoal",
-      "description": "Higiene Pessoal",
-      "image": "http://picsum.photos/200/300"
-    },
-    { 
-      "name": "Utilitários",
-      "description": "Utilitários em Geral",
-      "image": "http://picsum.photos/200/300"
-    },
-    { 
-      "name": "Doces",
-      "description": "Utilitários em Geral",
-      "image": "http://picsum.photos/200/300"
-    }    
+    }        
     ]}

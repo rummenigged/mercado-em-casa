@@ -1,0 +1,20 @@
+{ "productslist":[
+    { 
+      "name": "Sabão Em Pó",
+      "description": "Sabão em Pó",
+      "image": "https://www.calvoatacadista.com.br/wp-content/uploads/Detergente-em-P%C3%B3-Omo-2kg-300x300.jpg",
+      "price": "5.29"
+    },
+    { 
+      "name": "Sabão em Barra",
+      "description": "Sabão em Barra",
+      "image": "http://www.ype.ind.br/uploads/produtos/sabao-aloe-2016.jpg",
+      "price": "5.29"
+    },
+    { 
+      "name": "Detergente",
+      "description": "Detergente",
+      "image": "https://www.extra-imagens.com.br/Control/ArquivoExibir.aspx?IdArquivo=801703367",
+      "price": "5.29"
+    }
+    ]}

@@ -1,0 +1,32 @@
+{ "productslist":[
+    { 
+      "name": "Arroz",
+      "description": "Arroz Parborizado",
+      "image": "http://www.sacosplasticosflexiveis.com.br/imagens/embalagens/saco-de-arroz-jardim-monjolo.jpg",
+      "image-large": "https://www.deliveryextra.com.br/img/uploads/1/318/497318.jpg",
+      "price": "5.29"
+    },
+    { 
+      "name": "Feijão",
+      "description": "Feijão Preto",
+      "image": "http://www.kicaldo.com.br/images/feijao-preto.png"
+    },
+    { 
+      "name": "Macarrão",
+      "description": "Macarrão Espagete",
+      "image": "http://megario.vteximg.com.br/arquivos/ids/155768/2422-GRAVATA-DONA-BENTA-CASEIRO.jpg",
+      "price": "8.29"
+    },
+    { 
+      "name": "Ovo",
+      "description": "Ovo Tipo 1",
+      "image": "http://www.cageri.com.br/images/ovos_brancos_agranel.png",
+      "price": "12.29"
+    },
+    { 
+      "name": "Sopa de Legumes",
+      "description": "Sopa de Legumes Pré Cozida",
+      "image": "http://assets.angeloni.com.br/files/images/D/30/8D/3581823_1_A.jpg",
+      "price": "7.29"
+    }    
+    ]}

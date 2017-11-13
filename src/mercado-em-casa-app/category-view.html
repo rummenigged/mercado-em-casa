@@ -1,0 +1,100 @@
+
+<dom-module id="category-view">
+    <template>
+        <style>
+            :host{
+                z-index: -30;
+            }
+
+            h1{
+                color: black;
+            }
+
+            .item {
+                @apply --layout-horizontal;
+                padding: 10px;
+                border-radius: 8px;
+                background-color: white;
+                border: 1px solid #9c27b0;
+                max-width: 800px;
+                margin: 16px auto 0 auto;
+                cursor: pointer;
+            }
+
+            .item:focus {
+                outline: 0;
+                border-color: #333;
+            }
+
+            .circle-image {
+                height: 60px;
+                width: 60px;
+                border-radius: 30%;
+                box-sizing: border-box;
+                background-color: #DDD;
+            }        
+
+            .pad {          
+                padding: 0 16px;          
+                @apply --layout-flex;
+                @apply --layout-vertical;
+                align-self: center;          
+            }
+
+            span{
+                color: black;
+            }
+
+            ul{
+                color: black;
+            }
+        </style>
+        
+        <app-route
+            route="[[route]]"
+            pattern="/:category"
+            data="{{routeData}}">
+        </app-route>
+
+        <iron-ajax
+            auto
+            url="../../data/{{routeData.category}}.json"
+            handler-as="json"
+            on-response="_handlerProducts">
+        </iron-ajax>
+                        
+        <iron-list items="[[productsList]]" as="product">
+            <template>
+                <div>
+                <div class="item">
+                    <iron-image class="circle-image" sizing="cover" src="[[product.image]]"></iron-image>            
+                    <div class="pad"> 
+                        <a href="/detail/{{routeData.category}}/[[product.name]]"><span>[[product.name]]</span></a>                        
+                    </div>
+                </div>
+                </div>
+            </template>                  
+        </iron-list>                
+    </template>
+
+    <script>
+        class CategoryView extends Polymer.Element{
+            static get is(){ return 'category-view'}
+                                
+            static get properties(){
+                return{
+                    productsList: Object,
+                    
+                    category: Object,                    
+
+                    route: Object
+                };
+            }
+
+            _handlerProducts(event){
+                this.productsList = event.detail.response.productslist;
+            }                    
+        }
+        window.customElements.define(CategoryView.is, CategoryView);
+    </script>
+    </dom-module>

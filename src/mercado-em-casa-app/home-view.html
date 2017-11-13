@@ -1,0 +1,39 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<dom-module id="home-view">
+    <template>
+        <style>
+            :host{                
+            }
+
+            h1{
+                color: black;
+            }
+        </style>
+
+        <iron-list items="[[categories]]" as="cat">
+            <template>
+                <div>
+                <div class="item">                    
+                    <div class="pad"> 
+                        <a href="/list/[[cat.category]]">{{cat.name}}</a>
+                    </div>
+                </div>
+                </div>
+            </template>                  
+        </iron-list>
+    </template>
+    <script>
+        class HomeView extends Polymer.Element{
+            static get is(){ return 'home-view'}
+
+            static get properties(){
+                return{
+                    categories:{
+                        type: Array
+                    }
+                };
+            }
+        }
+        window.customElements.define(HomeView.is, HomeView);
+    </script>
+</dom-module>
