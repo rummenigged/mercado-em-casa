@@ -1,0 +1,40 @@
+<dom-module id="profile-view">
+    <template>
+        <style>
+            h1{
+                color: black;
+            }
+            
+            ul{
+                color: black;
+                list-style: none;
+            }
+        </style>
+        <h1>Profile</h1>
+        <ul>
+            <li>Nome: [[user.displayName]]</li>
+            <li>Id: [[user.uid]]</li>
+            <li>Email: [[user.email]]</li>
+            <li>Email Verificado: [[user.emailVerified]]</li>
+        </ul>
+    </template>
+    <script>
+        class ProfileView extends Polymer.Element{
+            static get is(){ return 'profile-view'}
+            
+            static get properties(){
+                return{
+                    user:{
+                        type:Object,
+                        observer:'_testeObserver'
+                    }
+                };
+            }
+            
+            _testeObserver(){
+                console.log("Observer Called");
+            }
+        }
+        window.customElements.define(ProfileView.is, ProfileView);
+    </script>
+</dom-module>

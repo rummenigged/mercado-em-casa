@@ -9,7 +9,8 @@
     { 
       "name": "Feijão",
       "description": "Feijão Preto",
-      "image": "http://www.kicaldo.com.br/images/feijao-preto.png"
+      "image": "http://www.kicaldo.com.br/images/feijao-preto.png",
+      "price": "5.90"
     },
     { 
       "name": "Macarrão",
@@ -29,4 +30,4 @@
       "image": "http://assets.angeloni.com.br/files/images/D/30/8D/3581823_1_A.jpg",
       "price": "7.29"
     }    
-    ]}
+]}

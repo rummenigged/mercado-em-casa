@@ -1,0 +1,147 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
+
+
+<dom-module id="login-view">
+    <template>
+        <style>
+            :host{
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: var(--paper-purple-500);
+                transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1;
+                color: var(--paper-purple-50);
+                
+                @apply --layout;
+                @apply --layout-center-center;
+            }
+            
+            :host([signed-in]){
+                opacity: 0;
+                pointer-events: none;
+            }
+            
+            paper-button > *{
+                vertical-align: middle;
+                text-transform: none;
+            }
+            
+            table {
+                margin: 24px 0;
+                border: 1px solid #ccc;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 8px;
+                border-bottom: 1px solid #ccc;
+            }
+            th {
+                text-align: right;
+            }
+        </style>
+        
+        <firebase-app
+            auth-domain="mercado-em-casa-v1.firebaseapp.com"
+            database-url="https://mercado-em-casa-v1.firebaseio.com"
+            api-key="AIzaSyBSbjYUrW7XDbpouusVifmw1di5JyKcSVE"> 
+        </firebase-app>
+        
+        <firebase-auth 
+            id="auth" 
+            user="{{user}}"
+            provider="google" 
+            signed-in="{{signedIn}}"
+            on-error="_showError">
+        </firebase-auth>
+        
+        <div>
+            <form on-submit="_signInWithEmailAndPassword" hidden$="[[signedIn]]">
+                <input value="{{email::input}}" type="email" placeholder="Email">
+                <input value="{{password::input}}" type="password" placeholder="Password">
+                <button type="submit" on-tap="_signInWithEmailAndPassword">Sign In</button>
+                <button type="button" on-tap="_createUserWithEmailAndPassword">Sign Up</button>
+            </form>
+            <paper-button on-tap="_signInWithGoogle" hidden$="[[signedIn]]">
+                <iron-icon icon="account-circle"></iron-icon>
+                <span>Sign in with Google</span>
+            </paper-button>
+
+            <paper-button on-tap="_signOut" hidden$="[[!signedIn]]">
+                <iron-icon icon="account-circle"></iron-icon>
+                <span>Sign Out</span>
+            </paper-button>
+        </div>
+    </template>
+    <script>
+        
+    class LoginView extends Polymer.Element {
+        static get is() { return 'login-view'; }
+        
+        static get properties(){
+            return{
+                disabled:{
+                    type: Boolean,
+                    reflectToAttribute: true,
+                    value: false    
+                },                
+                user:{
+                    type: Object,
+                    notify: true
+                }
+            };
+        }
+        
+        static get observers(){
+            return [
+                '_userNameChanged(user)'          
+            ];
+        }
+        
+        _userNameChanged(user){
+            this.user = user;
+            if(user){
+                localStorage.setItem("username", this.user.displayName);
+            }
+        }
+        
+        _signInWithGoogle(){
+            this.$.auth.signInWithPopup();    
+        }
+        
+         _signInWithEmailAndPassword(e){
+          if (e) { e.preventDefault(); }
+          this.error = null;
+          this.$.auth.signInWithEmailAndPassword(this.email, this.password);
+          this.email = null;
+          this.password = null;
+        };
+
+        _createUserWithEmailAndPassword() {
+          this.error = null;
+          this.$.auth.createUserWithEmailAndPassword(this.email, this.password);
+          this.email = null;
+          this.password = null;
+        };
+
+        
+        _signOut(){
+            this.$.auth.signOut();
+            localStorage.removeItem("username");
+        }
+        
+        _shorError(e){
+            console.log("Auth Error = " + e.detail);
+        }
+    }    
+    window.customElements.define(LoginView.is, LoginView);
+    </script>
+</dom-module>

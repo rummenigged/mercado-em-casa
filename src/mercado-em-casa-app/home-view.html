@@ -8,6 +8,17 @@
             h1{
                 color: black;
             }
+            
+           .item {
+                @apply --layout-horizontal;
+                padding: 10px;
+                border-radius: 8px;
+                background-color: white;
+                border: 1px solid #9c27b0;
+                max-width: 800px;
+                margin: 16px auto 0 auto;
+                cursor: pointer;
+            }
         </style>
 
         <iron-list items="[[categories]]" as="cat">

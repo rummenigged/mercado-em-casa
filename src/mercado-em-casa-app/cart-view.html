@@ -1,0 +1,62 @@
+<dom-module id="cart-view">
+    <template>
+        <style>
+            h1{
+                color: black;
+            }
+            
+            p{
+                color: black;
+            }
+        </style>
+        
+         <iron-ajax
+            auto
+            url="../../data/cartlist.json"
+            handler-as="json"
+            on-response="_handlerCartItems">
+        </iron-ajax>
+        
+        <h1>Carrinho</h1>
+        <div visible$="[[!_hasItems]]">
+            <p>Your <iron-icon icon="shopping-cart"></iron-icon> is empty.</p>
+        </div>
+        <iron-list items="[[cartList]]" as="item-cart">
+            <template>
+                <div>
+                    <div class="item">
+                        <iron-image class="circle-image" sizing="cover" src="[[item-cart.image]]"></iron-image>            
+                        <div class="pad"> 
+                            <a href="/detail/{{routeData.category}}/[[item-cart.name]]"><span>[[item-cart.name]]</span></a>
+                        </div>
+                    </div>
+                </div>
+            </template>                  
+        </iron-list>  
+    </template>
+    <script>
+    class CartView extends Polymer.Element{
+        static get is(){return 'cart-view'}
+        
+        static get properties(){
+            return{
+                cartList: Object,
+                
+                _hasItems:{
+                    type: Boolean,
+                    computed: '_computeHasItem(cartList.length)'
+                }
+            };
+        }
+        
+        _computeHasItem(cartLength){
+            return cartLength > 0;
+        }
+        
+        _handlerCartItems(event){
+            this.cartList = event.detail.response.cartlist;
+        }
+    }
+    window.customElements.define(CartView.is, CartView);
+    </script>
+</dom-module>

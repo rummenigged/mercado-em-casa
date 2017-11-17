@@ -1,0 +1,26 @@
+{ "cartlist":[
+    { 
+      "name": "Água Mineral",
+      "description": "Água Mineral",
+      "image": "https://www.paodeacucar.com/img/uploads/1/545/458545.jpg",
+      "price": "5.29"
+    },
+    { 
+      "name": "Água com Gás",
+      "description": "Água com Gás",
+      "image": "https://www.deliveryextra.com.br/img/uploads/1/141/389141x200x200.jpg",
+      "price": "5.29"
+    },
+    { 
+      "name": "Refrigerante de Laranja",
+      "description": "Refrigerante de Laranja",
+      "image": "https://www.deliveryextra.com.br/img/uploads/1/184/469184.jpg",
+      "price": "5.29"
+    },    
+    { 
+      "name": "Suco de Laranja",
+      "description": "Suco Natural de Laranja",
+      "image": "http://assets.angeloni.com.br/files/images/E/57/8F/3584656_1_A.jpg",
+      "price": "5.29"
+    }    
+]}

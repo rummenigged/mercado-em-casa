@@ -1,10 +1,14 @@
-<link rel="import" href="product-image.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
 
 <dom-module id="product-detail">
     <template>
         <style>
-            p{
-                color: black;                
+            
+            #content{
+                color: black;
+            }
+            .price{
+                color: green;
             }
         </style>
 
@@ -22,12 +26,12 @@
         </iron-ajax>
         
         <div id="content">
-            <p>The Name's Product is {{item.name}}, 
-                the description is {{item.description}}, the price is R${{item.price}} 
-                and the image's path is {{item.image}}</p>
-            <product-image
-                alt="[[item.name]]"
-                src="[[item.image-large]]"></product-image>    
+            <h1>{{item.name}}</h1>
+            <h3 class="price">R${{item.price}}</h3>            
+            <p>{{item.description}}</p>
+            <iron-image style="width:300px; height:300px;" sizing="contain"
+                    src="[[item.image]]" alt="[[item.name]]"></iron-image>
+            <paper-button class="red" raised on-tap="_addCart">Add Cart</paper-button>
         </div>
     </template>
     <script>
@@ -55,13 +59,17 @@
                 this.itemPathName = item;                
             }
 
-            _handlerProducts(event){                   
+            _handlerProducts(event){
                 let productsList = event.detail.response.productslist;                
                 for(let i = 0 ; i < productsList.length ; i++){                    
                     if(this.itemPathName === productsList[i].name){                        
                         this._setItem(productsList[i]);
                     }
                 }
+            }
+            
+            _addCart(){
+                console.log("Click Add Cart Button");
             }
         }
         window.customElements.define(ProductDetail.is, ProductDetail);
