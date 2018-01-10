@@ -1,3 +1,4 @@
+<link rel="import" href="cart-data.html">
 <dom-module id="cart-view">
     <template>
         <style>
@@ -8,26 +9,41 @@
             p{
                 color: black;
             }
+            h2{
+                color: black;
+            }
         </style>
         
-         <iron-ajax
-            auto
-            url="../../data/cartlist.json"
-            handler-as="json"
-            on-response="_handlerCartItems">
-        </iron-ajax>
+        <app-location
+          route="[[route]]">
+        </app-location>    
+
+        <app-route
+          route="{{route}}"
+          pattern="/:key"
+          data="{{routeData}}"
+          tail="{{subroute}}"
+          active="{{pageActive}}">
+        </app-route>
         
-        <h1>Carrinho</h1>
-        <div visible$="[[!_hasItems]]">
+        <cart-data
+            id="cartData"
+            cart-key={{routeData.key}}
+            data="{{data}}"
+            has-itens={{hasItem}}> 
+        </cart-data>
+        
+        <h1>Carrinho</h1>        
+        <div hidden$="[[hasItem]]">
             <p>Your <iron-icon icon="shopping-cart"></iron-icon> is empty.</p>
         </div>
-        <iron-list items="[[cartList]]" as="item-cart">
+        <iron-list items="{{data}}" as="item-cart">
             <template>
                 <div>
                     <div class="item">
                         <iron-image class="circle-image" sizing="cover" src="[[item-cart.image]]"></iron-image>            
                         <div class="pad"> 
-                            <a href="/detail/{{routeData.category}}/[[item-cart.name]]"><span>[[item-cart.name]]</span></a>
+                            <a href="/detail/{{routeData.category}}/[[item-cart.name]]">{{item-cart.productName}}</a>
                         </div>
                     </div>
                 </div>
@@ -40,21 +56,12 @@
         
         static get properties(){
             return{
-                cartList: Object,
-                
-                _hasItems:{
-                    type: Boolean,
-                    computed: '_computeHasItem(cartList.length)'
-                }
+                cartList:{
+                  type: Object,
+                  observer: '_cartListChanged'    
+                },
+                route: Object
             };
-        }
-        
-        _computeHasItem(cartLength){
-            return cartLength > 0;
-        }
-        
-        _handlerCartItems(event){
-            this.cartList = event.detail.response.cartlist;
         }
     }
     window.customElements.define(CartView.is, CartView);

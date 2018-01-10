@@ -26,7 +26,7 @@
                 <div>
                 <div class="item">                    
                     <div class="pad"> 
-                        <a href="/list/[[cat.category]]">{{cat.name}}</a>
+                        <a on-tap="_setKey" category="[[cat]]" href="/list/[[cat.$key]]/[[cat.name]]">{{cat.name}}</a>
                     </div>
                 </div>
                 </div>
@@ -40,9 +40,18 @@
             static get properties(){
                 return{
                     categories:{
-                        type: Array
+                        type: Object
+                    },
+                    itemKey:{
+                        type: String,
+                        notify: true
                     }
                 };
+            }
+            
+            _setKey(e){
+                let key = e.currentTarget.category.$key;
+                this.itemKey = key;
             }
         }
         window.customElements.define(HomeView.is, HomeView);

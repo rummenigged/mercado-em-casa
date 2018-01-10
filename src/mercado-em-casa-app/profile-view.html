@@ -10,12 +10,19 @@
                 list-style: none;
             }
         </style>
+        <firebase-auth
+            id="auth"
+            user={{user}}>            
+        </firebase-auth>
+        
         <h1>Profile</h1>
         <ul>
-            <li>Nome: [[user.displayName]]</li>
-            <li>Id: [[user.uid]]</li>
-            <li>Email: [[user.email]]</li>
-            <li>Email Verificado: [[user.emailVerified]]</li>
+            <li>Nome: {{user.displayName}}</li>
+            <li>Id: {{user.uid}}</li>
+            <li>Email: {{user.email}}</li>
+            <li>Email Verificado: {{user.emailVerified}}</li>
+            <li>Photo Path: {{user.photoURL}}</li>
+            <img src="{{user.photoURL}}" alt="foto perfil">
         </ul>
     </template>
     <script>
@@ -24,15 +31,15 @@
             
             static get properties(){
                 return{
-                    user:{
-                        type:Object,
-                        observer:'_testeObserver'
-                    }
+//                    user:{
+//                        type:Object,
+//                        observer:'_testeObserver'
+//                    }
                 };
             }
             
             _testeObserver(){
-                console.log("Observer Called");
+//                console.log("Observer Called");
             }
         }
         window.customElements.define(ProfileView.is, ProfileView);

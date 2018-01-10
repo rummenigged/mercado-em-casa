@@ -1,37 +1,100 @@
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="product-data.html">
 
 <dom-module id="product-detail">
     <template>
-        <style>
-            
-            #content{
+        <style include="flaty-bootstrap">            
+            :host{
+                display: block;
+                color: black;
+            }
+            .container{
                 color: black;
             }
             .price{
                 color: green;
+                font-weight: bold;
+            }
+            iron-image{
+                width: 100%;
+                height: 400px;
+                background-color: lightgray;
+            }
+    /*        Small devices (landscape phones, 576px and up)*/
+            @media (min-width: 576px) {
+                iron-image{
+                    height: 400px;
+                }
+            }
+
+    /*        Medium devices (tablets, 768px and up)*/
+            @media (min-width: 768px) {
+                iron-image{
+                    height: 400px;
+                }
+            }
+
+    /*        Large devices (desktops, 992px and up)*/
+            @media (min-width: 992px) {
+                iron-image{
+                    height: 500px;
+                }
+            }
+
+    /*        Extra large devices (large desktops, 1200px and up)*/
+            @media (min-width: 1200px) {
+                iron-image{
+                    height: 600px;
+                }
             }
         </style>
 
         <app-route
+            id="route"
             route=[[route]]
-            pattern="/:category/:item"
+            pattern="/:idCategory/:category/:idItem/:item"
             data="{{routeData}}">
         </app-route>
-
-        <iron-ajax
-            auto
-            url="../../data/{{routeData.category}}.json"
-            handler-as="json"
-            on-response="_handlerProducts">
-        </iron-ajax>
         
-        <div id="content">
-            <h1>{{item.name}}</h1>
-            <h3 class="price">R${{item.price}}</h3>            
-            <p>{{item.description}}</p>
-            <iron-image style="width:300px; height:300px;" sizing="contain"
-                    src="[[item.image]]" alt="[[item.name]]"></iron-image>
-            <paper-button class="red" raised on-tap="_addCart">Add Cart</paper-button>
+        <firebase-auth 
+            id="auth" 
+            user="{{user}}">
+        </firebase-auth>
+        
+        <firebase-query
+            id="queryItensCart"
+            path="/carts/{{cartsKey}}/itensCart"
+            data="{{data}}">
+        </firebase-query>
+        
+        <firebase-query
+            id="query"
+            path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
+            data="{{data}}">
+        </firebase-query>
+         
+        <product-data
+            id="productData"
+            category-id="{{routeData.idCategory}}"
+            product-id="{{routeData.idItem}}"
+            data="{{product}}">
+        </product-data>
+        
+        <div class="container">           
+            <div class="row">
+                <iron-image class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7" src="http://lorempixel.com/400/400" sizing="cover" preload fade></iron-image>            
+                <div class="detail col-xs-12 col-sm-12 col-md-6 col-lg-4 offset-lg-1">                   
+                        <h3>{{product.name}}</h3>
+                        <span class="price">R${{product.price}}</span>        
+                        <paper-input id="qtd" label="Quantidade" type="number"></paper-input>
+                        <h4>Descriçao</h4>
+                        <p>{{product.description}}</p>                                                            
+                </div>
+            </div>
+            <paper-button class="btn btn-primary" on-tap="_addCart">Adicionar ao Carrinho</paper-button>
+            <paper-button class="btn btn-primary" on-tap="_addItemCart">Adicionar Item</paper-button>
         </div>
     </template>
     <script>
@@ -45,10 +108,16 @@
                         readOnly: true                        
                     },
                     itemPathName: String,
-                    route: Object                
+                    route: Object,
+                    productKey: String,
+                    cartKey:{
+                        type: String,
+                        value: "",
+                        observer:'_setCartKeyValue'
+                    }
                 }
             }
-
+            
             static get observers(){
                 return [
                     '_routePageChanged(routeData.item)'
@@ -58,19 +127,33 @@
             _routePageChanged(item){
                 this.itemPathName = item;                
             }
-
-            _handlerProducts(event){
-                let productsList = event.detail.response.productslist;                
-                for(let i = 0 ; i < productsList.length ; i++){                    
-                    if(this.itemPathName === productsList[i].name){                        
-                        this._setItem(productsList[i]);
-                    }
+            
+            _setCartKeyValue(){
+                let cartSotagedKey = localStorage.getItem("cartKey");
+                if(cartSotagedKey != null){
+                    this.cartKey = '/' + cartSotagedKey;                    
                 }
             }
+            _addCart(e){                
+//                let cartRef = this.$.query.ref; 
+//                let itemCartRef = this.$.queryItensCart.ref; 
+//                let key = this.__createNewCart(this.$.auth.user.uid, cartRef);
+////                localStorage.setItem("cartKey", key);                       
+//                this.$.qtd.value = null;
+                var produto = new Object();
+                produto["id"] = this.$.route.data.idItem;
+                produto["name"] = this.$.productData.data.name;
+                produto["qtd"] = this.$.qtd.value;                
+                this.$.productData._addProductToCart(produto);
+            } 
             
-            _addCart(){
-                console.log("Click Add Cart Button");
-            }
+            __createNewCart(userId, ref){                
+                return ref.push({                                        
+                        productId: this.$.route.data.idItem,
+                        productName: this.$.productData.data.name,
+                        quantity: this.$.qtd.value                    
+                }).key;
+            }                    
         }
         window.customElements.define(ProductDetail.is, ProductDetail);
     </script>

@@ -12,7 +12,12 @@
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../style/flaty-bootstrap.html">
 
 
 <link rel="import" href="category-view.html">
@@ -25,7 +30,7 @@
 
 <dom-module id="mercado-em-casa-app">
   <template>
-    <style>
+    <style include="flaty-bootstrap">
             
       paper-toolbar{
         width: 100%;                  
@@ -158,14 +163,27 @@
             color: black;
             padding: 5px;
         }
-    </style>   
+        
+        /*        Small devices (landscape phones, 576px and up)*/
+        @media (min-width: 576px) {
+            
+        }
 
-    <iron-ajax
-        auto
-        url="../../data/categorieslist.json"
-        handler-as="json"
-        on-response="_handlerCategories">
-    </iron-ajax>
+/*        Medium devices (tablets, 768px and up)*/
+        @media (min-width: 768px) {    
+            
+        }
+
+/*        Large devices (desktops, 992px and up)*/
+        @media (min-width: 992px) {
+            
+        }
+
+/*        Extra large devices (large desktops, 1200px and up)*/
+        @media (min-width: 1200px) {
+            
+        }
+    </style>   
 
     <app-location
       route="{{route}}">
@@ -179,6 +197,26 @@
       active="{{pageActive}}">
     </app-route>
     
+    <firebase-app
+            auth-domain="mercado-em-casa-v1.firebaseapp.com"
+            database-url="https://mercado-em-casa-v1.firebaseio.com"
+            api-key="AIzaSyBSbjYUrW7XDbpouusVifmw1di5JyKcSVE"> 
+    </firebase-app>
+    
+    <firebase-query
+        id="query"
+        path="/categories"
+        data={{categories}}>        
+    </firebase-query>
+        
+<!--
+    <app-indexeddb-mirror
+        id="aidbm"
+        key="cartKey"        
+        persisted-data="{{persistedData}}">
+    </app-indexeddb-mirror>
+    
+-->
     <app-drawer-layout>
 <!--
         <app-drawer slot="drawer">
@@ -190,11 +228,12 @@
               <app-toolbar>
                 <paper-icon-button icon="menu" drawer-toogle></paper-icon-button>
                 <div main-title>
-                  Mercado em Casa<span hidden$="{{!user}}"> - {{user.displayName}}</span>
+                  Mercado em Casa
+<!--                  <span>{{cartKey}}</span>-->
                 </div>
                 <paper-icon-button icon="search"></paper-icon-button>
                 <a href="/home"><paper-icon-button icon="home"></paper-icon-button></a>
-                <a href="/cart"><paper-icon-button icon="shopping-cart"></paper-icon-button></a>
+                <a href="/cart/-L2C2UQbfZ3aeHfK4CO-"><paper-icon-button icon="shopping-cart"></paper-icon-button></a>
                 <paper-menu-button vertical-align="bottom" horizontal-align="right">
                     <paper-icon-button icon="account-circle" slot="dropdown-trigger" alt="menu"></paper-icon-button>
                     <paper-listbox slot="dropdown-content">
@@ -213,18 +252,19 @@
         </app-header-layout>
     </app-drawer-layout>   
         
+        <paper-button on-tap="_handlerClick">button</paper-button>
     <iron-pages
         selected="[[page]]"
         attr-for-selected="name"
         fallback-selection="view-404"
         role="main">   
 
-      <home-view name="home" categories="[[categoriesList]]"></home-view>
-      <category-view name="list" route="[[subroute]]"></category-view>
+      <home-view name="home" categories="{{categories}}" item-key={{itemKey}}></home-view>
+      <category-view name="list" route="[[subroute]]" key="{{itemKey}}"></category-view>
       <product-detail name="detail" route="[[subroute]]"></product-detail>
       <cart-view name="cart" route="[[subroute]]"></cart-view>
-      <profile-view name="profile" route="[[subroute]]" user="{{user}}"></profile-view>
-      <login-view name="login" route="[[subroute]]" user="{{user}}"></login-view>
+      <profile-view name="profile"></profile-view>
+      <login-view name="login"></login-view>
       <view-404 name="view-404"></view-404>
     </iron-pages>
   </template>
@@ -246,7 +286,13 @@
             reflectToAttribute: true,
             notify: true,
             observer: '_pageChanged'
-          }           
+          },
+          
+          cartKey:{
+            type: String,
+            value: "",
+            observer: '_setCartKey'   
+          } 
         };
       }
                   
@@ -255,8 +301,12 @@
           '_routePageChanged(routeData.page)'          
         ];
       }
-      
-      _routePageChanged(page) {         
+            
+      _setCartKey(){
+          this.cartKey = localStorage.getItem("cartKey");
+      }   
+        
+      _routePageChanged(page) {
         this.page = page || 'home';                
       }
       
@@ -267,12 +317,8 @@
         this.page = 'view-404';
       }
 
-      _handlerCategories(event){
-        this.categoriesList = event.detail.response.categorieslist;        
-      }
-
       _handlerClick(){
-        console.log("Click");
+        console.log(localStorage.getItem("cartKey"));
       }       
     }    
     window.customElements.define(MercadoEmCasaApp.is, MercadoEmCasaApp);

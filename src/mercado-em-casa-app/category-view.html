@@ -48,29 +48,27 @@
         
         <app-route
             route="[[route]]"
-            pattern="/:category"
+            pattern="/:id/:category"
             data="{{routeData}}">
         </app-route>
-
-        <iron-ajax
-            auto
-            url="../../data/{{routeData.category}}.json"
-            handler-as="json"
-            on-response="_handlerProducts">
-        </iron-ajax>
-                        
-        <iron-list items="[[productsList]]" as="product">
+        
+        <firebase-query
+            id="query"
+            path="/categories/{{routeData.id}}/products"
+            data="{{products}}">
+        </firebase-query>
+                                                                      
+        <iron-list items="[[products]]" as="product">
             <template>
                 <div>
                 <div class="item">
-                    <iron-image class="circle-image" sizing="cover" src="[[product.image]]"></iron-image>            
                     <div class="pad"> 
-                        <a href="/detail/{{routeData.category}}/[[product.name]]"><span>[[product.name]]</span></a>                        
+                        <a href="/detail/{{routeData.id}}/{{routeData.category}}/[[product.$key]]/[[product.name]]"><span>[[product.name]] - [[product.description]]</span></a>                        
                     </div>
                 </div>
-                </div>
+                </div>                            
             </template>                  
-        </iron-list>                
+        </iron-list>                        
     </template>
 
     <script>
@@ -83,13 +81,11 @@
                     
                     category: Object,                    
 
-                    route: Object
+                    route: Object,
+                    
+                    key: String,                   
                 };
             }
-
-            _handlerProducts(event){
-                this.productsList = event.detail.response.productslist;
-            }                    
         }
         window.customElements.define(CategoryView.is, CategoryView);
     </script>

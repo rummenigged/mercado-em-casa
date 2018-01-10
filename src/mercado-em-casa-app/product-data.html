@@ -1,0 +1,52 @@
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+
+<dom-module id="product-data">
+    <template>
+        
+        <firebase-document
+            id="doc"
+            path="/categories/[[categoryId]]/products/[[productId]]"
+            data="{{data}}">        
+        </firebase-document>
+        
+          <firebase-query
+            id="query"
+            path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
+            data="{{dataQuery}}">
+        </firebase-query>
+    </template>
+    <script>
+        class ProductData extends Polymer.Element{
+            static get is(){ return 'product-data'}
+
+            static get properties(){
+                return{
+                  path:{
+                      type: String,                      
+                  },                  
+                  data:{
+                      type: Object,
+                      notify: true,
+                      observer: '_dataChanged',                      
+                  },
+                  categoryId:{
+                      type: String                      
+                  },
+                  productId:{
+                      type: String
+                  }        
+                }
+            }
+            
+            _dataChanged(data){
+                console.log("Data = " + JSON.stringify(data));
+            }
+            
+            _addProductToCart(produto){                
+                let cartRef = this.$.query.ref;
+                let key = cartRef.push(produto);    
+            } 
+        }
+        window.customElements.define(ProductData.is, ProductData);
+    </script>
+</dom-module>

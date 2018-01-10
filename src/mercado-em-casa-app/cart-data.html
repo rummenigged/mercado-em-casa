@@ -1,0 +1,70 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+
+<dom-module id="cart-data">
+
+  <template>
+<!--    <app-localstorage-document key="shop-cart-data" data="{{cart}}"></app-localstorage-document>-->
+    <firebase-query
+        id="queryCart"
+        path="/carts/[[cartKey]]/itensCart"
+        data="{{data}}">     
+    </firebase-query>
+ 
+    <firebase-query
+        id="query"
+        path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
+        data="{{dataQuery}}">
+    </firebase-query>
+  </template>
+
+  <script>
+    class CartData extends Polymer.Element {
+        static get is() { return 'cart-data'; }
+        static get properties() { return {
+                data:{
+                    type: Object,           
+                    notify: true,                    
+                    observer: '_dataChanged'
+                },
+                cartKey:{
+                    type: String,
+                    value: "",
+                    observer: '_cartKeyChanged',                    
+                },
+                hasItens:{
+                    type: Boolean,
+                    value: false,
+                    notify: true,
+                    computed: '_computeHasItem(data.length)'
+                },
+                lastItemAdded:{
+                    type: String,
+                    notify: true
+                }
+            }
+        }
+        
+        _cartKeyChanged(value){
+            console.log("cart key changed " + value);
+        }
+        
+        _formatCartKey(cartKey){
+            console.log("Passei Format Key");
+            return cartKey ? "/" + cartKey : "";
+        }
+        
+        _dataChanged(value){
+            console.log("Data = " + JSON.stringify(this.data));
+        }
+        
+        _computeHasItem(dataLength){
+            return dataLength > 0;
+        }
+        
+    }    
+    customElements.define(CartData.is, CartData);
+  </script>
+
+</dom-module>

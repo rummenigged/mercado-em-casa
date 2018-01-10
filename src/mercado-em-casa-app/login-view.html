@@ -49,12 +49,6 @@
             }
         </style>
         
-        <firebase-app
-            auth-domain="mercado-em-casa-v1.firebaseapp.com"
-            database-url="https://mercado-em-casa-v1.firebaseio.com"
-            api-key="AIzaSyBSbjYUrW7XDbpouusVifmw1di5JyKcSVE"> 
-        </firebase-app>
-        
         <firebase-auth 
             id="auth" 
             user="{{user}}"
@@ -62,8 +56,8 @@
             signed-in="{{signedIn}}"
             on-error="_showError">
         </firebase-auth>
-        
-        <div>
+                   
+        <div>           
             <form on-submit="_signInWithEmailAndPassword" hidden$="[[signedIn]]">
                 <input value="{{email::input}}" type="email" placeholder="Email">
                 <input value="{{password::input}}" type="password" placeholder="Password">
@@ -77,7 +71,7 @@
 
             <paper-button on-tap="_signOut" hidden$="[[!signedIn]]">
                 <iron-icon icon="account-circle"></iron-icon>
-                <span>Sign Out</span>
+                <span>Log Out</span>
             </paper-button>
         </div>
     </template>
@@ -114,7 +108,7 @@
         }
         
         _signInWithGoogle(){
-            this.$.auth.signInWithPopup();    
+            this.$.auth.signInWithPopup();            
         }
         
          _signInWithEmailAndPassword(e){
@@ -138,7 +132,7 @@
             localStorage.removeItem("username");
         }
         
-        _shorError(e){
+        _showError(e){
             console.log("Auth Error = " + e.detail);
         }
     }    
