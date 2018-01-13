@@ -1,0 +1,106 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="progress-dialog">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+        
+        .modal {
+            display: block;
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding: 20px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%; /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        paper-icon-button {
+            color: #9b1a1a;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        paper-icon-button:hover,
+        paper-icon-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+    /*        Small devices (landscape phones, 576px and up)*/
+        @media (min-width: 576px) {
+        
+        }
+
+    /*        Medium devices (tablets, 768px and up)*/
+        @media (min-width: 768px) {    
+        
+        }
+
+    /*        Large devices (desktops, 992px and up)*/
+        @media (min-width: 992px) {
+         
+        }
+
+    /*        Extra large devices (large desktops, 1200px and up)*/
+        @media (min-width: 1200px) {
+       
+        }
+        
+    </style>
+    <div id="myModal" class="modal">
+        <div class="modal-content">        
+            <slot></slot>
+        </div>    
+    </div>
+  </template>
+
+  <script>
+    class ProgressDialog extends Polymer.Element {
+        static get is() { return 'progress-dialog'; }
+        static get properties() { return {
+                visible:{
+                    type: Boolean,                    
+                    observer: '__visibleChanged'
+                }
+            }                               
+        }
+        
+        __visibleChanged(){            
+            if(this.visible){
+                this._ativa();    
+            }else{
+                this._desativa();
+            }
+        }
+        
+         _ativa(){            
+            this.$.myModal.style.display= "block";
+        }
+        
+        _desativa(){            
+            this.$.myModal.style.display= "none";
+        }
+    }
+    customElements.define(ProgressDialog.is, ProgressDialog);
+  </script>
+
+</dom-module>

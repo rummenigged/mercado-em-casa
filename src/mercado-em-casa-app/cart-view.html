@@ -1,4 +1,6 @@
 <link rel="import" href="cart-data.html">
+<link rel="import" href="item-cart.html" >
+<link rel="import" href="progress-dialog.html" >
 <dom-module id="cart-view">
     <template>
         <style>
@@ -11,6 +13,19 @@
             }
             h2{
                 color: black;
+            }
+            .log{
+                color: teal;
+            }
+            
+            #bt-chekout-cart{
+                @apply --layout-fixed-bottom;
+                position: fixed;
+                width: 100%;
+                height: 64px;
+                background-color: #9c27b0;
+                color: white;
+                font-weight: bold;
             }
         </style>
         
@@ -30,25 +45,27 @@
             id="cartData"
             cart-key={{routeData.key}}
             data="{{data}}"
-            has-itens={{hasItem}}> 
+            has-itens={{hasItem}}
+            is-ready={{isReady}}> 
         </cart-data>
         
         <h1>Carrinho</h1>        
         <div hidden$="[[hasItem]]">
             <p>Your <iron-icon icon="shopping-cart"></iron-icon> is empty.</p>
         </div>
+        <progress-dialog id="progressDialog" visible={{!isReady}}>
+            Carregando Carrinho...
+        </progress-dialog>
         <iron-list items="{{data}}" as="item-cart">
             <template>
                 <div>
                     <div class="item">
-                        <iron-image class="circle-image" sizing="cover" src="[[item-cart.image]]"></iron-image>            
-                        <div class="pad"> 
-                            <a href="/detail/{{routeData.category}}/[[item-cart.name]]">{{item-cart.productName}}</a>
-                        </div>
+                        <item-cart item={{item-cart}}></item-cart>
                     </div>
                 </div>
             </template>                  
-        </iron-list>  
+        </iron-list>
+        <paper-button id="bt-chekout-cart">Avançar</paper-button> 
     </template>
     <script>
     class CartView extends Polymer.Element{
@@ -60,8 +77,24 @@
                   type: Object,
                   observer: '_cartListChanged'    
                 },
-                route: Object
+                route: {
+                    type:Object                    
+                }
             };
+        }
+        
+        static get observers(){
+            return [
+              '_routePageChanged(routeData.key)'          
+            ];
+        }
+        
+        _routePageChanged(key){            
+            this.$.cartData._getItensCartData();
+         }   
+        
+        __stringfy(data){
+            return JSON.stringify(data);
         }
     }
     window.customElements.define(CartView.is, CartView);

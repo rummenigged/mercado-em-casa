@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
@@ -18,6 +19,7 @@
 <link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
 <link rel="import" href="../style/flaty-bootstrap.html">
+<link rel="import" href="category-data.html">
 
 
 <link rel="import" href="category-view.html">
@@ -26,38 +28,31 @@
 <link rel="import" href="login-view.html">
 <link rel="import" href="cart-view.html">
 <link rel="import" href="profile-view.html">
-<link rel="lazy-import" href="view-404.html">
+<link rel="import" href="view-404.html">
 
 <dom-module id="mercado-em-casa-app">
   <template>
     <style include="flaty-bootstrap">
-            
-      paper-toolbar{
-        width: 100%;                  
-        --paper-toolbar-background: #9c27b0;
-      }      
-
-      iron-icon {
-        margin-right: 0.5em;
-        background: white;
-      }
-
-
-      :host {
+       
+        :host {
           display: block;    
         }
+      
+        paper-toolbar{
+            width: 100%;                  
+            --paper-toolbar-background: #9c27b0;
+        }      
+
+        iron-icon {
+            margin-right: 0.5em;
+            background: white;
+        } 
 
         app-header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
+          @apply --layout-fixed-top;
           z-index: 1;
           background-color: #9c27b0;
-          color: white;
-          --app-header-background-front-layer: {
-            background-color: #4285f4;
-          };
+          color: white;          
         }
 
         app-header paper-icon-button {
@@ -82,74 +77,8 @@
 
         app-toolbar.tall {
           height: 148px;
-        }
+        }      
 
-        iron-list {
-          padding-top: 20px;
-          margin-top: 64px;
-          padding-bottom: 10px;                    
-        }
-
-        .item {
-          @apply --layout-horizontal;
-          padding: 10px;
-          border-radius: 8px;
-          background-color: white;
-          border: 1px solid #9c27b0;
-          max-width: 800px;
-          margin: 16px auto 0 auto;
-        }
-
-        .item:focus {
-          outline: 0;
-          border-color: #333;
-        }
-
-        .avatar {
-          height: 60px;
-          width: 60px;
-          border-radius: 20px;
-          box-sizing: border-box;
-          background-color: #DDD;
-        }        
-
-        .pad {          
-          padding: 0 16px;          
-          @apply --layout-flex;
-          @apply --layout-vertical;
-          align-self: center;          
-        }
-
-        .primary {
-          font-size: 16px;
-          font-weight: bold;
-        }
-
-        .secondary {
-          font-size: 14px;
-        }
-
-        .dim {
-          color: gray;
-        }
-
-        .spacer {
-          @apply --layout-flex;
-        }
-      
-        app-drawer-layout:not([narrow]) [drawer-toggle] {
-          display: none;
-        }
-        
-        .iron-selected{          
-          color: white;
-          /* background: gray; */
-        }
-
-        paper-tabs{
-          background-color: #9c27b0;
-        }
-        
         a{
           color: white;
         }
@@ -162,6 +91,10 @@
         paper-item{
             color: black;
             padding: 5px;
+        }
+        
+        #drawer{
+            z-index: 2;
         }
         
         /*        Small devices (landscape phones, 576px and up)*/
@@ -197,39 +130,45 @@
       active="{{pageActive}}">
     </app-route>
     
+    <firebase-auth
+        id="auth"
+        user={{user}}>
+    </firebase-auth>
+    
     <firebase-app
             auth-domain="mercado-em-casa-v1.firebaseapp.com"
             database-url="https://mercado-em-casa-v1.firebaseio.com"
             api-key="AIzaSyBSbjYUrW7XDbpouusVifmw1di5JyKcSVE"> 
     </firebase-app>
     
-    <firebase-query
-        id="query"
-        path="/categories"
-        data={{categories}}>        
-    </firebase-query>
-        
+    <cart-data id="cartData"></cart-data>
+        <app-drawer id="drawer" swipe-open>
+
+            <div class="drawer-header">
+                <span>Mercado Em Casa</span>
+            </div>
+            <div class="drawer-content">
+            <ul>
+                <li>Home</li>
+                <li>Perfil</li>
+                <li>Configuraçoes</li>
+                <li>Sair</li>
+            </ul>
 <!--
-    <app-indexeddb-mirror
-        id="aidbm"
-        key="cartKey"        
-        persisted-data="{{persistedData}}">
-    </app-indexeddb-mirror>
-    
+                <iron-list items="[[menuItems]]" as="item">
+                    <template>
+                            <span class="item-drawer"><a href="[[item.nameRoute]]">[[item.name]]</a></span>    
+                        </template>
+                </iron-list>
 -->
-    <app-drawer-layout>
-<!--
-        <app-drawer slot="drawer">
-            drawer-content
-        </app-drawer>
--->
+            </div>
+        </app-drawer>       
         <app-header-layout>
             <app-header slot="header">
               <app-toolbar>
-                <paper-icon-button icon="menu" drawer-toogle></paper-icon-button>
+                <paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
                 <div main-title>
                   Mercado em Casa
-<!--                  <span>{{cartKey}}</span>-->
                 </div>
                 <paper-icon-button icon="search"></paper-icon-button>
                 <a href="/home"><paper-icon-button icon="home"></paper-icon-button></a>
@@ -247,26 +186,24 @@
                     </paper-listbox>        
                 </paper-menu-button>
               </app-toolbar>          
-            </app-header>   
-            <app-drawer id="drawer" swipe-open></app-drawer>                   
+            </app-header>               
         </app-header-layout>
-    </app-drawer-layout>   
-        
-        <paper-button on-tap="_handlerClick">button</paper-button>
-    <iron-pages
-        selected="[[page]]"
-        attr-for-selected="name"
-        fallback-selection="view-404"
-        role="main">   
+<!--    </app-drawer-layout>   -->
+                
+        <iron-pages
+            selected="[[page]]"
+            attr-for-selected="name"
+            fallback-selection="view-404"
+            role="main">   
 
-      <home-view name="home" categories="{{categories}}" item-key={{itemKey}}></home-view>
-      <category-view name="list" route="[[subroute]]" key="{{itemKey}}"></category-view>
-      <product-detail name="detail" route="[[subroute]]"></product-detail>
-      <cart-view name="cart" route="[[subroute]]"></cart-view>
-      <profile-view name="profile"></profile-view>
-      <login-view name="login"></login-view>
-      <view-404 name="view-404"></view-404>
-    </iron-pages>
+          <home-view name="home" item-key={{itemKey}}></home-view>
+          <category-view name="list" route="[[subroute]]" key="{{itemKey}}"></category-view>
+          <product-detail name="detail" route="[[subroute]]"></product-detail>
+          <cart-view name="cart" route="[[subroute]]"></cart-view>
+          <profile-view name="profile"></profile-view>
+          <login-view name="login"></login-view>
+          <view-404 name="view-404"></view-404>
+        </iron-pages>
   </template>
 
   <script>
@@ -302,6 +239,11 @@
         ];
       }
             
+        ready(){
+            super.ready();
+            this.addEventListener('add-cart-item', (e)=> this.$.cartData._addCartItem(e.detail.item));
+        }
+        
       _setCartKey(){
           this.cartKey = localStorage.getItem("cartKey");
       }   
@@ -319,7 +261,11 @@
 
       _handlerClick(){
         console.log(localStorage.getItem("cartKey"));
-      }       
+      }
+        
+      _drawerToggle(){
+        this.$.drawer.toggle();
+      }
     }    
     window.customElements.define(MercadoEmCasaApp.is, MercadoEmCasaApp);
   </script>

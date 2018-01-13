@@ -8,15 +8,10 @@
 <!--    <app-localstorage-document key="shop-cart-data" data="{{cart}}"></app-localstorage-document>-->
     <firebase-query
         id="queryCart"
-        path="/carts/[[cartKey]]/itensCart"
+        path="{{path}}"
         data="{{data}}">     
     </firebase-query>
- 
-    <firebase-query
-        id="query"
-        path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
-        data="{{dataQuery}}">
-    </firebase-query>
+<!--path="/carts/[[cartKey]]/itensCart"-->
   </template>
 
   <script>
@@ -26,43 +21,71 @@
                 data:{
                     type: Object,           
                     notify: true,                    
-                    observer: '_dataChanged'
+                    observer: '__dataChanged'
                 },
+            
                 cartKey:{
                     type: String,
                     value: "",
                     observer: '_cartKeyChanged',                    
                 },
+            
                 hasItens:{
                     type: Boolean,
                     value: false,
                     notify: true,
                     computed: '_computeHasItem(data.length)'
                 },
+            
                 lastItemAdded:{
                     type: String,
                     notify: true
-                }
+                },
+            
+                path:{
+                    type: String,
+                    readOnly: true
+                },
+                
+                isReady:{
+                  type: Boolean,
+                  value: false,
+                  notify: true,
+                  readOnly: true
+                }  
             }
         }
         
         _cartKeyChanged(value){
-            console.log("cart key changed " + value);
+            
         }
         
         _formatCartKey(cartKey){
-            console.log("Passei Format Key");
+            
             return cartKey ? "/" + cartKey : "";
         }
         
-        _dataChanged(value){
-            console.log("Data = " + JSON.stringify(this.data));
+        __dataChanged(value){
+            if(this.data == null || Object.keys(this.data).length === 0){                
+                this._setIsReady(false);
+            }else{                    
+                this._setIsReady(true);
+            }
         }
         
         _computeHasItem(dataLength){
             return dataLength > 0;
         }
         
+        _addCartItem(item){            
+            this._setPath("/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart");
+            let cartRef = this.$.queryCart.ref;
+            let key = cartRef.push(item);
+        }
+        
+        _getItensCartData(){
+            this._setPath("/carts/" + this.cartKey + "/itensCart");
+        }
     }    
     customElements.define(CartData.is, CartData);
   </script>

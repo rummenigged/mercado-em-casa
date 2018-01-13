@@ -4,15 +4,17 @@
     <template>
         
         <firebase-document
-            id="doc"
+            id="queryDoc"
+            id="queryDoc"
             path="/categories/[[categoryId]]/products/[[productId]]"
             data="{{data}}">        
         </firebase-document>
         
+<!--        path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"-->
           <firebase-query
             id="query"
-            path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
-            data="{{dataQuery}}">
+            path="[[path]]"
+            data="{{data}}">
         </firebase-query>
     </template>
     <script>
@@ -22,30 +24,53 @@
             static get properties(){
                 return{
                   path:{
-                      type: String,                      
+                      type: String,
+                      readOnly: true
                   },                  
                   data:{
                       type: Object,
                       notify: true,
-                      observer: '_dataChanged',                      
+                      observer: '__dataChanged'
                   },
                   categoryId:{
-                      type: String                      
+                      type: String         
                   },
                   productId:{
                       type: String
-                  }        
+                  },
+                    
+                  isReady:{
+                      type: Boolean,
+                      value: false,
+                      notify: true,
+                      readOnly: true,                      
+                  }
                 }
             }
-            
-            _dataChanged(data){
-                console.log("Data = " + JSON.stringify(data));
+            _addProductToCart(produto){
+//                this._setPath("/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart");
+//                let cartRef = this.$.query.ref;
+//                let key = cartRef.push(produto);
+                this.dispatchEvent(new CustomEvent('add-cart-item', {
+                    bubbles: true, composed: true, detail:{
+                            item: produto                        
+                        }
+                    }
+                  )
+                );
             }
             
-            _addProductToCart(produto){                
-                let cartRef = this.$.query.ref;
-                let key = cartRef.push(produto);    
-            } 
+            _getProductsByCategory(categoryKey){
+                this._setPath("/categories/" + categoryKey + "/products");                
+            }
+            
+            __dataChanged(){                
+                if(this.data == null || Object.keys(this.data).length === 0){                    
+                    this._setIsReady(false);
+                }else{                    
+                    this._setIsReady(true);
+                }
+            }
         }
         window.customElements.define(ProductData.is, ProductData);
     </script>

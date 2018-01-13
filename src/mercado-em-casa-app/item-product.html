@@ -1,0 +1,36 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="item-product">
+
+  <template>
+    <style>
+     .item {
+            @apply --layout-horizontal;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: white;
+            border: 1px solid #9c27b0;
+            max-width: 800px;
+            margin: 16px auto 0 auto;
+            cursor: pointer;
+        }
+    </style>
+<!--    <div href="">[[item.name]]</div>-->
+     <div class="item">[[item.name]] - [[item.description]]</div>
+  </template>
+
+  <script>
+    class ItemProduct extends Polymer.Element {
+        static get is() { return 'item-product'; }
+        static get properties() { return {
+                item:{
+                    type: Object,
+                    notify:true
+                }
+            }
+        }                       
+    }
+    customElements.define(ItemProduct.is, ItemProduct);
+  </script>
+
+</dom-module>

@@ -1,4 +1,6 @@
-
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="item-product.html">
+<link rel="import" href="product-data.html">
 <dom-module id="category-view">
     <template>
         <style>
@@ -10,63 +12,33 @@
                 color: black;
             }
 
-            .item {
-                @apply --layout-horizontal;
-                padding: 10px;
-                border-radius: 8px;
-                background-color: white;
-                border: 1px solid #9c27b0;
-                max-width: 800px;
-                margin: 16px auto 0 auto;
-                cursor: pointer;
-            }
-
-            .item:focus {
-                outline: 0;
-                border-color: #333;
-            }
-
-            .circle-image {
-                height: 60px;
-                width: 60px;
-                border-radius: 30%;
-                box-sizing: border-box;
-                background-color: #DDD;
-            }        
-
-            .pad {          
-                padding: 0 16px;          
-                @apply --layout-flex;
-                @apply --layout-vertical;
-                align-self: center;          
-            }
-
-            span{
-                color: black;
-            }
         </style>
         
         <app-route
+            id="appRoute"
             route="[[route]]"
             pattern="/:id/:category"
             data="{{routeData}}">
         </app-route>
         
+<!--
         <firebase-query
             id="query"
             path="/categories/{{routeData.id}}/products"
             data="{{products}}">
         </firebase-query>
-                                                                      
+-->
+        
+        <product-data
+            id="productData"
+            data="{{products}}">
+        </product-data> 
+                        
         <iron-list items="[[products]]" as="product">
-            <template>
-                <div>
-                <div class="item">
-                    <div class="pad"> 
-                        <a href="/detail/{{routeData.id}}/{{routeData.category}}/[[product.$key]]/[[product.name]]"><span>[[product.name]] - [[product.description]]</span></a>                        
-                    </div>
-                </div>
-                </div>                            
+            <template>                
+                <a href="/detail/{{routeData.id}}/{{routeData.category}}/[[product.$key]]/[[product.name]]">
+                    <item-product item="{{product}}"></item-product>
+                </a>                                                                  
             </template>                  
         </iron-list>                        
     </template>
@@ -81,10 +53,18 @@
                     
                     category: Object,                    
 
-                    route: Object,
+                    route:{
+                        type: Object,
+                        observer: '_routeChanged'
+                    },
                     
                     key: String,                   
                 };
+            }            
+            
+            _routeChanged(){                
+                let categoryKey = this.$.appRoute.data.id;
+                this.$.productData._getProductsByCategory(categoryKey);
             }
         }
         window.customElements.define(CategoryView.is, CategoryView);

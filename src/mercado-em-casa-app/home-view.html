@@ -1,4 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="item-category.html">
+<link rel="import" href="category-data.html">
+<link rel="import" href="progress-dialog.html">
 <dom-module id="home-view">
     <template>
         <style>
@@ -7,6 +10,10 @@
 
             h1{
                 color: black;
+            }
+            
+            iron-list{
+                z-index: 0;
             }
             
            .item {
@@ -20,28 +27,31 @@
                 cursor: pointer;
             }
         </style>
+        
+        <category-data
+            id="categories-data"
+            data="{{categories}}"
+            is-ready="{{isReady}}">
+        </category-data>
 
-        <iron-list items="[[categories]]" as="cat">
+        <iron-list items="{{categories}}" as="cat">
             <template>
-                <div>
-                <div class="item">                    
-                    <div class="pad"> 
-                        <a on-tap="_setKey" category="[[cat]]" href="/list/[[cat.$key]]/[[cat.name]]">{{cat.name}}</a>
-                    </div>
-                </div>
-                </div>
+                <a on-tap="_setKey" category="[[cat]]" href="/list/[[cat.$key]]/[[cat.name]]">
+                    <item-category item={{cat}}></item-category>
+                </a>                    
             </template>                  
         </iron-list>
+        
+        <progress-dialog id="progressDialog" visible={{!isReady}}>
+            Carregando Categorias...
+        </progress-dialog>
     </template>
     <script>
         class HomeView extends Polymer.Element{
             static get is(){ return 'home-view'}
 
             static get properties(){
-                return{
-                    categories:{
-                        type: Object
-                    },
+                return{                   
                     itemKey:{
                         type: String,
                         notify: true

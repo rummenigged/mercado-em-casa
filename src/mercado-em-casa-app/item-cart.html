@@ -1,0 +1,25 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="item-cart">
+
+  <template>
+    <style>
+    </style>
+    <a href="">[[item.name]] - x[[item.qtd]]</a>
+  </template>
+
+  <script>
+    class ItemCart extends Polymer.Element {
+        static get is() { return 'item-cart'; }
+        static get properties() { return {
+            item:{
+                type: Object,
+                notify:true
+            }
+            }
+        }                       
+    }
+    customElements.define(ItemCart.is, ItemCart);
+  </script>
+
+</dom-module>

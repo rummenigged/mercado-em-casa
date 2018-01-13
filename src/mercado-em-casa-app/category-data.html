@@ -1,0 +1,48 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+
+<dom-module id="category-data">
+    <template>
+        <firebase-query
+            id="query"
+            path="[[path]]"
+            data="{{data}}">
+        </firebase-query>
+    </template>
+    <script>
+        class CategoryData extends Polymer.Element{
+            static get is(){ return 'category-data'}
+
+            static get properties(){
+                return{
+                  path:{
+                      type: String,
+                      value:"/categories",
+                      readOnly: true
+                  },                  
+                  data:{
+                      type: Object,
+                      notify: true,
+                      observer: '__dataChanged'
+                  },
+                  
+                  isReady:{
+                      type: Boolean,
+                      value: false,
+                      notify: true,
+                      readOnly: true
+                  }    
+                }
+            }                           
+            
+            __dataChanged(){                
+                if(this.data == null || Object.keys(this.data).length === 0){                
+                    this._setIsReady(false);
+                }else{                    
+                    this._setIsReady(true);
+                }
+            }
+        }
+        window.customElements.define(CategoryData.is, CategoryData);
+    </script>
+</dom-module>

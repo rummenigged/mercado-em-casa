@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="progress-dialog.html">
 <link rel="import" href="product-data.html">
 
 <dom-module id="product-detail">
@@ -22,10 +23,35 @@
                 height: 400px;
                 background-color: lightgray;
             }
+            
+            .content-item{
+                margin-bottom: 70px;
+            }
+            
+            #bt-add-product-to-cart{
+                @apply --layout-fixed-bottom;
+                position: fixed;
+                width: 100%;
+                height: 64px;
+                background-color: #9c27b0;
+                color: white;
+                font-weight: bold;                
+            }
+            
     /*        Small devices (landscape phones, 576px and up)*/
             @media (min-width: 576px) {
                 iron-image{
                     height: 400px;
+                }
+                
+                #bt-add-product-to-cart{
+                    @apply --layout-fixed-bottom;
+                    position: fixed;
+                    width: 100%;
+                    height: 64px;
+                    background-color: #9c27b0;
+                    color: white;
+                    font-weight: bold;                
                 }
             }
 
@@ -34,12 +60,22 @@
                 iron-image{
                     height: 400px;
                 }
+                
+                #bt-add-product-to-cart{                    
+                    position: relative;                    
+                    height: 50px;                                    
+                }
             }
 
     /*        Large devices (desktops, 992px and up)*/
             @media (min-width: 992px) {
                 iron-image{
                     height: 500px;
+                }
+                
+                #bt-add-product-to-cart{                    
+                    position: absolute;                    
+                    height: 50px;                                  
                 }
             }
 
@@ -48,9 +84,14 @@
                 iron-image{
                     height: 600px;
                 }
+                
+                #bt-add-product-to-cart{                    
+                    position: relative;                    
+                    height: 50px;                                    
+                }
             }
-        </style>
-
+        </style>        
+        
         <app-route
             id="route"
             route=[[route]]
@@ -62,39 +103,30 @@
             id="auth" 
             user="{{user}}">
         </firebase-auth>
-        
-        <firebase-query
-            id="queryItensCart"
-            path="/carts/{{cartsKey}}/itensCart"
-            data="{{data}}">
-        </firebase-query>
-        
-        <firebase-query
-            id="query"
-            path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
-            data="{{data}}">
-        </firebase-query>
          
         <product-data
             id="productData"
             category-id="{{routeData.idCategory}}"
             product-id="{{routeData.idItem}}"
-            data="{{product}}">
+            data="{{product}}"
+            is-ready="{{isReady}}">
         </product-data>
         
         <div class="container">           
-            <div class="row">
+            <div class="row content-item">
                 <iron-image class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7" src="http://lorempixel.com/400/400" sizing="cover" preload fade></iron-image>            
                 <div class="detail col-xs-12 col-sm-12 col-md-6 col-lg-4 offset-lg-1">                   
                         <h3>{{product.name}}</h3>
                         <span class="price">R${{product.price}}</span>        
                         <paper-input id="qtd" label="Quantidade" type="number"></paper-input>
                         <h4>Descriçao</h4>
-                        <p>{{product.description}}</p>                                                            
+                        <p>{{product.description}}</p>
+                        <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>
+                        <progress-dialog id="progressDialog" visible="{{!isReady}}">
+                            Carregando Produto...
+                        </progress-dialog>                                                            
                 </div>
-            </div>
-            <paper-button class="btn btn-primary" on-tap="_addCart">Adicionar ao Carrinho</paper-button>
-            <paper-button class="btn btn-primary" on-tap="_addItemCart">Adicionar Item</paper-button>
+            </div>            
         </div>
     </template>
     <script>
@@ -106,10 +138,8 @@
                     item: {
                         type:Object,
                         readOnly: true                        
-                    },
-                    itemPathName: String,
-                    route: Object,
-                    productKey: String,
+                    },                    
+                    route: Object,                    
                     cartKey:{
                         type: String,
                         value: "",
@@ -143,17 +173,9 @@
                 var produto = new Object();
                 produto["id"] = this.$.route.data.idItem;
                 produto["name"] = this.$.productData.data.name;
-                produto["qtd"] = this.$.qtd.value;                
+                produto["qtd"] = this.$.qtd.value;
                 this.$.productData._addProductToCart(produto);
-            } 
-            
-            __createNewCart(userId, ref){                
-                return ref.push({                                        
-                        productId: this.$.route.data.idItem,
-                        productName: this.$.productData.data.name,
-                        quantity: this.$.qtd.value                    
-                }).key;
-            }                    
+            }
         }
         window.customElements.define(ProductDetail.is, ProductDetail);
     </script>
