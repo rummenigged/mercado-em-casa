@@ -1,0 +1,32 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="item-order-resume">
+  <template>
+      <style include="flaty-bootstrap">
+          .card{
+/*              max-width: 20rem;*/
+              background: #9c27b0;
+            }
+      </style>
+    
+        <div class="card text-white mb-3">
+            <div class="card-header">Resumo do Pedido
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Arror Urbano - 1kg</h4>
+                <p class="card-text">Quantidade: 2x 
+                    <br> Preco: R$5.00 
+                </p>
+            </div>
+        </div>
+  </template>
+  <script>
+    class ItemOrderResume extends Polymer.Element {
+        static get is() { return 'item-order-resume'; }
+        static get properties() { return {}
+        }
+    }    
+    customElements.define(ItemOrderResume.is, ItemOrderResume);
+  </script>
+
+</dom-module>

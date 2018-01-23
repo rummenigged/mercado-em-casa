@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="item-address.html">
+<link rel="import" href="item-form-payment.html">
+<link rel="import" href="item-order-resume.html">
+
+<dom-module id="checkout-view">
+  <template>
+      <style>
+           #bt-finish-order{
+            @apply --layout-fixed-bottom;
+            position: fixed;
+            width: 100%;
+            height: 64px;
+            background-color: #9c27b0;
+            color: white;
+            font-weight: bold;
+            }
+      </style>      
+      <item-address></item-address>
+      <item-form-payment></item-form-payment>
+      <item-order-resume></item-order-resume>
+      <paper-button id="bt-finish-order"><a href="/checkout">Finalizar Pedido</a></paper-button> 
+  </template>
+  <script>
+    class CheckoutView extends Polymer.Element {
+        static get is() { return 'checkout-view'; }
+        static get properties() { return {}
+        }
+    }    
+    customElements.define(CheckoutView.is, CheckoutView);
+  </script>
+
+</dom-module>

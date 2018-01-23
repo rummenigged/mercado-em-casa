@@ -1,11 +1,80 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
 
 <dom-module id="item-cart">
 
   <template>
     <style>
+        :host {
+          display: block;    
+        }
+        
+        .content{
+            padding: 10px;                 
+        }
+        
+        .flex {
+            @apply --layout-horizontal;
+/*            @apply --layout-flex-auto;*/
+/*            margin-left: 24px;*/
+        }
+        .item {
+            @apply --layout-horizontal;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: white;
+            border: 1px solid #9c27b0;
+            max-width: 800px;
+            margin: 16px auto 0 auto;
+            cursor: pointer;
+        }
+        
+         .name {
+
+          }
+        
+        .name a{
+            display: inline-block;
+            max-width: 100%;
+            text-decoration: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: black;
+        }
+        
+        .selector-qtd{
+            font-size: 16px;
+            padding-left: 40px;
+            margin-left: 30px;
+        }
     </style>
-    <a href="">[[item.name]] - x[[item.qtd]]</a>
+    <div class="content flex">
+        <iron-image src="http://lorempixel.com/60/60"></iron-image>
+        <div class="name">
+            <a href="">[[item.name]]</a>
+        </div>
+        <div class="selector-qtd">
+         <label prefix>Qtd:</label>
+        <select id="quantitySelect" aria-label="Change quantity" value="[[entry.quantity]]"
+            on-change="_quantityChange">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+        </select>
+        </div>
+        <div class="price">[[_formatPrice(item.price)]]</div>
+        <paper-icon-button icon="delete" on-tap="_removeItemCart"></paper-icon-button>
+<!--        <div class="price">[[item.price]]</div>-->
+    </div>    
   </template>
 
   <script>
@@ -18,6 +87,14 @@
             }
             }
         }                       
+        _formatPrice(price) {
+            return price ? 'R$' + price : '';
+        }
+        
+        _removeItemCart(e){
+//            this.fire('delete', {name: 'item'});
+            this.dispatchEvent(new CustomEvent('delete'));
+        }
     }
     customElements.define(ItemCart.is, ItemCart);
   </script>

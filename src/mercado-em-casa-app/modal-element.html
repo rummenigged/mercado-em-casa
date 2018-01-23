@@ -1,15 +1,15 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
+ <link rel="import" href="../style/flaty-bootstrap.html">
 
-<dom-module id="progress-dialog">
+ <dom-module id="modal-element">
   <template>
     <style>
       :host {
         display: block;
       }
-
+        
         .modal {
-            display: block;
+            display: none;
             position: fixed; /* Stay in place */
             z-index: 1; /* Sit on top */
             left: 0;
@@ -28,7 +28,7 @@
             margin: 15% auto; /* 15% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
-            width: 40%; /* Could be more or less, depending on screen size */
+            width: 80%; /* Could be more or less, depending on screen size */
         }
 
         /* The Close Button */
@@ -69,40 +69,40 @@
     </style>
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <paper-spinner-lite active class="green"></paper-spinner-lite>        
+            <paper-icon-button icon="close" on-tap="_desativa"></paper-icon-button>
             <slot></slot>
         </div>    
     </div>
   </template>
 
   <script>
-    class ProgressDialog extends Polymer.Element {
-        static get is() { return 'progress-dialog'; }
-        static get properties() { return {
-                visible:{
-                    type: Boolean,                    
-                    observer: '__visibleChanged'
-                }
-            }                               
+    class ModalElement extends Polymer.Element {
+        static get is() { return 'modal-element'; }
+        static get properties(){
+            return{
+            
+            };
         }
-        
-        __visibleChanged(){            
-            if(this.visible){
-                this._ativa();    
-            }else{
-                this._desativa();
-            }
+
+        static get observers(){
+            return[];
         }
-        
-         _ativa(){            
+
+        ativa(){            
             this.$.myModal.style.display= "block";
         }
         
         _desativa(){            
             this.$.myModal.style.display= "none";
         }
+        
+//        window.onclick = function(event) {
+//            if (event.target == modal) {
+//                modal.style.display = "none";
+//            }
+//        }
     }
-    customElements.define(ProgressDialog.is, ProgressDialog);
-  </script>
 
+    window.customElements.define(ModalElement.is, ModalElement);
+  </script>
 </dom-module>

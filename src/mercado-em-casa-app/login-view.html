@@ -56,7 +56,11 @@
             signed-in="{{signedIn}}"
             on-error="_showError">
         </firebase-auth>
-                   
+        
+        <cart-data
+            id="cartData"
+            cartKey={{cartKey}}>
+        </cart-data>                      
         <div>           
             <form on-submit="_signInWithEmailAndPassword" hidden$="[[signedIn]]">
                 <input value="{{email::input}}" type="email" placeholder="Email">
@@ -71,7 +75,7 @@
 
             <paper-button on-tap="_signOut" hidden$="[[!signedIn]]">
                 <iron-icon icon="account-circle"></iron-icon>
-                <span>Log Out</span>
+                <span>Log Out of {{cartKey}} Cart</span>
             </paper-button>
         </div>
     </template>

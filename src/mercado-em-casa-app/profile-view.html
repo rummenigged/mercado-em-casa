@@ -1,6 +1,13 @@
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <dom-module id="profile-view">
     <template>
-        <style>
+        <style include="flaty-bootstrap">
+            
+            :host{                
+            }
             h1{
                 color: black;
             }
@@ -9,21 +16,78 @@
                 color: black;
                 list-style: none;
             }
+            
+            .info-perfil{                
+                width: 85%;
+                float: right;
+            }
+            
+            .info-new-address{
+                display: block;
+                margin-top: 120px;
+            }
+            
+            img{                
+                width: 60px;
+                height: 60px;
+                float: left;
+            }
+            
+            #bt-save-address{
+                background: teal;
+                color: white;
+            }
         </style>
         <firebase-auth
             id="auth"
             user={{user}}>            
         </firebase-auth>
         
-        <h1>Profile</h1>
-        <ul>
-            <li>Nome: {{user.displayName}}</li>
-            <li>Id: {{user.uid}}</li>
-            <li>Email: {{user.email}}</li>
-            <li>Email Verificado: {{user.emailVerified}}</li>
-            <li>Photo Path: {{user.photoURL}}</li>
+        <firebase-query
+           id="addressQuery"           
+           path="/address"
+           order-by-child="userId"
+           equal-to="{{user.uid}}"
+           data="{{addressData}}"> 
+        </firebase-query>
+        
+<!--
+        <firebase-query
+            id="query"
+            path="/categories/{{routeData.id}}/products"
+            order-by-child="name"
+            equal-to="{{inputSearch}}"
+            data="{{productsList}}">
+        </firebase-query>
+-->
+        
+        <h1>Profile</h1>        
             <img src="{{user.photoURL}}" alt="foto perfil">
-        </ul>
+            <div class="info-perfil">
+                Nome: {{user.displayName}} <br>
+                Id: {{user.uid}} <br>
+                Email: {{user.email}} <br>
+                Email Verificado: {{user.emailVerified}} <br>
+                Photo Path: {{user.photoURL}}
+            </div>
+            
+            <div class="info-new-address">
+                <paper-input id="inputStreet" label="Rua" value="Tabelião João Machado"></paper-input>
+                <paper-input id="inputNumber" label="Numero" value="38"></paper-input>
+                <paper-input id="inputDistrict" label="Bairro" value="Santa Tereza"></paper-input>
+                <paper-input id="inputCity" label="Cidade" value="Juazeiro do Norte"></paper-input>
+                <paper-input id="inputState" label="Estado" value="CE"></paper-input>
+                <paper-input id="inputLandmark" label="Ponto de Referência" value="Ao Lado do Colégio Polivalente"></paper-input>
+                <paper-button id="bt-save-address" class="btn btn-block" on-tap="_createNewAddress">Salvar</paper-button>
+            </div>
+            
+            <div class="info-address">
+                <template is="dom-repeat" items="{{addressData}}" as="item">
+                    {{item.street}} - {{item.number}} - {{item.district}} - {{item.city}} - {{item.state}} - {{item.landmark}} <br>
+                </template>
+
+                <paper-button class="btn btn-block btn-info">Editar</paper-button>
+            </div>                
     </template>
     <script>
         class ProfileView extends Polymer.Element{
@@ -40,6 +104,19 @@
             
             _testeObserver(){
 //                console.log("Observer Called");
+            }
+            
+            _createNewAddress(){
+                var newAddress = new Object();
+                newAddress["userId"] = this.$.auth.user.uid;
+                newAddress["street"] = this.$.inputStreet.value;
+                newAddress["number"] = this.$.inputNumber.value;
+                newAddress["district"] = this.$.inputDistrict.value;
+                newAddress["city"] = this.$.inputCity.value;
+                newAddress["state"] = this.$.inputState.value;
+                newAddress["landmark"] = this.$.inputLandmark.value;
+                
+                this.$.addressQuery.ref.push(newAddress);
             }
         }
         window.customElements.define(ProfileView.is, ProfileView);

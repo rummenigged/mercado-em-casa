@@ -6,7 +6,7 @@
 
 <dom-module id="product-detail">
     <template>
-        <style include="flaty-bootstrap">            
+        <style include="flaty-bootstrap"> 
             :host{
                 display: block;
                 color: black;
@@ -150,7 +150,7 @@
             
             static get observers(){
                 return [
-                    '_routePageChanged(routeData.item)'
+//                    '_routePageChanged(routeData.item)'
                 ] ;
             }
 
@@ -170,11 +170,15 @@
 //                let key = this.__createNewCart(this.$.auth.user.uid, cartRef);
 ////                localStorage.setItem("cartKey", key);                       
 //                this.$.qtd.value = null;
+//                console.log(JSON.stringify(this.$.productData.data.price));
                 var produto = new Object();
                 produto["id"] = this.$.route.data.idItem;
                 produto["name"] = this.$.productData.data.name;
                 produto["qtd"] = this.$.qtd.value;
+                produto["price"] = this.$.productData.data.price;
                 this.$.productData._addProductToCart(produto);
+                
+                this.$.qtd.value = null;
             }
         }
         window.customElements.define(ProductDetail.is, ProductDetail);

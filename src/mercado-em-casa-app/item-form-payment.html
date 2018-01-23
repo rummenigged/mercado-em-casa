@@ -1,0 +1,38 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="item-form-payment">
+  <template>
+      <style include="flaty-bootstrap">
+           .card{
+/*              max-width: 20rem;*/
+              background: #9c27b0;
+            }
+          
+            .form-check-input{            
+              float: left;
+            }
+      </style>      
+        <div class="card text-white mb-3">
+            <div class="card-header">Forma de Pagamento                
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Dinheiro</h4>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadio" value="option1" checked="">                        
+                    </label>
+                </div>
+<!--                <p class="card-text">Dinheiro</p>-->
+            </div>
+        </div>
+  </template>
+  <script>
+    class ItemFormPayment extends Polymer.Element {
+        static get is() { return 'item-form-payment'; }
+        static get properties() { return {}
+        }
+    }    
+    customElements.define(ItemFormPayment.is, ItemFormPayment);
+  </script>
+
+</dom-module>

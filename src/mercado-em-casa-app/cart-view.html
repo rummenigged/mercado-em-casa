@@ -56,16 +56,16 @@
         <progress-dialog id="progressDialog" visible={{!isReady}}>
             Carregando Carrinho...
         </progress-dialog>
-        <iron-list items="{{data}}" as="item-cart">
-            <template>
+<!--        <iron-list items="{{data}}" as="item-cart">-->
+            <template is="dom-repeat" items="{{data}}" as="item-cart">
                 <div>
                     <div class="item">
-                        <item-cart item={{item-cart}}></item-cart>
+                        <item-cart item={{item-cart}} on-delete="_deleteItemCart"></item-cart>
                     </div>
                 </div>
             </template>                  
-        </iron-list>
-        <paper-button id="bt-chekout-cart">Avançar</paper-button> 
+<!--        </iron-list>-->
+        <paper-button id="bt-chekout-cart"><a href="/checkout">Avancar</a></paper-button> 
     </template>
     <script>
     class CartView extends Polymer.Element{
@@ -85,16 +85,21 @@
         
         static get observers(){
             return [
-              '_routePageChanged(routeData.key)'          
+//              '_routePageChanged(routeData.key)'          
             ];
         }
         
-        _routePageChanged(key){            
-            this.$.cartData._getItensCartData();
-         }   
+//        _routePageChanged(key){            
+//            this.$.cartData._getItensCartData();
+//         }   
         
         __stringfy(data){
             return JSON.stringify(data);
+        }
+        
+        _deleteItemCart(e){
+            let key = e.currentTarget.item.$key;
+            this.$.cartData.removeItemCart(key)
         }
     }
     window.customElements.define(CartView.is, CartView);

@@ -1,0 +1,63 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="modal-element.html">
+<dom-module id="item-address">
+  <template>
+      <style include="flaty-bootstrap">
+          
+          .card{
+/*              max-width: 20rem;*/
+              background: #9c27b0;
+          }
+          
+          .card-header paper-icon-button{
+              float: right;              
+          }
+          
+          .card-header input{
+              float: right;
+          }
+      </style>        
+<!--
+        <div class="content">
+            Rua: Tabelião João Machado N:38
+            Bairro: Santa Tereza
+            Juazeiro do Norte - CE
+            Ao lado do Colégio Polivalente
+        </div>
+-->
+        <div class="card text-white mb-3">
+            <div class="card-header">Endereço de Entrega <paper-icon-button icon="more-vert" on-tap="_showModalAddress"></paper-icon-button></div>
+            <div class="card-body">
+                <h4 class="card-title">Rummenigge Duarte da Silva</h4>
+                <p class="card-text">Rua: Tabelião João Machado N:38
+                                        Bairro: Santa Tereza
+                                        Juazeiro do Norte - CE
+                                        Ao lado do Colégio Polivalente</p>                
+            </div>
+        </div>
+        
+        <modal-element id="modalAddress">
+           <h3>Endereço de Entrega</h3>
+            <div class="card text-white mb-3">
+                <div class="card-header">Endereço de Entrega</div>
+                <div class="card-body">
+                    <h4 class="card-title">Rummenigge Duarte da Silva</h4>
+                    <p class="card-text">Rua: Tabelião João Machado N:38 Bairro: Santa Tereza Juazeiro do Norte - CE Ao lado do Colégio Polivalente</p>
+                </div>
+            </div>           
+        </modal-element>
+  </template>
+  <script>
+    class ItemAddress extends Polymer.Element {
+        static get is() { return 'item-address'; }
+        static get properties() { return {}
+        }
+        
+        _showModalAddress(){
+            this.$.modalAddress.ativa();
+        }
+    }    
+    customElements.define(ItemAddress.is, ItemAddress);
+  </script>
+
+</dom-module>

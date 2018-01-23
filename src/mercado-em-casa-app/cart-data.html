@@ -7,9 +7,21 @@
   <template>
 <!--    <app-localstorage-document key="shop-cart-data" data="{{cart}}"></app-localstorage-document>-->
     <firebase-query
-        id="queryCart"
-        path="{{path}}"
+        id="queryCartItens"
+        path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
         data="{{data}}">     
+    </firebase-query>
+       
+    <firebase-query
+        id="queryAddItem"
+        path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
+        data="{{dataItemAdded}}">     
+    </firebase-query>
+    
+    <firebase-query
+        id="queryRemoveItem"
+        path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
+        data="{{dataItemRemoved}}">     
     </firebase-query>
 <!--path="/carts/[[cartKey]]/itensCart"-->
   </template>
@@ -27,7 +39,8 @@
                 cartKey:{
                     type: String,
                     value: "",
-                    observer: '_cartKeyChanged',                    
+                    observer: '_cartKeyChanged',
+                    computed: '_computedCartKey()'
                 },
             
                 hasItens:{
@@ -77,14 +90,22 @@
             return dataLength > 0;
         }
         
-        _addCartItem(item){            
-            this._setPath("/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart");
-            let cartRef = this.$.queryCart.ref;
+        _addCartItem(item){                        
+            let cartRef = this.$.queryAddItem.ref;
             let key = cartRef.push(item);
         }
         
-        _getItensCartData(){
-            this._setPath("/carts/" + this.cartKey + "/itensCart");
+//        _getItensCartData(){
+//            this._setPath("/carts/" + this.cartKey + "/itensCart");
+//        }
+        
+        _computedCartKey(value){
+            return localStorage.getItem('cartKey');
+            console.log("CartKey Recuperado do LocalStorage = " + this.cartKey);
+        }
+        
+        removeItemCart(key){
+            this.$.queryRemoveItem.ref.child(key).remove();
         }
     }    
     customElements.define(CartData.is, CartData);
