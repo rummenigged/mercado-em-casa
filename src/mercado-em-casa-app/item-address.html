@@ -28,11 +28,8 @@
         <div class="card text-white mb-3">
             <div class="card-header">Endereço de Entrega <paper-icon-button icon="more-vert" on-tap="_showModalAddress"></paper-icon-button></div>
             <div class="card-body">
-                <h4 class="card-title">Rummenigge Duarte da Silva</h4>
-                <p class="card-text">Rua: Tabelião João Machado N:38
-                                        Bairro: Santa Tereza
-                                        Juazeiro do Norte - CE
-                                        Ao lado do Colégio Polivalente</p>                
+                <h4 class="card-title">{{title}}</h4>
+                <p class="card-text"><slot></slot></p>                
             </div>
         </div>
         
@@ -50,9 +47,17 @@
   <script>
     class ItemAddress extends Polymer.Element {
         static get is() { return 'item-address'; }
-        static get properties() { return {}
+        static get properties() { return {
+                title:{
+                    type: Object,
+                    observer:'_observerTest'
+                }
+            }
         }
         
+        _observerTest(){
+            console.log("_observerTest");
+        }
         _showModalAddress(){
             this.$.modalAddress.ativa();
         }

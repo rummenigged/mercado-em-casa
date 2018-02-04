@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="cart-data.html">
 
 
 <dom-module id="login-view">
@@ -57,10 +58,14 @@
             on-error="_showError">
         </firebase-auth>
         
-        <cart-data
-            id="cartData"
-            cartKey={{cartKey}}>
-        </cart-data>                      
+        <firebase-query
+           id="cartKeyQuery"           
+           path="/carts"
+           order-by-child="idUser"
+           equal-to="{{user.uid}}"
+           data="{{cartData}}"> 
+        </firebase-query>
+        
         <div>           
             <form on-submit="_signInWithEmailAndPassword" hidden$="[[signedIn]]">
                 <input value="{{email::input}}" type="email" placeholder="Email">
@@ -75,8 +80,8 @@
 
             <paper-button on-tap="_signOut" hidden$="[[!signedIn]]">
                 <iron-icon icon="account-circle"></iron-icon>
-                <span>Log Out of {{cartKey}} Cart</span>
-            </paper-button>
+                <span>Log Out</span>
+            </paper-button>                        
         </div>
     </template>
     <script>
@@ -93,26 +98,41 @@
                 },                
                 user:{
                     type: Object,
-                    notify: true
+                    notify: true,
+                    value: "",
+                    observer: '_userObserver'
+                },
+                
+                cartData:{
+                    type: Object,
+                    observer: '_cartDataChanged'
                 }
             };
         }
         
         static get observers(){
             return [
-                '_userNameChanged(user)'          
+//                '_userNameChanged(user)'
             ];
         }
         
-        _userNameChanged(user){
-            this.user = user;
-            if(user){
-                localStorage.setItem("username", this.user.displayName);
+        _cartDataChanged(value){            
+            if(value != null && value.length > 0){
+                let keyCart = value[0].$key;
+                localStorage.setItem("cartKey", keyCart);
             }
         }
         
         _signInWithGoogle(){
-            this.$.auth.signInWithPopup();            
+            this.$.auth.signInWithPopup();
+        }
+        
+        _userObserver(user){
+            this.user = user;            
+            if(user){
+                console.log("user id = " + user.uid);
+                localStorage.setItem("username", this.user.displayName);
+            }
         }
         
          _signInWithEmailAndPassword(e){
@@ -120,7 +140,7 @@
           this.error = null;
           this.$.auth.signInWithEmailAndPassword(this.email, this.password);
           this.email = null;
-          this.password = null;
+          this.password = null;            
         };
 
         _createUserWithEmailAndPassword() {
@@ -128,17 +148,22 @@
           this.$.auth.createUserWithEmailAndPassword(this.email, this.password);
           this.email = null;
           this.password = null;
+//          let ref = this.$.cartKeyQuery.ref;
+//            ref.push({
+//                idUser: this.user.uid
+//            });
         };
 
         
         _signOut(){
             this.$.auth.signOut();
             localStorage.removeItem("username");
+            localStorage.removeItem("cartKey");
         }
         
         _showError(e){
             console.log("Auth Error = " + e.detail);
-        }
+        }                
     }    
     window.customElements.define(LoginView.is, LoginView);
     </script>

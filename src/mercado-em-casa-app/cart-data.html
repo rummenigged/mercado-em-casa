@@ -12,9 +12,22 @@
         data="{{data}}">     
     </firebase-query>
        
+    <firebase-auth
+        id="user"
+        user="{{user}}">        
+    </firebase-auth> 
+      
+    <firebase-query
+        id="queryCartItem"
+        path="/carts"
+        order-by-child="idUser"
+        equal-to="{{user.uid}}"
+        data="{{cartItem}}">     
+    </firebase-query>
+       
     <firebase-query
         id="queryAddItem"
-        path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
+        path="/carts/[[cartKey]]/itensCart"
         data="{{dataItemAdded}}">     
     </firebase-query>
     
@@ -23,6 +36,13 @@
         path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
         data="{{dataItemRemoved}}">     
     </firebase-query>
+       
+    <firebase-query
+        id="queryCartList"
+        path="/carts"
+        data="{{cartsList}}">     
+    </firebase-query>
+    
 <!--path="/carts/[[cartKey]]/itensCart"-->
   </template>
 
@@ -39,8 +59,7 @@
                 cartKey:{
                     type: String,
                     value: "",
-                    observer: '_cartKeyChanged',
-                    computed: '_computedCartKey()'
+                    observer: '_cartKeyChanged'                    
                 },
             
                 hasItens:{
@@ -65,12 +84,25 @@
                   value: false,
                   notify: true,
                   readOnly: true
-                }  
+                },
+            
+                cartsList:{
+                    type: Array,
+                    observer: '__cartsListChanged'
+                },
+            
+                user:{
+                    type: Object,
+                    value: ""
+                },
+                cartItem:{
+                    type: Object                    
+                }
             }
         }
         
         _cartKeyChanged(value){
-            
+            console.log("Cart Key = " + value);
         }
         
         _formatCartKey(cartKey){
@@ -79,6 +111,7 @@
         }
         
         __dataChanged(value){
+            
             if(this.data == null || Object.keys(this.data).length === 0){                
                 this._setIsReady(false);
             }else{                    
@@ -86,13 +119,17 @@
             }
         }
         
+        __cartsListChanged(value){
+//            console.log("Carts List Value = " + JSON.stringify(this.cartsList));
+        }
         _computeHasItem(dataLength){
             return dataLength > 0;
         }
         
-        _addCartItem(item){                        
+        _addCartItem(item){            
+            this.cartKey = item.cartKey;
             let cartRef = this.$.queryAddItem.ref;
-            let key = cartRef.push(item);
+            let key = cartRef.push(item.item);
         }
         
 //        _getItensCartData(){
@@ -100,12 +137,19 @@
 //        }
         
         _computedCartKey(value){
-            return localStorage.getItem('cartKey');
-            console.log("CartKey Recuperado do LocalStorage = " + this.cartKey);
+            return localStorage.getItem('cartKey');            
         }
         
         removeItemCart(key){
             this.$.queryRemoveItem.ref.child(key).remove();
+        }
+            
+        getCartKey(userId){        
+            console.log("user id = " + userId);
+//            let list = this.$.queryCartList.data;
+//            for(let i = 0 ; i < list.length() ; i++){ 
+                console.log("Carts List Value = " + JSON.stringify(this.cartsList));
+//            }
         }
     }    
     customElements.define(CartData.is, CartData);

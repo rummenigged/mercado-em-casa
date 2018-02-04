@@ -111,16 +111,27 @@
             data="{{product}}"
             is-ready="{{isReady}}">
         </product-data>
+                        
+        <firebase-query
+           id="cartKeyQuery"           
+           path="/carts"
+           order-by-child="idUser"
+           equal-to="{{user.uid}}"
+           data="{{cartData}}"> 
+        </firebase-query>
         
         <div class="container">           
             <div class="row content-item">
-                <iron-image class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7" src="http://lorempixel.com/400/400" sizing="cover" preload fade></iron-image>            
+                <iron-image class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7" src="../../data/images/none.jpg" sizing="cover" preload fade></iron-image>            
                 <div class="detail col-xs-12 col-sm-12 col-md-6 col-lg-4 offset-lg-1">                   
                         <h3>{{product.name}}</h3>
-                        <span class="price">R${{product.price}}</span>        
+                        <span class="price">R${{product.price}}</span>
                         <paper-input id="qtd" label="Quantidade" type="number"></paper-input>
                         <h4>Descriçao</h4>
                         <p>{{product.description}}</p>
+                        <template is="dom-repeat" items="{{cartData}}" as="item">
+                            <p>{{item.$key}}</p>
+                        </template>
                         <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>
                         <progress-dialog id="progressDialog" visible="{{!isReady}}">
                             Carregando Produto...
@@ -140,10 +151,13 @@
                         readOnly: true                        
                     },                    
                     route: Object,                    
-                    cartKey:{
+                    cartData:{
                         type: String,
-                        value: "",
-                        observer:'_setCartKeyValue'
+                        value: "",                        
+                    },
+                    user:{
+                        type: Object,
+                        value: ""
                     }
                 }
             }
@@ -157,26 +171,26 @@
             _routePageChanged(item){
                 this.itemPathName = item;                
             }
-            
-            _setCartKeyValue(){
-                let cartSotagedKey = localStorage.getItem("cartKey");
-                if(cartSotagedKey != null){
-                    this.cartKey = '/' + cartSotagedKey;                    
-                }
-            }
+                                    
             _addCart(e){                
-//                let cartRef = this.$.query.ref; 
-//                let itemCartRef = this.$.queryItensCart.ref; 
-//                let key = this.__createNewCart(this.$.auth.user.uid, cartRef);
-////                localStorage.setItem("cartKey", key);                       
-//                this.$.qtd.value = null;
-//                console.log(JSON.stringify(this.$.productData.data.price));
-                var produto = new Object();
+                let cartKey;
+                
+                if(this.cartData[0] != null){
+                    cartKey = this.cartData[0].$key;
+                }else{
+                    cartKey = this.$.cartKeyQuery.ref.push({
+                        idUser: this.user.uid
+                    }).key;
+                }
+                
+                console.log("Key Cart Product Detail = " + cartKey);
+                let produto = new Object();
                 produto["id"] = this.$.route.data.idItem;
                 produto["name"] = this.$.productData.data.name;
                 produto["qtd"] = this.$.qtd.value;
                 produto["price"] = this.$.productData.data.price;
-                this.$.productData._addProductToCart(produto);
+                console.log("Cart Key Product Detail = " + cartKey);
+                this.$.productData._addProductToCart(produto, cartKey);
                 
                 this.$.qtd.value = null;
             }

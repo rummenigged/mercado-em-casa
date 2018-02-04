@@ -3,20 +3,30 @@
 <dom-module id="item-category">
 
   <template>
-    <style>
+    <style include="flaty-bootstrap">
      .item {
             @apply --layout-horizontal;
             padding: 10px;
             border-radius: 8px;
             background-color: white;
             border: 1px solid #9c27b0;
-            max-width: 800px;
-            margin: 16px auto 0 auto;
+            width: 30%;
+/*            margin: 16px auto 0 auto;*/
             cursor: pointer;
         }
-    </style>
-<!--    <div href="">[[item.name]]</div>-->
-     <div class="item">[[item.name]]</div>
+        
+        .card{
+            margin-bottom: 50px;
+            margin-right: 50px;
+            max-width: 100%;
+        }
+    </style>     
+        <div class="card bg-dark text-black">
+            <img class="card-img" src="../../data/images/none.jpg" alt="Card image">
+            <div class="card-img-overlay">
+                <h5 class="card-title">[[item.name]]</h5>
+            </div>
+        </div>
   </template>
 
   <script>

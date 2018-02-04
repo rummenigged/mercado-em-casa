@@ -21,15 +21,15 @@
             pattern="/:id/:category"
             data="{{routeData}}">
         </app-route>
-        
+                        
         <firebase-query
             id="query"
             path="/categories/{{routeData.id}}/products"
             order-by-child="name"
-            equal-to="{{inputSearch}}"
+            start-at="{{inputSearch}}"
             data="{{productsList}}">
         </firebase-query>
-        
+                
 <!--
         <product-data
             id="productData"
@@ -41,7 +41,8 @@
             <paper-input class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-4" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
                 <iron-icon icon="search" slot="suffix"></iron-icon>
             </paper-input>            
-        </div>                        
+        </div>
+                                
         <iron-list items="[[productsList]]" as="product">
             <template>                
                 <a href="/detail/{{routeData.id}}/{{routeData.category}}/[[product.$key]]/[[product.name]]">

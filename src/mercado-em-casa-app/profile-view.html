@@ -46,7 +46,7 @@
         <firebase-query
            id="addressQuery"           
            path="/address"
-           order-by-child="userId"
+           order-by-child="idUser"
            equal-to="{{user.uid}}"
            data="{{addressData}}"> 
         </firebase-query>
@@ -67,8 +67,7 @@
                 Nome: {{user.displayName}} <br>
                 Id: {{user.uid}} <br>
                 Email: {{user.email}} <br>
-                Email Verificado: {{user.emailVerified}} <br>
-                Photo Path: {{user.photoURL}}
+                Email Verificado: {{user.emailVerified}} <br>                
             </div>
             
             <div class="info-new-address">
@@ -83,10 +82,11 @@
             
             <div class="info-address">
                 <template is="dom-repeat" items="{{addressData}}" as="item">
-                    {{item.street}} - {{item.number}} - {{item.district}} - {{item.city}} - {{item.state}} - {{item.landmark}} <br>
-                </template>
-
-                <paper-button class="btn btn-block btn-info">Editar</paper-button>
+                    {{item.street}} - {{item.number}} <br>
+                    {{item.district}} <br>
+                    {{item.city}} - {{item.state}} <br>
+                    {{item.landmark}} <br>
+                </template>                
             </div>                
     </template>
     <script>
@@ -95,10 +95,11 @@
             
             static get properties(){
                 return{
-//                    user:{
-//                        type:Object,
-//                        observer:'_testeObserver'
-//                    }
+                    user:{
+                        type:Object,
+                        value: "",
+                        observer:'_testeObserver'
+                    }
                 };
             }
             
@@ -108,7 +109,7 @@
             
             _createNewAddress(){
                 var newAddress = new Object();
-                newAddress["userId"] = this.$.auth.user.uid;
+                newAddress["idUser"] = this.$.auth.user.uid;
                 newAddress["street"] = this.$.inputStreet.value;
                 newAddress["number"] = this.$.inputNumber.value;
                 newAddress["district"] = this.$.inputDistrict.value;

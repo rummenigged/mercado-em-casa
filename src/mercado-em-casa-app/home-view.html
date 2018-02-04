@@ -4,7 +4,7 @@
 <link rel="import" href="progress-dialog.html">
 <dom-module id="home-view">
     <template>
-        <style>
+        <style include="flaty-bootstrap">
             :host{                
             }
 
@@ -26,6 +26,36 @@
                 margin: 16px auto 0 auto;
                 cursor: pointer;
             }
+            
+            .header-banner{                    
+                width: 100%;
+                height: 200px;
+                background-color: purple;
+                padding-top: 100px;
+/*                background-image: url(../../data/images/none.jpg); */
+                background-size: cover;              
+            }
+            
+            #image-banner{        
+                max-height: 200px;
+                max-width: 100%;
+            }
+            
+            .search-field{                
+                width: 100%;
+                z-index: 2;                 
+/*
+                align-items: center;
+                justify-content: center;
+                -webkit-align-items: center;
+                -webkit-justify-content: center;
+*/
+            }  
+            
+            .search-field paper-input{                          
+                border-radius: 10px;
+                background-color: white;
+            }
         </style>
         
         <category-data
@@ -34,14 +64,29 @@
             is-ready="{{isReady}}">
         </category-data>
 
-        <iron-list items="{{categories}}" as="cat">
-            <template>
-                <a on-tap="_setKey" category="[[cat]]" href="/list/[[cat.$key]]/[[cat.name]]">
-                    <item-category item={{cat}}></item-category>
-                </a>                    
-            </template>                  
-        </iron-list>
-        
+       <div class="container-fluid">
+            <div class="header-banner">                
+<!--                <iron-image id="image-banner" src="../../data/images/none.jpg"></iron-image>-->
+<!--                <iron-image id="image-banner" src="http://lorempixel.com/500/300"></iron-image>-->
+                <div class="search-field">
+                        <paper-input class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-4" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
+                            <iron-icon icon="search" slot="suffix"></iron-icon>
+                        </paper-input>
+                </div>
+            </div>                   
+            
+<!--            <iron-list items="{{categories}}" as="cat"> -->
+                   <div class="row">
+                    <template is="dom-repeat" items="{{categories}}" as="cat">
+                       <div class="col-6" col-md-2>
+                        <a on-tap="_setKey" category="[[cat]]" href="/list/[[cat.$key]]/[[cat.name]]">
+                            <item-category item={{cat}}></item-category>
+                        </a>
+                        </div>
+                    </template>
+                    </div>
+<!--            </iron-list>-->
+        </div>
         <progress-dialog id="progressDialog" visible={{!isReady}}>
             Carregando Categorias...
         </progress-dialog>

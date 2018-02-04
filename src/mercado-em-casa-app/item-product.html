@@ -3,8 +3,13 @@
 <dom-module id="item-product">
 
   <template>
-    <style>
+    <style include="flaty-bootstrap">
+        
+        :host{
+            text-decoration: none;
+        }
      .item {
+            position: relative; 
             @apply --layout-horizontal;
             padding: 10px;
             border-radius: 8px;
@@ -14,9 +19,75 @@
             margin: 16px auto 0 auto;
             cursor: pointer;
         }
+        .item img{
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+        }
+        
+        .name{
+            color: black;
+            font-size: 16pt;
+            font-weight: bold;
+        }
+        
+        .description{
+            position: absolute;
+            top: 50px;
+            left: 100px;
+            color: black;
+        }
+        
+        .price{
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            color: teal;
+            font-size: 12pt;
+            font-weight: bold;
+        }
+        
+        .icon-cart{
+            position: absolute;
+            top: 0px;
+            right: 10px;
+            color: black;
+        }
     </style>
 <!--    <div href="">[[item.name]]</div>-->
-     <div class="item">[[item.name]] - [[item.description]]</div>
+<!--    <div class="row">-->
+<!--     <div class="card">-->
+<!--         <img src="../../data/images/none.jpg" alt="Card image">-->
+<!--         <div class="card-title">-->
+<!--              [[item.name]]-->
+<!--         </div>-->
+<!--         <div class="card-text">-->
+<!--             [[item.description]]-->
+<!--         </div>-->
+<!--     </div>-->
+<!--     </div>-->
+ 
+ <div class="item">
+      <img src="../../data/images/none.jpg" alt="Card image">
+      <div class="name row">
+          <div class="col-12">
+              [[item.name]]
+          </div>
+      </div>
+      <div class="description row">
+          <div class="col-12">
+              [[item.description]]
+          </div>
+      </div>
+      <div class="price row">
+          <div class="col-12">
+              R$[[item.price]]
+          </div>
+      </div>
+      <div class="icon-cart">
+          <paper-icon-button icon="add-shopping-cart" on-tap="_addCart"></paper-icon-button>
+      </div>
+ </div>
   </template>
 
   <script>
@@ -28,7 +99,11 @@
                     notify:true
                 }
             }
-        }                       
+        }
+        
+        _addCart(){
+            console.log("Item Added");
+        }
     }
     customElements.define(ItemProduct.is, ItemProduct);
   </script>

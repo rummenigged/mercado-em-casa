@@ -41,31 +41,52 @@
           active="{{pageActive}}">
         </app-route>
         
+        <firebase-auth            
+            id="auth"
+            user={{user}}>            
+        </firebase-auth>
+<!--
         <cart-data
             id="cartData"
             cart-key={{routeData.key}}
             data="{{data}}"
             has-itens={{hasItem}}
-            is-ready={{isReady}}> 
+            is-ready={{isReady}}>
         </cart-data>
+-->
         
+        <firebase-query
+           id="cartQuery"
+           path="/carts"
+           order-by-child="idUser"
+           equal-to="{{user.uid}}"
+           data="{{data}}"> 
+        </firebase-query>
+          
+        <firebase-query
+           id="cartItensQuery"
+           path="{{pathItensCart}}"
+           data="{{dataItens}}"> 
+        </firebase-query>
+            
         <h1>Carrinho</h1>        
         <div hidden$="[[hasItem]]">
             <p>Your <iron-icon icon="shopping-cart"></iron-icon> is empty.</p>
         </div>
-        <progress-dialog id="progressDialog" visible={{!isReady}}>
+        
+        <progress-dialog id="progressDialog" visible=[[!isReady]]>
             Carregando Carrinho...
         </progress-dialog>
-<!--        <iron-list items="{{data}}" as="item-cart">-->
-            <template is="dom-repeat" items="{{data}}" as="item-cart">
-                <div>
-                    <div class="item">
-                        <item-cart item={{item-cart}} on-delete="_deleteItemCart"></item-cart>
-                    </div>
+
+        <template is="dom-repeat" items="{{dataItens}}" as="item-cart">
+            <div>
+                <div class="item">
+                   {{item-cart.name}}
+                    <item-cart item={{item-cart}} on-delete="_deleteItemCart"></item-cart>
                 </div>
-            </template>                  
-<!--        </iron-list>-->
-        <paper-button id="bt-chekout-cart"><a href="/checkout">Avancar</a></paper-button> 
+            </div>
+        </template>                  
+        <paper-button id="bt-chekout-cart"><a href="/checkout">Avançar</a></paper-button>
     </template>
     <script>
     class CartView extends Polymer.Element{
@@ -79,6 +100,22 @@
                 },
                 route: {
                     type:Object                    
+                },
+                user:{
+                    type: Object,
+                    value: ""
+                },
+                data:{
+                    type: Object,
+                    observer: '_dataChanged'
+                },
+                pathItensCart:{
+                    type: String,
+                    value: ""
+                },
+                isReady:{
+                    type: Boolean,
+                    value: false
                 }
             };
         }
@@ -101,6 +138,26 @@
             let key = e.currentTarget.item.$key;
             this.$.cartData.removeItemCart(key)
         }
+        
+        _dataChanged(value){
+            if(value != null && value.length > 0){
+                console.log("Entrei no if");
+                for(var i = 0 ; i < value.length ; i++){
+                    console.log("cart Key = " + this.__stringfy(value[i].$key));
+                    this.pathItensCart = '/carts/' + value[i].$key + '/itensCart';
+                    this.isReady = true;
+                }    
+            }            
+        }
+        
+        _extractArray(value){
+            let itens;
+            for(var item in value){
+//                console.log(this.__stringfy(item));
+                itens = item;
+            }
+            return itens;
+        }    
     }
     window.customElements.define(CartView.is, CartView);
     </script>

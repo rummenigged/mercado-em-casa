@@ -84,9 +84,8 @@
           color: white;
         }
         
-        iron-pages{
-                padding: 0% 5%;
-                color: black;
+        iron-pages{                
+            color: black;
         }
         
         paper-item{
@@ -98,7 +97,43 @@
             z-index: 2;
         }
         
-        /*        Small devices (landscape phones, 576px and up)*/
+        .drawer-header{
+            height: 120px;
+            background-color: #9c27b0;
+            color: white;
+        }
+        
+        .drawer-content ul{
+            list-style: none;
+            display: block;
+/*
+            justify-content: flex-start;
+            align-items: flex-start;
+            -webkit-align-items: flex-start;
+            -webkit-justify-content: flex-start;
+*/
+        }
+        .drawer-content ul a{
+            color: black;
+        }
+        
+        .drawer-content ul a:hover{
+            text-decoration: none;
+            
+        }
+        
+        .profile{
+            height: 70px;
+            width: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-align-items: center;            
+            -webkit-justify-content: center;
+            background-color: lightgray;
+        }
+        
+/*        Small devices (landscape phones, 576px and up)*/
         @media (min-width: 576px) {
             
         }
@@ -143,25 +178,22 @@
     </firebase-app>
     
     <cart-data id="cartData"></cart-data>
+    
         <app-drawer id="drawer" swipe-open>
 
             <div class="drawer-header">
                 <span>Mercado Em Casa</span>
+                <iron-image class="rounded-circle border profile" src="{{user.photoURL}}" sizing="cover" preload></iron-image>
             </div>
             <div class="drawer-content">
-            <ul>
-                <li>Home</li>
-                <li>Perfil</li>
-                <li>Configuraçoes</li>
-                <li>Sair</li>
-            </ul>
-<!--
-                <iron-list items="[[menuItems]]" as="item">
-                    <template>
-                            <span class="item-drawer"><a href="[[item.nameRoute]]">[[item.name]]</a></span>    
-                        </template>
-                </iron-list>
--->
+               
+                <ul>
+                    <li><a href="/home">Home</a></li>
+                    <li><a href="/profile">Perfil</a></li>
+                    <li><a href="/adress">Endereços</a></li>
+                    <li><a href="/settings">Configuraçoes</a></li>
+                    <li><a href="/login">Sair</a></li>
+                </ul>
             </div>
         </app-drawer>       
         <app-header-layout>
@@ -171,11 +203,15 @@
                 <div main-title>
                   Mercado em Casa
                 </div>
-                <paper-icon-button icon="search"></paper-icon-button>
-                <a href="/home"><paper-icon-button icon="home"></paper-icon-button></a>
-                <a href="/cart/-L2C2UQbfZ3aeHfK4CO-"><paper-icon-button icon="shopping-cart"></paper-icon-button></a>
-                <paper-menu-button vertical-align="bottom" horizontal-align="right">
-                    <paper-icon-button icon="account-circle" slot="dropdown-trigger" alt="menu"></paper-icon-button>
+<!--                <paper-icon-button icon="search"></paper-icon-button>-->
+<!--                <a href="/home"><paper-icon-button icon="home"></paper-icon-button></a>-->
+                <template is="dom-if" if="{{_isListPage(routeData.page)}}">                   
+                    <a href=""><paper-icon-button icon="filter-list"></paper-icon-button></a>    
+                </template>
+                <a href="/cart"><paper-icon-button icon="shopping-cart"></paper-icon-button></a> 
+<!--                <paper-menu-button vertical-align="bottom" horizontal-align="right">-->
+<!--                    <paper-icon-button icon="account-circle" slot="dropdown-trigger" alt="menu"></paper-icon-button>-->
+<!--
                     <paper-listbox slot="dropdown-content">
                         <template is="dom-if" if="{{user}}">
                             <a href="/profile"><paper-item>Profile</paper-item></a><br>
@@ -185,7 +221,8 @@
                             <a href="/login"><paper-item>Log In</paper-item></a>
                         </template>
                     </paper-listbox>        
-                </paper-menu-button>
+-->
+<!--                </paper-menu-button>-->
               </app-toolbar>          
             </app-header>               
         </app-header-layout>
@@ -243,7 +280,7 @@
             
         ready(){
             super.ready();
-            this.addEventListener('add-cart-item', (e)=> this.$.cartData._addCartItem(e.detail.item));
+            this.addEventListener('add-cart-item', (e)=> this.$.cartData._addCartItem(e.detail));
         }
         
       _setCartKey(){
@@ -267,6 +304,14 @@
         
       _drawerToggle(){
         this.$.drawer.toggle();
+      }
+        
+      _isListPage(page){
+          if(page == 'list'){
+              return true;
+          }
+          
+          return false;
       }
     }    
     window.customElements.define(MercadoEmCasaApp.is, MercadoEmCasaApp);

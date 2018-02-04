@@ -47,13 +47,14 @@
                   }
                 }
             }
-            _addProductToCart(produto){
+            _addProductToCart(produto, cartKey){
 //                this._setPath("/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart");
 //                let cartRef = this.$.query.ref;
 //                let key = cartRef.push(produto);
                 this.dispatchEvent(new CustomEvent('add-cart-item', {
                     bubbles: true, composed: true, detail:{
-                            item: produto                        
+                            item: produto,
+                            cartKey: cartKey
                         }
                     }
                   )

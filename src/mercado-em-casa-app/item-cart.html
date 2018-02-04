@@ -4,7 +4,7 @@
 <dom-module id="item-cart">
 
   <template>
-    <style>
+    <style include="flaty-bootstrap">
         :host {
           display: block;    
         }
@@ -48,32 +48,40 @@
             margin-left: 30px;
         }
     </style>
-    <div class="content flex">
+    <div class="content flex container">
         <iron-image src="http://lorempixel.com/60/60"></iron-image>
-        <div class="name">
-            <a href="">[[item.name]]</a>
+        <div class="name row">
+            <div class="col">
+                <a href="">[[item.name]]</a>
+            </div>
+            <div class="col">
+                <paper-icon-button icon="delete" on-tap="_removeItemCart"></paper-icon-button>
+            </div>
         </div>
-        <div class="selector-qtd">
-         <label prefix>Qtd:</label>
-        <select id="quantitySelect" aria-label="Change quantity" value="[[entry.quantity]]"
-            on-change="_quantityChange">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-        </select>
+        <div class="row">
+            <div class="selector-qtd col">
+                <label prefix>Qtd:</label>
+                <select 
+                    id="quantitySelect" 
+                    aria-label="Change quantity" 
+                    value="[[entry.quantity]]"
+                    on-change="_quantityChange">
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                </select>
+            </div>
         </div>
-        <div class="price">[[_formatPrice(item.price)]]</div>
-        <paper-icon-button icon="delete" on-tap="_removeItemCart"></paper-icon-button>
-<!--        <div class="price">[[item.price]]</div>-->
+        <div class="price">[[_formatPrice(item.price)]]</div>        
     </div>    
   </template>
 
@@ -81,19 +89,24 @@
     class ItemCart extends Polymer.Element {
         static get is() { return 'item-cart'; }
         static get properties() { return {
-            item:{
-                type: Object,
-                notify:true
-            }
+                item:{
+                    type: Object,
+                    notify:true
+                }                
             }
         }                       
         _formatPrice(price) {
-            return price ? 'R$' + price : '';
+            return price ? 'R$' + (price * this.quantity)  : '';
         }
         
         _removeItemCart(e){
 //            this.fire('delete', {name: 'item'});
             this.dispatchEvent(new CustomEvent('delete'));
+        }
+        
+        _quantityChange(e){
+            let sId = this.$.quantitySelect;
+            console.log("Item Selected = " + sId.options[sId.selectedIndex].text);
         }
     }
     customElements.define(ItemCart.is, ItemCart);
