@@ -30,18 +30,18 @@
           data="{{addressData}}">          
       </firebase-query>
       
-      <item-address title="{{user.displayName}}">
-          <div class="info-address">
-                <template is="dom-repeat" items="{{addressData}}" as="item">
+      <item-address title="{{user.displayName}}">          
+            <template is="dom-repeat" items="{{addressData}}" as="item">                       
+                <div hidden$={{!item.main}}>
                     {{item.street}}, {{item.number}} - {{item.district}} <br>
                     {{item.city}} - {{item.state}} <br>
-                    {{item.landmark}} <br>                    
-                </template>                
-            </div>
+                    {{item.landmark}} <br>
+                </div>
+            </template>            
       </item-address>
       <item-form-payment></item-form-payment>
       <item-order-resume></item-order-resume>
-      <paper-button id="bt-finish-order"><a href="/checkout">Finalizar Pedido</a></paper-button> 
+      <paper-button id="bt-finish-order" style="display: none;"><a href="/checkout">Finalizar Pedido</a></paper-button> 
   </template>
   <script>
     class CheckoutView extends Polymer.Element {
@@ -54,7 +54,7 @@
                 user:{
                     type: Object,
                     value:""
-                }
+                },                
             }
         }
     }    

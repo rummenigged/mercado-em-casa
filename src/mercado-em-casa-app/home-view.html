@@ -5,7 +5,8 @@
 <dom-module id="home-view">
     <template>
         <style include="flaty-bootstrap">
-            :host{                
+            :host{  
+                margin-top: 50px;
             }
 
             h1{
@@ -30,10 +31,13 @@
             .header-banner{                    
                 width: 100%;
                 height: 200px;
+                margin-bottom: 30px;
                 background-color: purple;
-                padding-top: 100px;
-/*                background-image: url(../../data/images/none.jpg); */
-                background-size: cover;              
+/*                padding-top: 100px;*/
+                background-image: url(../../data/images/food-background.jpg);
+                opacity: 0.5;
+                filter: alpha(opacity=50);  /* For IE8 and earlier */
+                background-size: cover;
             }
             
             #image-banner{        
@@ -56,6 +60,39 @@
                 border-radius: 10px;
                 background-color: white;
             }
+            
+            a{
+                color: yellow;
+                background-color: white;
+            }
+            
+    /*        Small devices (landscape phones, 576px and up)*/
+            @media (min-width: 576px) {
+                a{
+                    color: red;
+                }
+            }
+
+    /*        Medium devices (tablets, 768px and up)*/
+            @media (min-width: 768px) {    
+                a{
+                    color: black;
+                }
+            }
+
+    /*        Large devices (desktops, 992px and up)*/
+            @media (min-width: 992px) {
+                a{
+                    color: blue;
+                }
+            }
+
+    /*        Extra large devices (large desktops, 1200px and up)*/
+            @media (min-width: 1200px) {
+                a{
+                    color: green;
+                }
+            }
         </style>
         
         <category-data
@@ -64,31 +101,32 @@
             is-ready="{{isReady}}">
         </category-data>
 
-       <div class="container-fluid">
+       <div>
             <div class="header-banner">                
 <!--                <iron-image id="image-banner" src="../../data/images/none.jpg"></iron-image>-->
 <!--                <iron-image id="image-banner" src="http://lorempixel.com/500/300"></iron-image>-->
-                <div class="search-field">
-                        <paper-input class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-4" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
-                            <iron-icon icon="search" slot="suffix"></iron-icon>
-                        </paper-input>
+                <div class="search-field" style="display: none">
+                    <paper-input class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-4" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
+                        <iron-icon icon="search" slot="suffix"></iron-icon>
+                    </paper-input>
                 </div>
-            </div>                   
+                <p class="text-center">Boa Noite, Rummenigge Duarte</p>
+            </div>
             
 <!--            <iron-list items="{{categories}}" as="cat"> -->
-                   <div class="row">
-                    <template is="dom-repeat" items="{{categories}}" as="cat">
-                       <div class="col-6" col-md-2>
+            <div class="row mx-auto">
+                <template is="dom-repeat" items="{{categories}}" as="cat">
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
                         <a on-tap="_setKey" category="[[cat]]" href="/list/[[cat.$key]]/[[cat.name]]">
                             <item-category item={{cat}}></item-category>
                         </a>
-                        </div>
-                    </template>
                     </div>
+                </template>
+            </div>
 <!--            </iron-list>-->
         </div>
         <progress-dialog id="progressDialog" visible={{!isReady}}>
-            Carregando Categorias...
+            Só Um Minuto, Estamos Carregando as Categorias Para Você...
         </progress-dialog>
     </template>
     <script>

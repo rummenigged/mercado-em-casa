@@ -3,27 +3,72 @@
 <dom-module id="item-order-resume">
   <template>
       <style include="flaty-bootstrap">
+          :host{
+              margin-bottom: 40px;
+          }
           .card{
 /*              max-width: 20rem;*/
               background: #9c27b0;
             }
       </style>
-    
+        <firebase-auth
+            id="auth"
+            user="{{user}}">                
+        </firebase-auth>
+
+        <firebase-query
+            id="cartQuery"
+            path="/carts"
+            order-by-child="idUser"
+            equal-to="{{user.uid}}"
+            data={{cartData}}>
+        </firebase-query>
+           
+        <firebase-query
+            id="cartItensQuery"
+            path="{{pathItensCart}}"
+            data={{cartItemsData}}>
+        </firebase-query>
+        
+        
         <div class="card text-white mb-3">
-            <div class="card-header">Resumo do Pedido
-            </div>
+            <div class="card-header">Resumo do Pedido</div>
             <div class="card-body">
-                <h4 class="card-title">Arror Urbano - 1kg</h4>
-                <p class="card-text">Quantidade: 2x 
-                    <br> Preco: R$5.00 
-                </p>
+               <template is="dom-repeat" items="{{cartItemsData}}" as="itemCart">
+                    <h4 class="card-title">{{itemCart.name}}</h4>
+                    <p class="card-text">Quantidade: {{itemCart.qtd}}x
+                        <br> Preco: R${{itemCart.price}}
+                    </p>
+                </template>
             </div>
-        </div>
+        </div>        
   </template>
   <script>
     class ItemOrderResume extends Polymer.Element {
         static get is() { return 'item-order-resume'; }
-        static get properties() { return {}
+        static get properties() { return {
+                user:{
+                    type: Object,
+                    value: ""
+                },
+                cartData:{
+                    type: Object,
+                    observer: '_cartDataChanged'
+                },
+                pathItensCart:{
+                    type: String,
+                    value: ""
+                }
+            }
+        }
+        
+        _cartDataChanged(value){            
+            if(value != null && value.length > 0){                
+                for(var i = 0 ; i < value.length ; i++){
+                    console.log("Item Order Resume = " + value[i].$key);
+                    this.pathItensCart = '/carts/' + value[i].$key + '/itensCart';                    
+                }    
+            }                    
         }
     }    
     customElements.define(ItemOrderResume.is, ItemOrderResume);

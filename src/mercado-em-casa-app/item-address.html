@@ -17,14 +17,20 @@
               float: right;
           }
       </style>        
-<!--
-        <div class="content">
-            Rua: Tabelião João Machado N:38
-            Bairro: Santa Tereza
-            Juazeiro do Norte - CE
-            Ao lado do Colégio Polivalente
-        </div>
--->
+        
+        <firebase-auth
+            id="auth"
+            user="{{user}}">                
+        </firebase-auth>
+        
+        <firebase-query
+            id="addressQuery"
+            path="/address"
+            order-by-child="idUser"
+            equal-to="{{user.uid}}"
+            data={{addressData}}>
+        </firebase-query>
+        
         <div class="card text-white mb-3">
             <div class="card-header">Endereço de Entrega <paper-icon-button icon="more-vert" on-tap="_showModalAddress"></paper-icon-button></div>
             <div class="card-body">
@@ -33,16 +39,22 @@
             </div>
         </div>
         
+        
         <modal-element id="modalAddress">
-           <h3>Endereço de Entrega</h3>
+            <template is="dom-repeat" items="{{addressData}}" as="address">
+            <h3>Endereço de Entrega</h3>
             <div class="card text-white mb-3">
                 <div class="card-header">Endereço de Entrega</div>
                 <div class="card-body">
-                    <h4 class="card-title">Rummenigge Duarte da Silva</h4>
-                    <p class="card-text">Rua: Tabelião João Machado N:38 Bairro: Santa Tereza Juazeiro do Norte - CE Ao lado do Colégio Polivalente</p>
+                    <h4 class="card-title">{{user.displayName}}</h4>
+                    <p class="card-text">{{address.street}}, {{address.number}} - {{address.district}} <br>
+                                            {{address.city}} - {{address.state}} <br>
+                                            {{address.landmark}} <br></p>
                 </div>
-            </div>           
+            </div>
+            </template>
         </modal-element>
+        
   </template>
   <script>
     class ItemAddress extends Polymer.Element {
@@ -51,6 +63,10 @@
                 title:{
                     type: Object,
                     observer:'_observerTest'
+                },
+                user:{
+                    type: Object,
+                    value: ""
                 }
             }
         }

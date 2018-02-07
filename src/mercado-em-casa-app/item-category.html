@@ -4,27 +4,24 @@
 
   <template>
     <style include="flaty-bootstrap">
-     .item {
-            @apply --layout-horizontal;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: white;
-            border: 1px solid #9c27b0;
-            width: 30%;
-/*            margin: 16px auto 0 auto;*/
-            cursor: pointer;
+        
+        a{            
+            background-color: #fff;
+        }
+        .card{
+            margin-bottom: 50px;        
         }
         
-        .card{
-            margin-bottom: 50px;
-            margin-right: 50px;
-            max-width: 100%;
+        .card-img{
+            background-color: #000;
+            opacity: 0.7;
+            filter: alpha(opacity=50);  /* For IE8 and earlier */
         }
-    </style>     
-        <div class="card bg-dark text-black">
-            <img class="card-img" src="../../data/images/none.jpg" alt="Card image">
+    </style>
+        <div class="card text-black">
+            <img class="card-img" src="../../data/images/food-background.jpg" alt="Card image">
             <div class="card-img-overlay">
-                <h5 class="card-title">[[item.name]]</h5>
+                <h5 class="card-title text-center">[[item.name]]</h5>                
             </div>
         </div>
   </template>

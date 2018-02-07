@@ -116,6 +116,7 @@
                 newAddress["city"] = this.$.inputCity.value;
                 newAddress["state"] = this.$.inputState.value;
                 newAddress["landmark"] = this.$.inputLandmark.value;
+                newAddress["main"] = true;
                 
                 this.$.addressQuery.ref.push(newAddress);
             }
