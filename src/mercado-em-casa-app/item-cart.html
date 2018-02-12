@@ -6,33 +6,65 @@
   <template>
     <style include="flaty-bootstrap">
         :host {
-          display: block;    
+          display: block;  
         }
         
+/*
         .content{
             padding: 10px;                 
         }
+*/
         
+/*
         .flex {
             @apply --layout-horizontal;
+*/
 /*            @apply --layout-flex-auto;*/
 /*            margin-left: 24px;*/
-        }
+/*        }*/
         .item {
+            position: relative;
             @apply --layout-horizontal;
-            padding: 10px;
+            padding: 5px;
             border-radius: 8px;
             background-color: white;
-            border: 1px solid #9c27b0;
-            max-width: 800px;
+            border: 1px solid #9c27b0;            
             margin: 16px auto 0 auto;
             cursor: pointer;
+            z-index: 1;
         }
         
-         .name {
-
+        .item-icon-delete{
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        .item-qtd-picker{
+            position: absolute;
+            left: 20%;
+            top: 45%;
+        }
+         
+        .item-name {
+            margin-left: 10px;
+            font-size: 12pt;
+            font-weight: bold;             
           }
         
+        .item-price{
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            color: teal;
+            font-size: 14pt;
+            font-weight: bold;
+        }
+        
+        .product-image{
+            width: 70px;
+            height: 70px;
+        }
+/*
         .name a{
             display: inline-block;
             max-width: 100%;
@@ -47,17 +79,25 @@
             padding-left: 40px;
             margin-left: 30px;
         }
+*/
     </style>
-    <div class="content flex container">
-        <iron-image src="http://lorempixel.com/60/60"></iron-image>
-        <div class="name row">
-            <div class="col">
-                <a href="">[[item.name]]</a>
-            </div>
-            <div class="col">
-                <paper-icon-button icon="delete" on-tap="_removeItemCart"></paper-icon-button>
-            </div>
+    <div class="item">  
+<!--       <iron-image src="http://lorempixel.com/70/70" class="col-2" class="product-image"></iron-image>-->
+       <iron-image src="../../data/images/food-background.jpg" class="col-2 product-image" class="product-image"></iron-image>
+        <div class="item-name">[[item.name]]</div>        
+        <div class="item-icon-delete">
+            <paper-icon-button icon="delete" on-tap="_removeItemCart"></paper-icon-button>            
         </div>
+        <div class="item-price">[[_formatPrice(item.price,item.qtd)]]</div>
+        <div class="item-qtd-picker">
+<!--            <paper-button class="" on-tap="_removeQuantity"><iron-icon icon="remove"></iron-icon></paper-button>-->                
+<!--            <paper-button class="" on-tap="_setQuantity"><iron-icon icon="add"></iron-icon></paper-button>-->
+            <button type="button" class="btn btn-primary btn-sm btn-success" on-tap="_addQuantity"><iron-icon icon="add"></iron-icon></button>
+            <span class="value-qtd">{{item.qtd}}</span>
+            <button type="button" class="btn btn-primary btn-sm btn-danger" on-tap="_removeQuantity"><iron-icon icon="remove"></iron-icon></button>
+        </div>
+                
+<!--
         <div class="row">
             <div class="selector-qtd col">
                 <label prefix>Qtd:</label>
@@ -81,7 +121,8 @@
                 </select>
             </div>
         </div>
-        <div class="price">[[_formatPrice(item.price)]]</div>        
+        <div class="price">[[_formatPrice(item.price)]]</div>
+-->
     </div>    
   </template>
 
@@ -92,21 +133,70 @@
                 item:{
                     type: Object,
                     notify:true
-                }                
+                },
+                qtdItem:{
+                    type: Number,
+                    value: 0,
+                    computed:'_computeQtdItem(item)',
+                    readOnly: true                    
+                }
             }
-        }                       
-        _formatPrice(price) {
-            return price ? 'R$' + (price * this.quantity)  : '';
+        }
+        
+        _computeQtdItem(item){
+//            console.log("Item = " + item.qtd);
+            return item.qtd;
+        }
+        
+        _formatPrice(price, qtd) {
+            let mPrice = parseFloat(price);
+            let mQtd = parseFloat(qtd);
+            let finalPrice = (mPrice * mQtd);            
+            return price ? 'R$' + (finalPrice)  : '';
         }
         
         _removeItemCart(e){
 //            this.fire('delete', {name: 'item'});
-            this.dispatchEvent(new CustomEvent('delete'));
+            this.dispatchEvent(new CustomEvent('delete',{
+                bubbles: true, composed: true, detail:{
+                    key: this.item.$key
+                }
+            }));
         }
         
         _quantityChange(e){
             let sId = this.$.quantitySelect;
             console.log("Item Selected = " + sId.options[sId.selectedIndex].text);
+        }
+        
+        _addQuantity(){            
+//            this.dispatchEvent(new CustomEvent('increase-quantity'));
+            let newQtd = this.item.qtd + 1;            
+            this.dispatchEvent(new CustomEvent('quantity-changed', {
+                    bubbles: true, composed: true, detail:{
+                        quantity: newQtd,
+                        key: this.item.$key
+                    }
+                }
+              )
+            );            
+        }
+        
+        _removeQuantity(){
+//            this.dispatchEvent(new CustomEvent('decrease-quantity'));
+            if(this.item.qtd > 1){
+                let newQtd = this.item.qtd - 1;
+                console.log("item qtd = " + this.item.qtd);
+                console.log("newQtd = " + newQtd);
+                this.dispatchEvent(new CustomEvent('quantity-changed', {
+                        bubbles: true, composed: true, detail:{
+                            quantity: newQtd,
+                            key: this.item.$key                        
+                        }
+                    }
+                  )
+                );
+            }
         }
     }
     customElements.define(ItemCart.is, ItemCart);

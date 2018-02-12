@@ -1,0 +1,125 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner-lite.html">
+
+<dom-module id="modal-dialog">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+        .modal {
+            display: block;
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding: 20px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 40%; /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        paper-icon-button {
+            color: #9b1a1a;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        paper-icon-button:hover,
+        paper-icon-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+    /*        Small devices (landscape phones, 576px and up)*/
+        @media (min-width: 576px) {
+        
+        }
+
+    /*        Medium devices (tablets, 768px and up)*/
+        @media (min-width: 768px) {    
+        
+        }
+
+    /*        Large devices (desktops, 992px and up)*/
+        @media (min-width: 992px) {
+         
+        }
+
+    /*        Extra large devices (large desktops, 1200px and up)*/
+        @media (min-width: 1200px) {
+       
+        }
+        
+    </style>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <h3>[[title]]</h3>
+            <p>[[text]]</p>
+            <slot></slot>
+        </div>    
+    </div>
+  </template>
+
+  <script>
+    class ModalDialog extends Polymer.Element {
+        static get is() { return 'modal-dialog'; }
+        static get properties() { return {
+                visible:{
+                    type: Boolean,                    
+                    observer: '__visibleChanged'
+                },
+                title:{
+                    type: String,
+                    value:""                    
+                },
+                text:{
+                    type: String,
+                    value:""
+                }
+            }                               
+        }
+        
+        __visibleChanged(){            
+            if(this.visible){
+                this._ativa();    
+            }else{
+                this._desativa();
+            }
+        }
+        
+         _ativa(){            
+            this.$.myModal.style.display= "block";
+        }
+        
+        _desativa(){            
+            this.$.myModal.style.display= "none";
+        }
+        
+        toogle(){
+            if(this.$.myModal.style.display == none){
+                this.$.myModal.style.display= "block";
+            }else{
+                this.$.myModal.style.display= "none";
+            }
+        }
+    }
+    customElements.define(ModalDialog.is, ModalDialog);
+  </script>
+
+</dom-module>

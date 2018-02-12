@@ -1,3 +1,4 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
@@ -18,6 +19,7 @@
 <link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="modal-dialog.html">
 <link rel="import" href="../style/flaty-bootstrap.html">
 <link rel="import" href="category-data.html">
 
@@ -172,7 +174,8 @@
     
     <firebase-auth
         id="auth"
-        user={{user}}>
+        user={{user}}
+        signed-in="{{signedIn}}">
     </firebase-auth>
     
     <firebase-app
@@ -196,7 +199,8 @@
                     <li><a href="/profile">Perfil</a></li>
                     <li><a href="/adress">Endereços</a></li>
                     <li><a href="/settings">Configuraçoes</a></li>
-                    <li><a href="/login">Sair</a></li>
+                    <li hidden$="[[!signedIn]]"><a href="/login">Sair</a></li>
+                    <li hidden$="[[signedIn]]"><a href="/login">Entrar</a></li>
                 </ul>
             </div>
         </app-drawer>       
@@ -207,30 +211,13 @@
                 <div main-title>
                   Mercado em Casa
                 </div>
-<!--                <paper-icon-button icon="search"></paper-icon-button>-->
-<!--                <a href="/home"><paper-icon-button icon="home"></paper-icon-button></a>-->
                 <template is="dom-if" if="{{_isListPage(routeData.page)}}">                   
-                    <a href=""><paper-icon-button icon="filter-list"></paper-icon-button></a>    
+                    <a href=""><paper-icon-button icon="filter-list" on-tap="_showModalOrder"></paper-icon-button></a>
                 </template>
-                <a href="/cart"><paper-icon-button icon="shopping-cart"></paper-icon-button></a> 
-<!--                <paper-menu-button vertical-align="bottom" horizontal-align="right">-->
-<!--                    <paper-icon-button icon="account-circle" slot="dropdown-trigger" alt="menu"></paper-icon-button>-->
-<!--
-                    <paper-listbox slot="dropdown-content">
-                        <template is="dom-if" if="{{user}}">
-                            <a href="/profile"><paper-item>Profile</paper-item></a><br>
-                            <a href="/login"><paper-item>Log Out</paper-item></a>
-                        </template>
-                        <template is="dom-if" if="{{!user}}">                            
-                            <a href="/login"><paper-item>Log In</paper-item></a>
-                        </template>
-                    </paper-listbox>        
--->
-<!--                </paper-menu-button>-->
+                <a href="/cart" hidden$="[[!signedIn]]"><paper-icon-button icon="shopping-cart"></paper-icon-button></a> 
               </app-toolbar>          
             </app-header>               
         </app-header-layout>
-<!--    </app-drawer-layout>   -->
                 
         <iron-pages
             selected="[[page]]"
@@ -272,7 +259,11 @@
             type: String,
             value: "",
             observer: '_setCartKey'   
-          } 
+          },
+          user:{
+              type: Object,
+              value: null
+          }    
         };
       }
                   
@@ -301,11 +292,7 @@
       _showPage404(){
         this.page = 'view-404';
       }
-
-      _handlerClick(){
-        console.log(localStorage.getItem("cartKey"));
-      }
-        
+  
       _drawerToggle(){
         this.$.drawer.toggle();
       }
@@ -316,6 +303,15 @@
           }
           
           return false;
+      }
+                  
+      _showModalOrder(){          
+          this.dispatchEvent(
+              new CustomEvent('show-modal-order', {
+                    bubbles: true, composed: true, detail:{}
+                }
+              )
+          );
       }
     }    
     window.customElements.define(MercadoEmCasaApp.is, MercadoEmCasaApp);

@@ -4,7 +4,7 @@
 <link rel="import" href="product-data.html">
 <dom-module id="category-view">
     <template>
-        <style>
+        <style include="flaty-bootstrap">
             :host{
                 z-index: -30;
             }
@@ -13,6 +13,9 @@
                 color: black;
             }
 
+            #btn-ordenar{
+                float: right;
+            }
         </style>
         
         <app-route
@@ -29,20 +32,13 @@
             start-at="{{inputSearch}}"
             data="{{productsList}}">
         </firebase-query>
-                
-<!--
-        <product-data
-            id="productData"
-            data="{{products}}">
-        </product-data> 
--->
-                        
-         <div class="row">
-            <paper-input class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-4" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
+                 
+        <div class="row">
+            <paper-input class=" offset-1 col-10 col-sm-10 col-md-10 col-lg-10 col-xl-10" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
                 <iron-icon icon="search" slot="suffix"></iron-icon>
             </paper-input>            
         </div>
-                                
+        
         <iron-list items="[[productsList]]" as="product">
             <template>                
                 <a href="/detail/{{routeData.id}}/{{routeData.category}}/[[product.$key]]/[[product.name]]">
@@ -69,7 +65,12 @@
                     
                     key: String,                   
                 };
-            }            
+            }
+            
+            ready(){
+                super.ready();
+                this.addEventListener('show-modal-order', (e)=> console.log("show modal"));
+            }
             
 //            _routeChanged(){                
 //                let categoryKey = this.$.appRoute.data.id;

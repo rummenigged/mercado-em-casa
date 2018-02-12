@@ -26,6 +26,7 @@
                 background-color: #9c27b0;
                 color: white;
                 font-weight: bold;
+                z-index: 2
             }
         </style>
         
@@ -57,33 +58,38 @@
         
         <firebase-query
            id="cartQuery"
-           path="/carts"
-           order-by-child="idUser"
-           equal-to="{{user.uid}}"
+           path="/userOwner/{{user.uid}}/cart"
            data="{{data}}"> 
         </firebase-query>
           
+<!--
         <firebase-query
            id="cartItensQuery"
            path="{{pathItensCart}}"
            data="{{dataItens}}"> 
         </firebase-query>
+-->
             
-        <h1>Carrinho</h1>        
-        <div hidden$="[[hasItem]]">
+        <h1>Carrinho</h1>
+        <div hidden$="[[data]]">
             <p>Your <iron-icon icon="shopping-cart"></iron-icon> is empty.</p>
         </div>
         
+<!--
         <progress-dialog id="progressDialog" visible=[[!isReady]]>
             Carregando Carrinho...
         </progress-dialog>
+-->
 
-        <template is="dom-repeat" items="{{dataItens}}" as="item-cart">
+        <template is="dom-repeat" items="{{data}}" as="item-cart">
             <div>
-                <div class="item">
-                   {{item-cart.name}}
-                    <item-cart item={{item-cart}} on-delete="_deleteItemCart"></item-cart>
-                </div>
+<!--                <div class="item">                   -->
+                <item-cart item={{item-cart}}                     
+                    on-delete="_deleteItemCart"                                 
+                    qtd-item="[[itemQtd]]"
+                    on-quantity-changed="updateQuantity">
+                </item-cart>
+<!--                </div>-->
             </div>
         </template>                  
         <paper-button id="bt-chekout-cart"><a href="/checkout">Avançar</a></paper-button>
@@ -94,70 +100,40 @@
         
         static get properties(){
             return{
-                cartList:{
-                  type: Object,
-                  observer: '_cartListChanged'    
-                },
                 route: {
-                    type:Object                    
+                    type: Object                    
                 },
                 user:{
                     type: Object,
                     value: ""
                 },
                 data:{
-                    type: Object,
-                    observer: '_dataChanged'
+                    type: Object                    
                 },
-                pathItensCart:{
-                    type: String,
-                    value: ""
-                },
-                isReady:{
+                hasItens:{
                     type: Boolean,
                     value: false
-                }
+                }                
             };
         }
-        
-        static get observers(){
-            return [
-//              '_routePageChanged(routeData.key)'          
-            ];
-        }
-        
-//        _routePageChanged(key){            
-//            this.$.cartData._getItensCartData();
-//         }   
         
         __stringfy(data){
             return JSON.stringify(data);
         }
         
-        _deleteItemCart(e){
-            let key = e.currentTarget.item.$key;
-            this.$.cartData.removeItemCart(key)
+        _deleteItemCart(e){            
+            let key = e.detail.key;
+            this.$.cartQuery.ref.child(key).remove();
         }
         
-        _dataChanged(value){
-            if(value != null && value.length > 0){
-                console.log("Entrei no if");
-                for(var i = 0 ; i < value.length ; i++){
-                    console.log("cart Key = " + this.__stringfy(value[i].$key));
-                    this.pathItensCart = '/carts/' + value[i].$key + '/itensCart';
-                    this.isReady = true;
-                }    
-            }            
+        _itemQtdChanged(value){
+            this.$.cartQuery.ref.child(item.$key).update({qtd: value});
         }
-        
-        _extractArray(value){
-            let itens;
-            for(var item in value){
-//                console.log(this.__stringfy(item));
-                itens = item;
-            }
-            return itens;
-        }    
+
+        updateQuantity(e){
+            let item = e.detail;            
+            this.$.cartQuery.ref.child(item.key).update({qtd: item.quantity});
+        }
     }
     window.customElements.define(CartView.is, CartView);
     </script>

@@ -9,7 +9,7 @@
             text-decoration: none;
         }
      .item {
-            position: relative; 
+            position: relative;
             @apply --layout-horizontal;
             padding: 10px;
             border-radius: 8px;
@@ -18,6 +18,7 @@
             max-width: 800px;
             margin: 16px auto 0 auto;
             cursor: pointer;
+            z-index: 1;
         }
         .item img{
             width: 80px;
@@ -36,6 +37,8 @@
             top: 50px;
             left: 100px;
             color: black;
+            max-width: 300px;
+            
         }
         
         .price{
@@ -52,42 +55,31 @@
             top: 0px;
             right: 10px;
             color: black;
+            z-index: 10;
         }
     </style>
-<!--    <div href="">[[item.name]]</div>-->
-<!--    <div class="row">-->
-<!--     <div class="card">-->
-<!--         <img src="../../data/images/none.jpg" alt="Card image">-->
-<!--         <div class="card-title">-->
-<!--              [[item.name]]-->
-<!--         </div>-->
-<!--         <div class="card-text">-->
-<!--             [[item.description]]-->
-<!--         </div>-->
-<!--     </div>-->
-<!--     </div>-->
- 
- <div class="item">
-      <img src="../../data/images/none.jpg" alt="Card image">
-      <div class="name row">
-          <div class="col-12">
-              [[item.name]]
+
+     <div class="item">
+          <img src="../../data/images/none.jpg" alt="Card image">
+          <div class="name row">
+              <div class="col-12">
+                  [[item.name]]
+              </div>
           </div>
-      </div>
-      <div class="description row">
-          <div class="col-12">
-              [[item.description]]
+          <div class="description row">
+              <div class="col-10 text-truncate">
+                  [[item.description]]
+              </div>
           </div>
-      </div>
-      <div class="price row">
-          <div class="col-12">
-              R$[[item.price]]
+          <div class="price row">
+              <div class="col-12">
+                  R$[[item.price]]
+              </div>
           </div>
-      </div>
-      <div class="icon-cart">
-          <paper-icon-button icon="add-shopping-cart" on-tap="_addCart"></paper-icon-button>
-      </div>
- </div>
+          <div class="icon-cart">
+              <paper-icon-button icon="add-shopping-cart" on-tap="_addCart"></paper-icon-button>
+          </div>
+     </div>
   </template>
 
   <script>
@@ -99,11 +91,7 @@
                     notify:true
                 }
             }
-        }
-        
-        _addCart(){
-            console.log("Item Added");
-        }
+        }                
     }
     customElements.define(ItemProduct.is, ItemProduct);
   </script>

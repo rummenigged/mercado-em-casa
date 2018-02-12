@@ -35,7 +35,7 @@
                 background-color: purple;
 /*                padding-top: 100px;*/
                 background-image: url(../../data/images/food-background.jpg);
-                opacity: 0.5;
+                opacity: 0.7;
                 filter: alpha(opacity=50);  /* For IE8 and earlier */
                 background-size: cover;
             }
@@ -56,6 +56,15 @@
 */
             }  
             
+            .text-welcome{
+                position: absolute;
+                width: 100%;                
+                top: 160px;
+                z-index: 1;                
+                font-size: 18pt;
+                color: white;
+            }
+            
             .search-field paper-input{                          
                 border-radius: 10px;
                 background-color: white;
@@ -70,6 +79,10 @@
             @media (min-width: 576px) {
                 a{
                     color: red;
+                    
+                }
+                #image-banner{        
+                    max-height: 300px;
                 }
             }
 
@@ -77,6 +90,9 @@
             @media (min-width: 768px) {    
                 a{
                     color: black;
+                }
+                #image-banner{        
+                    max-height: 500px;
                 }
             }
 
@@ -101,7 +117,12 @@
             is-ready="{{isReady}}">
         </category-data>
 
+        <firebase-auth
+            id="auth"
+            user={{user}}>                
+        </firebase-auth>
        <div>
+            <p class="text-center align-middle text-welcome">Boa Noite, {{user.displayName}}</p>
             <div class="header-banner">                
 <!--                <iron-image id="image-banner" src="../../data/images/none.jpg"></iron-image>-->
 <!--                <iron-image id="image-banner" src="http://lorempixel.com/500/300"></iron-image>-->
@@ -109,8 +130,7 @@
                     <paper-input class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-4" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
                         <iron-icon icon="search" slot="suffix"></iron-icon>
                     </paper-input>
-                </div>
-                <p class="text-center">Boa Noite, Rummenigge Duarte</p>
+                </div>                
             </div>
             
 <!--            <iron-list items="{{categories}}" as="cat"> -->

@@ -10,31 +10,11 @@
 /*              max-width: 20rem;*/
               background: #9c27b0;
             }
-      </style>
-        <firebase-auth
-            id="auth"
-            user="{{user}}">                
-        </firebase-auth>
-
-        <firebase-query
-            id="cartQuery"
-            path="/carts"
-            order-by-child="idUser"
-            equal-to="{{user.uid}}"
-            data={{cartData}}>
-        </firebase-query>
-           
-        <firebase-query
-            id="cartItensQuery"
-            path="{{pathItensCart}}"
-            data={{cartItemsData}}>
-        </firebase-query>
-        
-        
+      </style>        
         <div class="card text-white mb-3">
             <div class="card-header">Resumo do Pedido</div>
             <div class="card-body">
-               <template is="dom-repeat" items="{{cartItemsData}}" as="itemCart">
+               <template is="dom-repeat" items="{{item}}" as="itemCart">
                     <h4 class="card-title">{{itemCart.name}}</h4>
                     <p class="card-text">Quantidade: {{itemCart.qtd}}x
                         <br> Preco: R${{itemCart.price}}
@@ -51,13 +31,10 @@
                     type: Object,
                     value: ""
                 },
-                cartData:{
-                    type: Object,
-                    observer: '_cartDataChanged'
-                },
-                pathItensCart:{
-                    type: String,
-                    value: ""
+                item:{
+                    type: Array,
+                    value: "",
+                    observer:'_itemChangeObserver'
                 }
             }
         }
@@ -69,6 +46,9 @@
                     this.pathItensCart = '/carts/' + value[i].$key + '/itensCart';                    
                 }    
             }                    
+        }
+        
+        _itemChangeObserver(value){            
         }
     }    
     customElements.define(ItemOrderResume.is, ItemOrderResume);

@@ -129,8 +129,7 @@
         
         _userObserver(user){
             this.user = user;            
-            if(user){
-                console.log("user id = " + user.uid);
+            if(user){                
                 localStorage.setItem("username", this.user.displayName);
             }
         }

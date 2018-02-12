@@ -12,11 +12,12 @@
                 color: black;
             }
             .container{
-                color: black;
+                color: black;                
             }
             .price{
-                color: green;
+                color: #18BC9C;
                 font-weight: bold;
+                font-size: 20pt;                
             }
             iron-image{
                 width: 100%;
@@ -38,6 +39,22 @@
                 font-weight: bold;                
             }
             
+            .qtd-field{
+                width: 100%;
+                margin-top: 20px;
+                margin-bottom: 30px;
+                text-align: right;
+            }
+            
+            .value-qtd{
+                font-size: 20pt;
+                margin-right: 10px;
+                margin-left: 10px;
+            }
+            
+            .product-description{
+                text-align: justify;
+            }
     /*        Small devices (landscape phones, 576px and up)*/
             @media (min-width: 576px) {
                 iron-image{
@@ -58,7 +75,7 @@
     /*        Medium devices (tablets, 768px and up)*/
             @media (min-width: 768px) {
                 iron-image{
-                    height: 400px;
+                    height: 300px;
                 }
                 
                 #bt-add-product-to-cart{                    
@@ -111,31 +128,50 @@
             data="{{product}}"
             is-ready="{{isReady}}">
         </product-data>
-                        
+    
         <firebase-query
-           id="cartKeyQuery"           
-           path="/carts"
-           order-by-child="idUser"
-           equal-to="{{user.uid}}"
-           data="{{cartData}}"> 
+            id="addItemCart"
+            path="/userOwner/{{user.uid}}/cart"
+            data="{{cartsUserList}}">
         </firebase-query>
+           
+        <firebase-query
+            id="addItemCart"
+            path="/productOwner/{{routeData.idItem}}/prices"
+            data="{{supermarketData}}">
+        </firebase-query>
+                        
+        <progress-dialog id="progressDialog" visible="{{!isReady}}">
+                            Carregando Produto...
+        </progress-dialog>
         
         <div class="container">           
             <div class="row content-item">
-                <iron-image class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7" src="../../data/images/none.jpg" sizing="cover" preload fade></iron-image>            
-                <div class="detail col-xs-12 col-sm-12 col-md-6 col-lg-4 offset-lg-1">                   
-                        <h3>{{product.name}}</h3>
-                        <span class="price">R${{product.price}}</span>
-                        <paper-input id="qtd" label="Quantidade" type="number"></paper-input>
-                        <h4>Descriçao</h4>
-                        <p>{{product.description}}</p>
-                        <template is="dom-repeat" items="{{cartData}}" as="item">
-                            <p>{{item.$key}}</p>
-                        </template>
-                        <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>
-                        <progress-dialog id="progressDialog" visible="{{!isReady}}">
-                            Carregando Produto...
-                        </progress-dialog>                                                            
+                <iron-image class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7" 
+                   src="../../data/images/none.jpg" 
+                   sizing="cover" preload fade>                    
+                </iron-image>            
+                <div class="detail col-xs-12 col-sm-12 col-md-6 col-lg-4 offset-lg-1">
+                    <div class="row">
+                        <h3 class="col-9">{{product.name}}</h3>
+                        <span class="price col-2">R${{product.price}}</span>   
+                        <template is="dom-repeat" items="{{supermarketData}}" as="supermarket">
+                            <span class="price col-2">R${{supermarket.price}}</span>
+                            <span class="col-2">{{supermarket.name}}</span>
+                        </template>                     
+                    </div>
+    <!--                        <paper-input id="qtd" label="Quantidade" type="number"></paper-input>-->
+                    <div class="qtd-field">
+                        <paper-button class="btn-danger" on-tap="_removeQuantity"><iron-icon icon="remove"></iron-icon></paper-button>
+                        <span class="value-qtd">{{qtdProduct}}</span>                            
+                        <paper-button class="btn-success" on-tap="_setQuantity"><iron-icon icon="add"></iron-icon></paper-button>
+                    </div>
+                    <div class="row">
+                        <h4 class="col-12">Descriçao</h4>
+                        <p class="product-description col-12">{{product.description}}</p>    
+                    </div>
+
+                    <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>
                 </div>
             </div>            
         </div>
@@ -158,6 +194,10 @@
                     user:{
                         type: Object,
                         value: ""
+                    },
+                    qtdProduct:{
+                        type: Object,
+                        value: 0
                     }
                 }
             }
@@ -172,27 +212,26 @@
                 this.itemPathName = item;                
             }
                                     
-            _addCart(e){                
-                let cartKey;
-                
-                if(this.cartData[0] != null){
-                    cartKey = this.cartData[0].$key;
-                }else{
-                    cartKey = this.$.cartKeyQuery.ref.push({
-                        idUser: this.user.uid
-                    }).key;
-                }
-                
-                console.log("Key Cart Product Detail = " + cartKey);
+            _addCart(e){                                
                 let produto = new Object();
+                let cartRef = this.$.addItemCart.ref;
                 produto["id"] = this.$.route.data.idItem;
                 produto["name"] = this.$.productData.data.name;
-                produto["qtd"] = this.$.qtd.value;
+                produto["qtd"] = this.qtdProduct;
                 produto["price"] = this.$.productData.data.price;
-                console.log("Cart Key Product Detail = " + cartKey);
-                this.$.productData._addProductToCart(produto, cartKey);
+                cartRef.push(produto);
+                this.qtdProduct = 0;
+            }
+            
+            _setQuantity(){
+                this.qtdProduct++;
+            }
+            
+            _removeQuantity(){
+                if(this.qtdProduct > 0){
+                    this.qtdProduct--;    
+                }
                 
-                this.$.qtd.value = null;
             }
         }
         window.customElements.define(ProductDetail.is, ProductDetail);

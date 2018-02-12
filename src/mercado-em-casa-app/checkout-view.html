@@ -29,6 +29,12 @@
           equal-to="{{user.uid}}"
           data="{{addressData}}">          
       </firebase-query>
+         
+     <firebase-query
+          id="itensCartQuery"
+          path="/userOwner/{{user.uid}}/cart"
+          data="{{cartData}}">
+      </firebase-query>
       
       <item-address title="{{user.displayName}}">          
             <template is="dom-repeat" items="{{addressData}}" as="item">                       
@@ -40,7 +46,7 @@
             </template>            
       </item-address>
       <item-form-payment></item-form-payment>
-      <item-order-resume></item-order-resume>
+      <item-order-resume item="[[cartData]]"></item-order-resume>
       <paper-button id="bt-finish-order" style="display: none;"><a href="/checkout">Finalizar Pedido</a></paper-button> 
   </template>
   <script>
@@ -54,7 +60,7 @@
                 user:{
                     type: Object,
                     value:""
-                },                
+                },
             }
         }
     }    

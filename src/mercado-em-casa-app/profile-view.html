@@ -45,9 +45,7 @@
         
         <firebase-query
            id="addressQuery"           
-           path="/address"
-           order-by-child="idUser"
-           equal-to="{{user.uid}}"
+           path="/userOwner/{{user.uid}}/address"
            data="{{addressData}}"> 
         </firebase-query>
         

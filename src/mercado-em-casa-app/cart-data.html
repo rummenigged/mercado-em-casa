@@ -6,6 +6,7 @@
 
   <template>
 <!--    <app-localstorage-document key="shop-cart-data" data="{{cart}}"></app-localstorage-document>-->
+<!--
     <firebase-query
         id="queryCartItens"
         path="/carts/-L2C2UQbfZ3aeHfK4CO-/itensCart"
@@ -42,7 +43,14 @@
         path="/carts"
         data="{{cartsList}}">     
     </firebase-query>
+-->
     
+    
+    <firebase-query
+       id="addItemCart"
+       path="/userOwner/{{user.uid}}/cart"
+       data="{{cartsUserList}}">
+    </firebase-query>
 <!--path="/carts/[[cartKey]]/itensCart"-->
   </template>
 
@@ -101,8 +109,7 @@
             }
         }
         
-        _cartKeyChanged(value){
-            console.log("Cart Key = " + value);
+        _cartKeyChanged(value){            
         }
         
         _formatCartKey(cartKey){
@@ -126,9 +133,8 @@
             return dataLength > 0;
         }
         
-        _addCartItem(item){            
-            this.cartKey = item.cartKey;
-            let cartRef = this.$.queryAddItem.ref;
+        _addCartItem(item){                        
+            let cartRef = this.$.addItemCart.ref;
             let key = cartRef.push(item.item);
         }
         
@@ -143,14 +149,7 @@
         removeItemCart(key){
             this.$.queryRemoveItem.ref.child(key).remove();
         }
-            
-        getCartKey(userId){        
-            console.log("user id = " + userId);
-//            let list = this.$.queryCartList.data;
-//            for(let i = 0 ; i < list.length() ; i++){ 
-                console.log("Carts List Value = " + JSON.stringify(this.cartsList));
-//            }
-        }
+                    
     }    
     customElements.define(CartData.is, CartData);
   </script>
