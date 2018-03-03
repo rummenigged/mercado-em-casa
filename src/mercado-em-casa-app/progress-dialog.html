@@ -80,7 +80,8 @@
         static get is() { return 'progress-dialog'; }
         static get properties() { return {
                 visible:{
-                    type: Boolean,                    
+                    type: Boolean,
+                    value: false,
                     observer: '__visibleChanged'
                 }
             }                               

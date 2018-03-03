@@ -1,0 +1,348 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="modal-element.html">
+<dom-module id="item-order-address">
+  <template>
+      <style include="flaty-bootstrap">
+          
+          :host{
+              display: flex;              
+          }
+          
+          .card{
+/*              max-width: 20rem;*/
+              background: #9c27b0;
+          }
+          
+          .other-address{
+              cursor: pointer;
+          }
+          
+          .card-header paper-icon-button{
+              float: right;              
+          }
+          
+          .card-header input{
+              float: right;
+          }
+          
+          .card-body{
+              background-color: white;
+              color: black;
+          }
+          
+          #fav-icon{
+              color: gold;
+          }
+          
+          .icon-check{
+              float: right;
+          }
+          
+          .item{
+              padding: 5px 10px 5px 10px;
+              box-shadow: 0 0 20px #7e7e7e;
+              border-radius: 8px;
+              color: #868686;
+              
+              margin: 20px 10px 0 10px;              
+          }
+          
+          iron-icon{
+              color: black;
+          }                
+          
+          .name{
+              color: black;
+          }
+          
+          .item span{
+              display: block;
+          }
+          
+          .input-check{
+              float: right;              
+          }
+      </style>        
+        
+        <firebase-auth
+            id="auth"
+            user="{{user}}">                
+        </firebase-auth>
+        
+      <!--Endereço de Entrega do Carrinho-->
+        <firebase-document
+          id="addressCartQuery"
+          path="/userOwner/{{user.uid}}/cart/orderAddress"
+          data="{{orderAddressCart}}">
+        </firebase-document>
+        
+<!--############################### UI Components ###############################-->                       
+<!--
+        <div class="card text-white mb-3">
+            <div class="card-header">Endereço de Entrega <paper-icon-button icon="more-vert" on-tap="_showModalAddress"></paper-icon-button></div>
+            <div class="card-body">
+                <div class="row">
+                <h4 class="card-title col-8">{{title}}</h4>
+-->
+<!--                <iron-icon icon="star" class="offset-2 col-2" id="fav-icon" hidden$="{{!orderAddress.main}}"></iron-icon>-->
+<!--
+                <iron-icon icon="star" class="offset-2 col-2" id="fav-icon" hidden$="{{!orderAddressMock.main}}"></iron-icon>
+                </div>
+-->
+                
+<!--
+                <p class="card-text">
+                    <slot></slot>                      
+                    {{orderAddress.street}}, {{orderAddress.number}} - {{orderAddress.district}} <br>
+                    {{orderAddress.city}} - {{orderAddress.state}} <br>
+                    {{orderAddress.landmark}}   
+                </p>
+-->
+<!--
+                <p class="card-text">
+                    <slot></slot>                      
+                    {{orderAddressMock.street}}, {{orderAddressMock.number}} - {{orderAddressMock.district}} <br>
+                    {{orderAddressMock.city}} - {{orderAddressMock.state}} <br>
+                    {{orderAddressMock.landmark}}   
+                </p>
+-->
+<!--
+            </div>
+        </div>
+-->
+        
+        
+<!--        <modal-element id="modalAddress">-->
+<!--
+            <template is="dom-repeat" items="{{addressList}}" as="address">            
+                <div class="card text-white mb-3 other-address" item-address="[[address]]" on-tap="_setOrderAddress">
+                    <div class="card-header">{{user.displayName}}</div>
+                    <div class="card-body">
+                        <h4 class="card-title">{{user.displayName}}</h4>
+                        <div class="row">
+                            <h4 class="card-title col-8">{{title}}</h4>
+                            <iron-icon icon="star" class="offset-10 col-2" id="fav-icon" hidden$="{{!address.main}}"></iron-icon>    
+                        </div>
+                        <p class="card-text">{{address.street}}, {{address.number}} - {{address.district}} <br>
+                                                {{address.city}} - {{address.state}} <br>
+                                                {{address.landmark}} - {{address.main}}<br></p>
+                    </div>
+                </div>
+            </template>
+-->
+           
+<!--
+       
+            <template is="dom-repeat" items="{{addressList}}" as="address">            
+                <div class="card text-white mb-3 other-address" address="[[address]]" on-tap="_setOrderAddress">
+-->
+<!--                    <div class="card-header">{{user.displayName}}</div>-->
+<!--
+                    <div class="card-header">Endereço de Entrega
+                        <iron-icon icon="check" class="icon-check" hidden$="{{!address.main}}"></iron-icon>
+                    </div>                    
+                    <div class="card-body">
+-->
+<!--                        <h4 class="card-title">Rummenigge Duarte</h4>-->
+<!--
+                        <div class="row">
+                            <h4 class="card-title col-8">{{title}}</h4>
+                            <iron-icon icon="star" class="offset-10 col-2" id="fav-icon" hidden$="{{!address.main}}"></iron-icon>    
+                        </div>
+                        <p class="card-text">{{address.street}}, {{address.number}} - {{address.district}} <br>
+                                                {{address.city}} - {{address.state}} <br>
+                                                {{address.landmark}} - {{address.main}}<br></p>
+                    </div>
+                </div>
+            </template>
+
+        </modal-element>
+-->
+        
+        
+        <div class="item">           
+            <div class="row">                               
+                <div class="col-1">
+                    <iron-icon icon="home"></iron-icon>
+                </div>                                
+                <div class="col-11 name">
+                    <span>{{address.name}} {{address.surname}}</span>
+                </div>
+                <div class="col-10 offset-1">
+                    <span>{{address.number}}, {{address.street}}</span>
+                </div>
+                <div class="col-10 offset-1">
+                    <span>{{address.district}} - {{address.cep}}</span>                                    
+                </div>
+                <input type="checkbox" id="checkAddress" on-change="_addressSelected" class="input-check">
+            </div>
+        </div>
+  </template>
+  <script>
+    class ItemOrderAddress extends Polymer.Element {
+        static get is() { return 'item-order-address'; }
+        static get properties() { return {
+//                title:{
+//                    type: String                    
+//                },                
+//                orderAddress:{
+//                    type: Object,
+//                    observer: '_orderAddressChanged',
+//                    notify: true
+//                },                
+//                addressList:{
+//                    type: Array
+//                },
+//                orderAddressCart:{
+//                    type: Object,
+//                    observer: '_orderAddressCartChanged',
+//                    readOnly: true
+//                },
+//                addressListMock:{
+//                    type: Array,
+//                    computed: '_computeAddressListMock()'
+//                },
+//                orderAddressMock:{
+//                    type: Object,
+//                    readOnly: true,
+//                    computed: '_computeOrderAddressMock(addressListMock)'
+//                }
+            
+                address:{
+                    type: Object,                    
+                },
+                selectedAddress:{
+                    type: Object,
+                    notify: true
+                }
+            }
+        }                                          
+        
+        _addressSelected(e){
+            let checked = e.path[0].checked;
+            if(checked){                
+                delete this.address.$key;
+                this.selectedAddress = this.address;                
+            }else{
+                this.selectedAddress = null;
+            }
+        }
+        
+        
+        
+        
+        
+        
+//        _computeOrderAddress(addressList){
+//            let address = null;
+//            addressList.forEach(function(item){
+//                if(item.main){
+//                    address = item;
+//                }
+//            });
+//
+//            return address;
+//        }
+//                
+//        _computeAddressListMock(){
+//            let addressList = new Array;
+//            
+//            for(let i = 0 ; i < 3 ; i++){            
+//                let addressMock = new Object();
+//                addressMock["street"] = "Rua  Tabelião João Machado " + i;
+//                addressMock["number"] = "38";
+//                addressMock["district"] = "Santa Tereza " + i;
+//                addressMock["city"] = "Juazeiro do Norte ";
+//                addressMock["state"] = "CE";
+//                addressMock["name"] = "Rummenigge";
+//                addressMock["surname"] = "Duarte "  + i;
+//                addressMock["cep"] = "63050-400";
+//                addressMock["complement"] = "";
+//                addressMock["landmark"] = "Ao lado do Colégio Polivalente";
+//                if(i == 1){
+//                    addressMock["main"] = true;
+//                }else{
+//                    addressMock["main"] = false;
+//                }
+//                addressList.push(addressMock);
+//            }
+//            
+//            return addressList;
+//        }
+//        
+//        _computeOrderAddressMock(addressListMock){
+//            let address = null;
+//            addressListMock.forEach(function(item){
+//                if(item.main){
+//                    address = item;
+//                }
+//            });
+//
+//            return address;
+//        }
+//        
+//        _orderAddressChanged(address){
+//            console.log("_orderAddressChanged");
+//            console.log(address);
+//        }
+//        
+//        _addressListChanged(list){
+//            console.log(list);
+//            let address = Object.assign({}, this.orderAddress);
+//            if(list.length != 0){
+////                console.log('if');
+////                console.log(this.orderAddress);
+//                if(Object.keys(this.orderAddress).length === 0){
+////                    console.log("_orderAddressChanged if");
+////                    console.log(address);
+//                    list.forEach(function(item){
+//                        if(item.main){
+//                            address = item;
+////                            console.log(address);
+//                        }
+//                    });
+//                    
+////                    address = list.map(item => {
+////                        if(item.main){
+////                            return item;
+////                        }
+////                    });                    
+//                    this.orderAddress['$key'] = address.$key;
+//                    delete address.$key;
+//                    this.orderAddress.$key = address;                    
+//                }
+//            }
+            
+//            if(list.length != 0){
+//                if(this.orderAddressCart == null || Object.keys(this.orderAddressCart).length === 0){
+//                    list.forEach(function(item){
+//                       if(item.main){
+//                           this.orderAddress = item;
+//                       }
+//                    });
+//                }
+//            }else{
+//                console.log("Sem Endereços Cadastrados");
+//            }
+//        }        
+//
+//        _setOrderAddress(e){
+////            let key = e.currentTarget.category.$key;
+//            let address = e.currentTarget.address;
+////            console.log(address);
+////            this.orderAddress = address;
+//            this.$.modalAddress._desativa();
+//        }
+//        
+//        _showModalAddress(){
+//            this.$.modalAddress.ativa();
+//        }
+//        
+//        _orderAddressCartChanged(value){
+//            console.log(value);
+//        }
+    }    
+    customElements.define(ItemOrderAddress.is, ItemOrderAddress);
+  </script>
+
+</dom-module>

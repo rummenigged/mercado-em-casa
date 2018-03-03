@@ -395,6 +395,7 @@ Polymer({
         },
 
         __onFirebaseChildChanged: function(snapshot) {
+            console.log("__onFirebaseChildChanged");
           var key = snapshot.key;
           var prev = this.__map[key];
 

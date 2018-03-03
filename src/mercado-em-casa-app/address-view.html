@@ -1,0 +1,244 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+
+<link rel="import" href="item-address.html">
+
+<dom-module id="address-view">
+  <template>
+    <style include="flaty-bootstrap">
+        :host {          
+        }
+        
+        #bt-save-address{
+                background: teal;
+                color: white;
+        }
+        
+        .info-new-address{
+/*                display: block;*/
+        }
+        
+        paper-fab{
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #9c27b0;
+        }
+/*        Small devices (landscape phones, 576px and up)*/
+        @media (min-width: 576px) {
+/*
+           .left-content{                
+                padding-top: 15px;
+            }             
+*/
+        }
+
+/*        Medium devices (tablets, 768px and up)*/
+        @media (min-width: 768px) {            
+        
+        }
+
+/*        Large devices (desktops, 992px and up)*/
+        @media (min-width: 992px) {
+            
+        }
+
+/*        Extra large devices (large desktops, 1200px and up)*/
+        @media (min-width: 1200px) {
+            
+        }
+    </style>
+    
+    <firebase-auth
+        id="auth"
+        user="{{user}}">        
+    </firebase-auth>
+    
+    <firebase-query
+        id="addressQuery"
+        path="/userOwner/{{user.uid}}/address"
+        data="{{addressList}}">        
+    </firebase-query>
+            
+    <div>
+        <div class="info-new-address row">
+<!--
+            <div class="col-12 col-sm-6 col-md-6 col-lg-12">
+                <item-address                     
+                    title="Rummenigge Duarte"                         
+                    item-address="{{addressMock}}"                         
+                    on-edit="_editAddress"                        
+                    on-delete="_deleteAddress"
+                    on-favorite="_setFavoriteAddress">
+                </item-address>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-6 col-lg-12">
+                <item-address                     
+                    title="Rummenigge Duarte"                         
+                    item-address="{{addressMock}}"                         
+                    on-edit="_editAddress"                        
+                    on-delete="_deleteAddress"
+                    on-favorite="_setFavoriteAddress">
+                </item-address>
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-12">
+                <item-address                     
+                    title="Rummenigge Duarte"                         
+                    item-address="{{addressMock}}"                         
+                    on-edit="_editAddress"                        
+                    on-delete="_deleteAddress"
+                    on-favorite="_setFavoriteAddress">
+                </item-address>
+            </div>
+-->
+            <template is="dom-repeat" items="{{addressList}}" as="address">            
+                <div class="col-12 col-sm-6 col-md-6 col-lg-12">
+<!--                    <item-address title="{{address.name}}" item-address="{{address}}" on-edit="_editAddress"></item-address>-->
+                    <item-address                     
+                        title="{{address.name}}"                         
+                        item-address="{{address}}"                         
+                        on-edit="_editAddress"                        
+                        on-delete="_deleteAddress"
+                        on-favorite="_setFavoriteAddress">
+                    </item-address>
+            </div>
+            </template>
+        </div>
+<!--
+            <div class="info-address">
+                <template is="dom-repeat" items="{{addressList}}" as="item">
+                    {{item.street}} - {{item.number}} <br>
+                    {{item.district}} <br>
+                    {{item.city}} - {{item.state}} <br>
+                    {{item.landmark}} <br>
+                </template>                
+            </div>                
+-->
+    <modal-address id="modalNewAddress" on-confirm="_createNewAddress">
+            <div class="row">
+                <paper-input id="inputName" label="Nome" value="" class="col-12 col-sm-6"></paper-input>
+                <paper-input id="inputSurname" label="Sobrenome" value="" class="col-12 col-sm-6"></paper-input>
+                <paper-input id="inputCEP" label="CEP" value="" class="col-12 col-sm-3"></paper-input>
+                <paper-input id="inputStreet" label="Rua" value="" class="col-12 col-sm-7"></paper-input>
+                <paper-input id="inputNumber" label="Numero" value="" class="col-12 col-sm-2"></paper-input>
+                <paper-input id="inputComplement" label="Complemento" value="" class="col-12 col-sm-8"></paper-input>
+                <paper-input id="inputDistrict" label="Bairro" value="" class="col-12 col-sm-4"></paper-input>
+                <paper-input id="inputLandmark" label="Ponto de Referência" value="" class="col-12 col-sm-12"></paper-input>
+                <paper-input id="inputCity" label="Cidade" value="" class="col-10 col-sm-10"></paper-input>
+                <paper-input id="inputState" label="UC" value="" class="col-2 col-sm-2"></paper-input>
+                <div class="form-check col-4">
+                    <label class="form-check-label">
+                          <input id="inputFavorite" class="form-check-input" type="checkbox" value="" checked="">
+                          Favorito
+                    </label>
+                </div>
+<!--                <input class="form-check-input" type="checkbox" value="Favorito" checked="true">-->
+<!--                <paper-button id="bt-save-address" class="btn btn-block" on-tap="_createNewAddress">Salvar</paper-button>-->
+            </div>
+    </modal-address>
+       
+    </div>
+<!--    <paper-fab icon="add" on-tap="_showModalNewAddres" hidden$="true"></paper-fab>-->
+  </template>
+
+  <script>
+    class AddressView extends Polymer.Element {
+        static get is() { return 'address-view'; }
+        static get properties() { 
+            return {
+                addressMock:{
+                    tye: Object,
+                    computed: '_computeAddressMock()'
+                },
+                addressList:{
+                    type: Array                    
+                },
+                addressListMock:{
+                    type: Array,
+                    value: function(){
+                        let array = ['Address 1', 'Address 2', 'Address 3'];
+//                        let array = ['Address 1', 'Address 2'];
+                        return array;
+                    }
+                }
+            }
+        }
+        
+        _computeAddressMock(){
+            let addressMock = new Object();
+            addressMock["street"] = "Rua Tabelião João Machado";
+            addressMock["number"] = "38";
+            addressMock["district"] = "Santa Tereza";
+            addressMock["city"] = "Juazeiro do Norte";
+            addressMock["state"] = "CE";
+            addressMock["name"] = "Rummenigge Duarte";
+            addressMock["surname"] = "Duarte";
+            addressMock["cep"] = "63050-400";
+            addressMock["complement"] = "";
+            addressMock["landmark"] = "Ao lado do Colégio Polivalente";
+            addressMock["main"] = true;
+
+            return addressMock;
+        }
+        
+        _createNewAddress(){            
+            let queryRef = this.$.addressQuery.ref;
+//            var newAddress = new Object();
+//            newAddress["street"] = this.$.inputStreet.value;
+//            newAddress["number"] = this.$.inputNumber.value;
+//            newAddress["district"] = this.$.inputDistrict.value;
+//            newAddress["city"] = this.$.inputCity.value;
+//            newAddress["state"] = this.$.inputState.value;
+//            newAddress["name"] = this.$.inputName.value;
+//            newAddress["surname"] = this.$.inputSurname.value;
+//            newAddress["cep"] = this.$.inputCEP.value;
+//            newAddress["complement"] = this.$.inputComplement.value;
+//            newAddress["landmark"] = this.$.inputLandmark.value;
+//            newAddress["main"] = this.$.inputFavorite.checked;
+            
+            var newAddress = {};
+            newAddress.street = this.$.inputStreet.value;
+            newAddress.number = this.$.inputNumber.value;
+            newAddress.district = this.$.inputDistrict.value;
+            newAddress.city = this.$.inputCity.value;
+            newAddress.state = this.$.inputState.value;
+            newAddress.name = this.$.inputName.value;
+            newAddress.surname = this.$.inputSurname.value;
+            newAddress.cep = this.$.inputCEP.value;
+            newAddress.complement = this.$.inputComplement.value;
+            newAddress.landmark = this.$.inputLandmark.value;
+            newAddress.main = this.$.inputFavorite.checked;
+
+            queryRef.push(newAddress);                
+            this.$.modalNewAddress.desativa();                   
+        }
+                        
+        _editAddress(e){
+            console.log(e);
+            let address = e.detail.address;
+            let queryRef = this.$.addressQuery.ref;
+            queryRef.child(address.key).update(e.detail.address);
+            this.$.modalNewAddress.desativa();
+        }
+        
+        _deleteAddress(e){
+            alert("The " + e.detail.address.name + "'s Address Was Deleted");
+        }
+        
+        _setFavoriteAddress(e){
+            alert("The " + e.detail.address.name + "'s Address Was Favorited");
+        }
+        
+        _showModalNewAddres(){            
+            if(this.addressList.length < 3){
+                this.$.modalNewAddress.ativa();
+            }else{
+                alert("The Limit of Address is 3");
+            }
+        }
+    }
+    customElements.define(AddressView.is, AddressView);
+  </script>
+
+</dom-module>

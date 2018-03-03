@@ -3,7 +3,7 @@
 <link rel="import" href="progress-dialog.html" >
 <dom-module id="cart-view">
     <template>
-        <style>
+        <style include="flaty-bootstrap">
             h1{
                 color: black;
             }
@@ -18,6 +18,10 @@
                 color: teal;
             }
             
+            .content{
+                margin-bottom: 128px;    
+            }
+            
             #bt-chekout-cart{
                 @apply --layout-fixed-bottom;
                 position: fixed;
@@ -28,6 +32,91 @@
                 font-weight: bold;
                 z-index: 2
             }
+            
+            #bt-clear-cart{
+                float: right;
+                width: 100%;
+                cursor: pointer; 
+                font-size: 9pt;
+            }
+            
+            #bt-keep-shopping{
+                width: 100%;
+                background-color: teal;
+                font-size: 9pt;
+            }
+            
+            a:hover{
+                text-decoration: none;
+                text-decoration-line: none;
+            }
+            
+            .empty-cart{
+                text-align: center;
+                white-space: nowrap;   
+            }
+            
+            #cart-items-list{
+                margin-bottom: 300px;
+            }
+            
+            h1{
+                font-size: 18pt;
+                text-align: center;
+                font-weight: bold;
+            }
+            
+            .bottom-info{
+                @apply --layout-fixed-bottom;
+                height: 64px;
+                margin-bottom: 64px;
+                z-index: 2;
+                background-color: white;
+                padding: 2%;
+            }
+            
+            .label{
+                font-weight: bold;
+            }
+            
+            .value{
+                font-weight: bold;
+                float: right;
+            }
+            
+            .price{
+                color: #18BC9C;
+                font-weight: bold;                
+            }
+            
+            .bottom-info_item-quantity{
+                margin-bottom: 2%;
+            }
+        /*        Small devices (landscape phones, 576px and up)*/    
+        @media (min-width: 576px) {
+            
+        }
+
+/*        Medium devices (tablets, 768px and up)*/
+        @media (min-width: 768px) {
+            #bt-clear-cart{                
+                font-size: 12pt;
+            }
+            
+            #bt-keep-shopping{                
+                font-size: 12pt;
+            }
+        }
+
+/*        Large devices (desktops, 992px and up)*/
+        @media (min-width: 992px) {
+                                  
+        }
+
+/*        Extra large devices (large desktops, 1200px and up)*/
+        @media (min-width: 1200px) {
+                                 
+        }
         </style>
         
         <app-location
@@ -59,40 +148,60 @@
         <firebase-query
            id="cartQuery"
            path="/userOwner/{{user.uid}}/cart"
-           data="{{data}}"> 
+           data="{{dataCart}}"> 
         </firebase-query>
-          
-<!--
-        <firebase-query
-           id="cartItensQuery"
-           path="{{pathItensCart}}"
-           data="{{dataItens}}"> 
-        </firebase-query>
--->
             
-        <h1>Carrinho</h1>
-        <div hidden$="[[data]]">
+<!--        <h1>Seu Carrinho</h1>-->
+        <div hidden$="{{_hasItems}}" class="empty-cart">
             <p>Your <iron-icon icon="shopping-cart"></iron-icon> is empty.</p>
         </div>
         
-<!--
-        <progress-dialog id="progressDialog" visible=[[!isReady]]>
+        <progress-dialog id="progressDialog" visible={{!dataCart}}>
             Carregando Carrinho...
         </progress-dialog>
--->
 
-        <template is="dom-repeat" items="{{data}}" as="item-cart">
-            <div>
-<!--                <div class="item">                   -->
-                <item-cart item={{item-cart}}                     
-                    on-delete="_deleteItemCart"                                 
-                    qtd-item="[[itemQtd]]"
-                    on-quantity-changed="updateQuantity">
-                </item-cart>
-<!--                </div>-->
+        <div class="content">
+            <div class="row" hidden$="{{!_hasItems}}">
+               <div class="col-6">
+                    <paper-button id="bt-clear-cart" class="btn-danger" on-tap="_clearCart">
+                        Limpar Carrinho
+                    </paper-button>
+                </div>
+                <div class="col-6">
+                    <a href="/home">
+                        <paper-button id="bt-keep-shopping" class="btn-primary">
+                            Continuar Comprando
+                        </paper-button>
+                    </a>
+                </div>            
             </div>
-        </template>                  
-        <paper-button id="bt-chekout-cart"><a href="/checkout">Avançar</a></paper-button>
+            <div class="cart-items-list">
+                <template is="dom-repeat" items="{{dataCart}}" as="item-cart">
+                    <div>
+                        <item-cart item={{item-cart}}
+                            on-delete="_deleteItemCart"
+                            qtd-item="[[itemQtd]]"
+                            on-quantity-changed="_updateQuantity">
+                        </item-cart>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <div class="bottom-info">
+            <div class="row bottom-info_item-quantity">
+                <div class="col-12">
+                    <span class="label">Quantidade</span>
+                    <span class="value">[[_formatQuantity(dataCart.length)]]</span>
+                </div>
+            </div>
+            <div class="row bottom-info_item-total">
+                <div class="col-12">
+                    <span class="label">Total</span>
+                    <span class="value price">[[_formatTotal(total)]]</span>
+                </div>
+            </div>
+        </div>
+        <a href="/checkout"><paper-button id="bt-chekout-cart">Avançar</paper-button></a>
     </template>
     <script>
     class CartView extends Polymer.Element{
@@ -107,16 +216,49 @@
                     type: Object,
                     value: ""
                 },
-                data:{
-                    type: Object                    
+                dataCart:{
+                    type: Object,
+                    observer: '_dataCartChanged',
+                    notify: true
                 },
-                hasItens:{
+                _hasItems:{
                     type: Boolean,
-                    value: false
-                }                
+                    computed:'_computeHasItems(dataCart.length)'
+                },
+                total:{
+                    type: Number,
+                    value: 0,
+                    computed: '_computeTotal(dataCart)'
+                }
             };
         }
         
+        _dataCartChanged(value){
+//            console.log("_dataChanged");
+        }
+        
+        _computeHasItems(length){            
+            return length > 0;
+        }
+        
+        _computeTotal(data){
+//            console.log("_computeTotal = " + data);
+            let total = 0;
+            data.forEach(function(item){
+               total += (parseFloat(item.price) * parseInt(item.qtd));                
+            });
+            
+            return total;
+            
+//            if(this.dataCart){
+//                return this.dataCart.reduce((total, entry) =>{
+//                   return total + (parseInt(entry.qtd) * parseFloat(entry.price));
+//                }, 0);
+//            }
+//            
+//            return 0;            
+        }
+                        
         __stringfy(data){
             return JSON.stringify(data);
         }
@@ -126,13 +268,26 @@
             this.$.cartQuery.ref.child(key).remove();
         }
         
-        _itemQtdChanged(value){
-            this.$.cartQuery.ref.child(item.$key).update({qtd: value});
-        }
-
-        updateQuantity(e){
+        _updateQuantity(e){
             let item = e.detail;            
             this.$.cartQuery.ref.child(item.key).update({qtd: item.quantity});
+        }
+        
+        _clearCart(){
+            let cartItens = this.$.cartQuery.data;
+            let ref = this.$.cartQuery.ref;
+            
+            cartItens.forEach(function(item){
+                ref.child(item.$key).remove();
+            });
+        }        
+        
+        _formatQuantity(quantity) {
+            return quantity + ' ' + (quantity === 1 ? 'item' : 'itens');
+        }
+        
+        _formatTotal(total) {
+            return isNaN(total) ? '' : 'R$' + total.toFixed(2);
         }
     }
     window.customElements.define(CartView.is, CartView);

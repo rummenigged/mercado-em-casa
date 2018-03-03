@@ -1,0 +1,114 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-icons/av-icons.html">
+
+<dom-module id="item-order">
+
+  <template>
+    <style include="flaty-bootstrap">
+        
+        :host{
+            display: block;            
+        }
+        
+         .item {
+            position: relative;
+            @apply --layout-horizontal;            
+            border-radius: 8px;
+            background-color: white;
+            border: 1px solid #9c27b0;
+            margin: 16px auto 0 auto;
+            cursor: pointer;
+            z-index: 1;
+        }
+         
+        .content{
+            padding: 10px;
+            margin-left: 1px;
+        }
+        .order-id{
+            margin-bottom: 10px;
+            
+            font-size: 18pt;
+            font-weight: bold;
+        }
+        
+        .date{
+            font-size: 14pt;
+        }
+        
+        .value{
+            position: absolute;
+            right: 10px;
+            bottom: 10px;            
+            
+            color: teal;
+            font-size: 16pt;
+            font-weight: bold;                        
+        }
+        
+        .itens-qtd{
+            position: absolute;
+            right: 10px;
+            margin-bottom: 10px;
+            
+            font-size: 14pt;
+            font-weight: bold;
+        }
+        
+        .stick{
+            position: absolute;            
+            
+            height: 100%;            
+            width: 12px;            
+            border-radius: 8px 0 0 8px;
+            background-color: #ffab00;
+        }
+        
+        .sts-recebido{
+            background-color: #ffab00;
+        }
+        
+        .sts-aceito{
+            background-color: #283593;
+        }
+        
+        .sts-recusado{
+            background-color: #e53935;
+        }
+        
+        .sts-entregue{
+            background-color: teal;
+        }
+    </style>
+            
+    <div class="item">
+        <div class="stick" id="statusStick">{{qtdItensOrder}}</div>
+        <div class="row content">
+            <div class="col-10 order-id">#{{order.idOrder}}</div>
+            <div class="value">R${{order.valueOrder}}</div>
+            <div class="col-10 date">{{order.dateOrder}}</div>
+            <div class=" itens-qtd">{{order.qtdItensOrder}}</div>
+        </div>        
+    </div>        
+  </template>
+
+  <script>
+    class ItemOrder extends Polymer.Element {
+        static get is() { return 'item-order'; }
+        static get properties() { 
+            return {
+                order:{
+                    type: Object,
+                    observer: "_orderChanged"
+                }
+            }
+        }
+        
+        _orderChanged(order){
+            this.$.statusStick.classList.add('sts-' + order.status);
+        }
+    }
+    customElements.define(ItemOrder.is, ItemOrder);
+  </script>
+
+</dom-module>

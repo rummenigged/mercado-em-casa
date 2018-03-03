@@ -41,20 +41,31 @@
         }
         .item-qtd-picker{
             position: absolute;
-            left: 20%;
+            right: 10%;
             top: 45%;
         }
          
         .item-name {
-            margin-left: 10px;
+            position: absolute;
+            left: 19%;
+            top: 5%;
             font-size: 12pt;
             font-weight: bold;             
-          }
+        }
+
+        .item-description{
+            position: absolute;
+            left: 19%;
+            top: 35%;
+            font-size: 12pt;
+            color: gray;
+            max-width: 40%;            
+        }
         
         .item-price{
             position: absolute;
             bottom: 5px;
-            right: 10px;
+            left: 20%;
             color: teal;
             font-size: 14pt;
             font-weight: bold;
@@ -64,65 +75,67 @@
             width: 70px;
             height: 70px;
         }
-/*
-        .name a{
-            display: inline-block;
-            max-width: 100%;
-            text-decoration: none;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: black;
-        }
         
-        .selector-qtd{
-            font-size: 16px;
-            padding-left: 40px;
-            margin-left: 30px;
+/*        Small devices (landscape phones, 576px and up)*/
+        @media (min-width: 576px) {
+                        
         }
-*/
+
+/*        Medium devices (tablets, 768px and up)*/
+        @media (min-width: 768px) {            
+            .item-name{
+                position: relative;
+                width: 30%;
+                left: 0;
+                margin-top: 2%;
+                margin-left: 2%;
+                margin-right: 5%;
+            }
+            
+            .item-description{
+                top: 50%;
+            }
+            
+            .item-price{
+                position: relative;
+                margin-top: 3%;
+            }
+            
+            .item-qtd-picker{
+                position: relative;
+                margin-top: 2%;
+                
+            }
+            
+            .item-icon-delete{
+                top: 15%;
+            }
+        }
+
+/*        Large devices (desktops, 992px and up)*/
+        @media (min-width: 992px) {
+            
+        }
+
+/*        Extra large devices (large desktops, 1200px and up)*/
+        @media (min-width: 1200px) {
+            
+        }
     </style>
     <div class="item">  
 <!--       <iron-image src="http://lorempixel.com/70/70" class="col-2" class="product-image"></iron-image>-->
        <iron-image src="../../data/images/food-background.jpg" class="col-2 product-image" class="product-image"></iron-image>
-        <div class="item-name">[[item.name]]</div>        
+        <div class="item-name">[[item.name]]</div>
+        <div class="item-description text-truncate">[[item.description]]</div>
         <div class="item-icon-delete">
             <paper-icon-button icon="delete" on-tap="_removeItemCart"></paper-icon-button>            
         </div>
         <div class="item-price">[[_formatPrice(item.price,item.qtd)]]</div>
         <div class="item-qtd-picker">
-<!--            <paper-button class="" on-tap="_removeQuantity"><iron-icon icon="remove"></iron-icon></paper-button>-->                
-<!--            <paper-button class="" on-tap="_setQuantity"><iron-icon icon="add"></iron-icon></paper-button>-->
-            <button type="button" class="btn btn-primary btn-sm btn-success" on-tap="_addQuantity"><iron-icon icon="add"></iron-icon></button>
-            <span class="value-qtd">{{item.qtd}}</span>
             <button type="button" class="btn btn-primary btn-sm btn-danger" on-tap="_removeQuantity"><iron-icon icon="remove"></iron-icon></button>
+                <span class="value-qtd">{{item.qtd}}</span>
+            <button type="button" class="btn btn-primary btn-sm btn-success" on-tap="_addQuantity"><iron-icon icon="add"></iron-icon></button>
         </div>
-                
-<!--
-        <div class="row">
-            <div class="selector-qtd col">
-                <label prefix>Qtd:</label>
-                <select 
-                    id="quantitySelect" 
-                    aria-label="Change quantity" 
-                    value="[[entry.quantity]]"
-                    on-change="_quantityChange">
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">5</option>
-                          <option value="6">6</option>
-                          <option value="7">7</option>
-                          <option value="8">8</option>
-                          <option value="9">9</option>
-                          <option value="10">10</option>
-                          <option value="11">11</option>
-                          <option value="12">12</option>
-                </select>
-            </div>
-        </div>
-        <div class="price">[[_formatPrice(item.price)]]</div>
--->
     </div>    
   </template>
 
@@ -144,19 +157,17 @@
         }
         
         _computeQtdItem(item){
-//            console.log("Item = " + item.qtd);
             return item.qtd;
         }
         
         _formatPrice(price, qtd) {
             let mPrice = parseFloat(price);
-            let mQtd = parseFloat(qtd);
+            let mQtd = parseInt(qtd);
             let finalPrice = (mPrice * mQtd);            
-            return price ? 'R$' + (finalPrice)  : '';
+            return price ? 'R$' + (finalPrice.toFixed(2))  : '';
         }
         
         _removeItemCart(e){
-//            this.fire('delete', {name: 'item'});
             this.dispatchEvent(new CustomEvent('delete',{
                 bubbles: true, composed: true, detail:{
                     key: this.item.$key
@@ -165,12 +176,10 @@
         }
         
         _quantityChange(e){
-            let sId = this.$.quantitySelect;
-            console.log("Item Selected = " + sId.options[sId.selectedIndex].text);
+            let sId = this.$.quantitySelect;            
         }
         
         _addQuantity(){            
-//            this.dispatchEvent(new CustomEvent('increase-quantity'));
             let newQtd = this.item.qtd + 1;            
             this.dispatchEvent(new CustomEvent('quantity-changed', {
                     bubbles: true, composed: true, detail:{
@@ -183,11 +192,8 @@
         }
         
         _removeQuantity(){
-//            this.dispatchEvent(new CustomEvent('decrease-quantity'));
             if(this.item.qtd > 1){
-                let newQtd = this.item.qtd - 1;
-                console.log("item qtd = " + this.item.qtd);
-                console.log("newQtd = " + newQtd);
+                let newQtd = this.item.qtd - 1;                
                 this.dispatchEvent(new CustomEvent('quantity-changed', {
                         bubbles: true, composed: true, detail:{
                             quantity: newQtd,

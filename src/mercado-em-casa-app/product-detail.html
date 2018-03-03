@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/my-components/bottom-button.html">
 <link rel="import" href="progress-dialog.html">
 <link rel="import" href="product-data.html">
 
@@ -14,11 +15,19 @@
             .container{
                 color: black;                
             }
+            
             .price{
                 color: #18BC9C;
                 font-weight: bold;
-                font-size: 20pt;                
+                font-size: 20pt;
             }
+            
+            .price-bottom{
+                color: #18BC9C;
+                font-weight: bold;
+                font-size: 16pt;
+            }
+            
             iron-image{
                 width: 100%;
                 height: 400px;
@@ -45,9 +54,14 @@
                 margin-bottom: 30px;
                 text-align: right;
             }
+                        
+            .wrapper-qtd-btns div{
+                cursor: pointer;
+            }
             
             .value-qtd{
                 font-size: 20pt;
+/*                font-size: 14pt;*/
                 margin-right: 10px;
                 margin-left: 10px;
             }
@@ -55,6 +69,7 @@
             .product-description{
                 text-align: justify;
             }
+            
     /*        Small devices (landscape phones, 576px and up)*/
             @media (min-width: 576px) {
                 iron-image{
@@ -69,6 +84,10 @@
                     background-color: #9c27b0;
                     color: white;
                     font-weight: bold;                
+                }
+                
+                .price-bottom{                    
+                    font-size: 20pt;
                 }
             }
 
@@ -136,29 +155,36 @@
         </firebase-query>
            
         <firebase-query
-            id="addItemCart"
+            id="querySupermarket"
             path="/productOwner/{{routeData.idItem}}/prices"
             data="{{supermarketData}}">
         </firebase-query>
                         
+<!--
         <progress-dialog id="progressDialog" visible="{{!isReady}}">
-                            Carregando Produto...
+            Carregando Produto...
         </progress-dialog>
+-->
         
         <div class="container">           
             <div class="row content-item">
-                <iron-image class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7" 
-                   src="../../data/images/none.jpg" 
-                   sizing="cover" preload fade>                    
-                </iron-image>            
-                <div class="detail col-xs-12 col-sm-12 col-md-6 col-lg-4 offset-lg-1">
+<!--            <div class="row">-->
+<!--                <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7">-->
+                    <iron-image
+                       src="{{product.image}}" 
+                       sizing="cover" preload fade>                    
+                    </iron-image>
+<!--                </div>-->
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 offset-lg-1">
                     <div class="row">
-                        <h3 class="col-9">{{product.name}}</h3>
-                        <span class="price col-2">R${{product.price}}</span>   
+                        <h3 class="col-8">{{product.name}}</h3>
+                        <span class="price col-2">R${{product.price}}</span>
+<!--
                         <template is="dom-repeat" items="{{supermarketData}}" as="supermarket">
                             <span class="price col-2">R${{supermarket.price}}</span>
                             <span class="col-2">{{supermarket.name}}</span>
-                        </template>                     
+                        </template>
+-->
                     </div>
     <!--                        <paper-input id="qtd" label="Quantidade" type="number"></paper-input>-->
                     <div class="qtd-field">
@@ -168,10 +194,21 @@
                     </div>
                     <div class="row">
                         <h4 class="col-12">Descriçao</h4>
-                        <p class="product-description col-12">{{product.description}}</p>    
+                        <p class="product-description col-12">{{product.description}}
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, maxime consectetur. Assumenda quo veniam delectus modi tempore expedita sed illum molestiae dolorem, nobis quod illo, eius, laborum maxime nesciunt corporis!</p>
                     </div>
 
-                    <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>
+<!--                    <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>-->
+                    <bottom-button button-text="Adicionar ao Carrinho" on-button-clicked="_addCart">
+<!--
+                        <div class="wrapper-qtd-btns">
+                            <div class="btn btn-danger" on-tap="_removeQuantity"><iron-icon icon="remove"></iron-icon></div>
+                            <span class="value-qtd">{{qtdProduct}}</span>   
+                            <div class="btn btn-success" on-tap="_setQuantity"><iron-icon icon="add"></iron-icon></div>
+                        </div>
+-->
+                    <span class="price-bottom">Total: [[_formatItemPrice(product.price, qtdProduct)]]</span>
+                    </bottom-button>
                 </div>
             </div>            
         </div>
@@ -197,8 +234,8 @@
                     },
                     qtdProduct:{
                         type: Object,
-                        value: 0
-                    }
+                        value: 1
+                    }                    
                 }
             }
             
@@ -212,15 +249,16 @@
                 this.itemPathName = item;                
             }
                                     
-            _addCart(e){                                
-                let produto = new Object();
+            _addCart(e){
                 let cartRef = this.$.addItemCart.ref;
-                produto["id"] = this.$.route.data.idItem;
-                produto["name"] = this.$.productData.data.name;
-                produto["qtd"] = this.qtdProduct;
-                produto["price"] = this.$.productData.data.price;
+                let produto = {};
+                produto.id =  this.$.route.data.idItem;
+                produto.name =  this.$.productData.data.name;
+                produto.description =  this.$.productData.data.description;
+                produto.qtd =  this.qtdProduct;
+                produto.price = this.$.productData.data.price;
                 cartRef.push(produto);
-                this.qtdProduct = 0;
+                this.qtdProduct = 1;
             }
             
             _setQuantity(){
@@ -228,10 +266,14 @@
             }
             
             _removeQuantity(){
-                if(this.qtdProduct > 0){
+                if(this.qtdProduct > 1){
                     this.qtdProduct--;    
-                }
-                
+                }                
+            }
+            
+            _formatItemPrice(price, qtd){
+                let finalPrice = parseFloat(price * qtd);                
+                return finalPrice ? 'R$' + (finalPrice.toFixed(2))  : '';
             }
         }
         window.customElements.define(ProductDetail.is, ProductDetail);

@@ -19,8 +19,12 @@
 <link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
 <link rel="import" href="../../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../../bower_components/app-storage/app-indexeddb-mirror/app-indexeddb-mirror.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+
 <link rel="import" href="modal-dialog.html">
-<link rel="import" href="../style/flaty-bootstrap.html">
+
+<!--<link rel="import" href="../style/flaty-bootstrap.html">-->
+
 <link rel="import" href="category-data.html">
 
 
@@ -31,6 +35,9 @@
 <link rel="import" href="cart-view.html">
 <link rel="import" href="checkout-view.html">
 <link rel="import" href="profile-view.html">
+<link rel="import" href="address-view.html">
+<link rel="import" href="orders-view.html">
+<link rel="import" href="order-detail.html">
 <link rel="import" href="view-404.html">
 
 <dom-module id="mercado-em-casa-app">
@@ -38,7 +45,8 @@
     <style include="flaty-bootstrap">
        
         :host {
-          display: block;    
+          display: block;
+          overflow-y: hidden;
         }
       
         paper-toolbar{
@@ -51,17 +59,24 @@
             background: white;
         } 
 
+/*
         app-header {
           @apply --layout-fixed-top;
-          
           background-color: #9c27b0;
           color: white;          
         }
+*/
 
-        app-header-layout{
-            z-index: 100;
-/*            background-color: black;*/
+        app-header {
+          background-color: #9c27b0;
+          color: white;
         }
+        
+        app-header-layout{
+            width: 100%;
+            z-index: 2;
+        }
+        
         app-header paper-icon-button {
           --paper-icon-button-ink-color: white;
         }
@@ -71,28 +86,9 @@
           margin: 0 0 0 50px;
         }
 
-        [condensed-title] {
-          font-size: 18px;
-          font-weight: 400;
-          margin-left: 30px;
-        }
-
-        [condensed-title] i {
-          font-style: normal;
-          font-weight: 100;
-        }
-
-        app-toolbar.tall {
-          height: 148px;
-        }      
-
         a{
           color: white;
-        }
-        
-        iron-pages{                
-            color: black;
-        }
+        }                
         
         paper-item{
             color: black;
@@ -100,18 +96,24 @@
         }
         
         #drawer{
-            z-index: 200;
+            z-index: 4;
         }
         
         .drawer-header{
             height: 120px;
             background-color: #9c27b0;
             color: white;
+            text-align: center;
+            padding-top: 10px;
         }
         
+        .drawer-content{
+            padding-top: 5%;
+            padding-left: 2%;
+        }
         .drawer-content ul{
             list-style: none;
-            display: block;
+/*            display: block;*/
 /*
             justify-content: flex-start;
             align-items: flex-start;
@@ -128,41 +130,126 @@
             
         }
         
+        .divider{        
+            width: 100%;
+            height: 1px;
+            background-color: #9e9e9e;
+            margin-bottom: 2%;
+        }
+        
         .profile{
             height: 70px;
             width: 70px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            -webkit-align-items: center;            
-            -webkit-justify-content: center;
+            display: block;
+            margin-left: 35%;
+            margin-top: 2%;
             background-color: lightgray;
+        }
+         
+        #item-cart:hover{
+            color: white;
+        }
+        
+        #small{
+            display: none;
+        }
+        #medium{
+            display: none;
+        }
+
+        #large{
+            display: none;
+        }
+
+        #x-large{
+            display: none;
         }
         
 /*        Small devices (landscape phones, 576px and up)*/
         @media (min-width: 576px) {
+            #current{
+                display: none;
+            }
+            #small{
+                display: block;
+            }
+            #medium{
+                display: none;
+            }
             
+            #large{
+                display: none;
+            }
+            
+            #x-large{
+                display: none;
+            }
         }
 
 /*        Medium devices (tablets, 768px and up)*/
-        @media (min-width: 768px) {    
+        @media (min-width: 768px) {
+            #current{
+                display: none;
+            }
+            #small{
+                display: none;
+            }            
+            #medium{
+                display: block;
+            }
+            #large{
+                display: none;
+            }
             
+            #x-large{
+                display: none;
+            }
         }
 
 /*        Large devices (desktops, 992px and up)*/
         @media (min-width: 992px) {
+            #current{
+                display: none;
+            }
+            #small{
+                display: none;
+            }
             
+            #medium{
+                display: none;
+            }
+            #large{
+                display: block;
+            }                    
+            #x-large{
+                display: none;
+            }                        
         }
 
 /*        Extra large devices (large desktops, 1200px and up)*/
         @media (min-width: 1200px) {
+            #current{
+                display: none;
+            }
+            #small{
+                display: none;
+            }
             
+            #medium{
+                display: none;
+            }
+            #x-large{
+                display: none;
+            }
+            #large{
+                display: block;
+            }                        
         }
     </style>   
 
     <app-location
       route="{{route}}">
-    </app-location>    
+    </app-location>
 
     <app-route
       route="{{route}}"
@@ -190,32 +277,46 @@
 
             <div class="drawer-header">
                 <span>Mercado Em Casa</span>
-                <iron-image class="rounded-circle border profile" src="{{user.photoURL}}" sizing="cover" preload></iron-image>
+                <iron-image class="rounded-circle border profile" src="{{user.photoURL}}" sizing="cover" preload hidden$="{{!user.PhotoURL}}"></iron-image>
+                <span hidden$="{{user.displayName}}">{{user.displayName}}</span>
             </div>
             <div class="drawer-content">
                
                 <ul>
                     <li><a href="/home">Home</a></li>
-                    <li><a href="/profile">Perfil</a></li>
-                    <li><a href="/adress">Endereços</a></li>
-                    <li><a href="/settings">Configuraçoes</a></li>
-                    <li hidden$="[[!signedIn]]"><a href="/login">Sair</a></li>
-                    <li hidden$="[[signedIn]]"><a href="/login">Entrar</a></li>
+                    <div class="divider"></div>
+                    <li hidden$="[[!signedIn]]"><a href="/orders">Pedidos</a></li>
+                    <div class="divider" hidden$="[[!signedIn]]"></div>
+                    <li hidden$="[[!signedIn]]"><a href="/profile">Perfil</a></li>
+                    <div class="divider" hidden$="[[!signedIn]]"></div>
+                    <li hidden$="[[!signedIn]]"><a href="/address">Endereços</a></li>
+                    <div class="divider" hidden$="[[!signedIn]]"></div>                    
+<!--                    <li hidden$="[[!signedIn]]"><a href="/login">Sair</a></li>-->
+                    <li hidden$="[[signedIn]]"><a href="/login">Entrar</a></li>                    
                 </ul>
             </div>
-        </app-drawer>       
+        </app-drawer>
         <app-header-layout>
             <app-header slot="header" fixed>
-              <app-toolbar>
-                <paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
-                <div main-title>
-                  Mercado em Casa
-                </div>
-                <template is="dom-if" if="{{_isListPage(routeData.page)}}">                   
-                    <a href=""><paper-icon-button icon="filter-list" on-tap="_showModalOrder"></paper-icon-button></a>
-                </template>
-                <a href="/cart" hidden$="[[!signedIn]]"><paper-icon-button icon="shopping-cart"></paper-icon-button></a> 
-              </app-toolbar>          
+                <app-toolbar>
+                    <paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
+                    <div main-title>
+                      Mercado em Casa
+                    </div>
+                    <span id="current">Current</span>
+                    <span id="small">Small</span>
+                    <span id="medium">Medium</span>
+                    <span id="large">Large</span>
+                    <span id="x-large">Extra Large</span> 
+                    <template is="dom-if" if="{{_isListPage(routeData.page)}}">                   
+                        <a href=""><paper-icon-button icon="filter-list" on-tap="_showModalOrder"></paper-icon-button></a>
+                    </template>
+                    <a href="/cart" hidden$="[[!signedIn]]" id="item-cart">
+                        <paper-icon-button icon="shopping-cart">
+                            <span class="badge badge-light">9</span>
+                        </paper-icon-button>
+                    </a>
+                </app-toolbar>          
             </app-header>               
         </app-header-layout>
                 
@@ -231,7 +332,10 @@
           <cart-view name="cart" route="[[subroute]]"></cart-view>
           <checkout-view name="checkout" route="[[subroute]]"></checkout-view>
           <profile-view name="profile"></profile-view>
-          <login-view name="login"></login-view>
+          <address-view name="address"></address-view>
+          <login-view name="login" route="[[subroute]]"></login-view>
+          <orders-view name="orders"></orders-view>
+          <order-detail name="order" route=[[subroute]]></order-detail>
           <view-404 name="view-404"></view-404>
         </iron-pages>
   </template>
@@ -305,7 +409,8 @@
           return false;
       }
                   
-      _showModalOrder(){          
+      _showModalOrder(){
+          this._notifyNetworkStatus();
           this.dispatchEvent(
               new CustomEvent('show-modal-order', {
                     bubbles: true, composed: true, detail:{}
@@ -313,6 +418,13 @@
               )
           );
       }
+        
+        _notifyNetworkStatus() {
+            let oldOffline = this.offline;
+            let offline =  !navigator.onLine;
+            console.log("oldOffline = " + oldOffline);
+            console.log("Offline = " + offline);
+        }
     }    
     window.customElements.define(MercadoEmCasaApp.is, MercadoEmCasaApp);
   </script>

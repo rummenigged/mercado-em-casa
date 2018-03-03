@@ -1,7 +1,8 @@
-<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../../src/mercado-em-casa-app/modal-element.html">
  <link rel="import" href="../style/flaty-bootstrap.html">
 
- <dom-module id="modal-element">
+ <dom-module id="modal-error">
   <template>
     <style include="flaty-bootstrap">
       :host {
@@ -23,30 +24,32 @@
 
         /* Modal Content/Box */
         .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto; /* 15% from the top and centered */
+            background-color: #db3f3f;
+            margin: 15% auto; /* 15% from the top and centered */
             padding: 5px 20px 10px 20px;
+            color: white;
 /*            border: 1px solid #888;*/
             width: 90%; /* Could be more or less, depending on screen size */
         }
 
         /* The Close Button */
-        paper-icon-button {            
-            color: #9b1a1a;
+        .icon-close {
+            color: white;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
-
-        paper-icon-button:hover,
-        paper-icon-button:focus {
-            color: black;
+                
+        icon:hover,
+        icon:focus {
+            color: white;
             text-decoration: none;
             cursor: pointer;
         }
         
-        .close-icon{
-            float: right;
+        .wrapper-icons{
+            float: left;
+            align-items: flex-end;
         }
         
     /*        Small devices (landscape phones, 576px and up)*/
@@ -70,22 +73,26 @@
         }
         
     </style>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <div class="close-icon">
-                <paper-icon-button icon="close" on-tap="_desativa"></paper-icon-button>           
+    <div id="myModal" class="modal">       
+        <div class="modal-content"> 
+            <div class="wrapper-icons">
+                <paper-icon-button icon="close" on-tap="hide" class="icon icon-close"></paper-icon-button>                
             </div>
+            <h4>[[text]]</h4>
             <slot></slot>
         </div>    
     </div>
   </template>
 
   <script>
-    class ModalElement extends Polymer.Element {
-        static get is() { return 'modal-element'; }
+    class ModalError extends Polymer.Element {
+        static get is() { return 'modal-error'; }
         static get properties(){
             return{
-            
+                text:{
+                    type: String,
+                    readOnly: true
+                }
             };
         }
 
@@ -93,21 +100,40 @@
             return[];
         }
 
-        ativa(){            
+        show(code){            
+            this._setText(this._getErrorMessage(code));
             this.$.myModal.style.display= "block";
         }
         
-        _desativa(){            
+        hide(){            
             this.$.myModal.style.display= "none";
         }
         
-//        window.onclick = function(event) {
-//            if (event.target == modal) {
-//                modal.style.display = "none";
-//            }
-//        }
+        _fireConfirmEvent(){
+            this.dispatchEvent(new CustomEvent('confirm', {
+                bubbles: true, composed: true, detail:{}
+                }
+              )
+            );
+        }
+        
+        _getErrorMessage(code){
+            switch(code){
+                case 'auth/network-request-failed':
+                    return 'Falha ao se Comunicar Com o Servidor, Por Favor Verifique se Você Tem Conexão Com a Internet'
+                break;
+                    
+                case 'auth/invalid-email':
+                    return 'Por Favor Insira um Email Válido'
+                break;
+                    
+                case 'auth/wrong-password':
+                    return 'Você Informou uma Senha Incorreta'
+                break;
+            }
+        }
     }
 
-    window.customElements.define(ModalElement.is, ModalElement);
+    window.customElements.define(ModalError.is, ModalError);
   </script>
 </dom-module>

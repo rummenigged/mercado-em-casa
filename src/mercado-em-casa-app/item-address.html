@@ -1,20 +1,42 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="modal-element.html">
+<link rel="import" href="../../bower_components/my-components/modal-address.html">
+<link rel="import" href="../../bower_components/my-components/modal-delete.html">
+
 <dom-module id="item-address">
   <template>
       <style include="flaty-bootstrap">
           
           .card{
 /*              max-width: 20rem;*/
-              background: #9c27b0;
+              background: #9c27b0;              
+          }
+          
+          .card-bottom{
+              text-align: right;                  
+          }
+          
+          .other-address{
+              cursor: pointer;
           }
           
           .card-header paper-icon-button{
               float: right;              
           }
+                    
           
-          .card-header input{
-              float: right;
+          .card-body{
+              background-color: white;
+              color: black;
+          }
+          
+          .card-bottom{
+              background: white;
+              color: #9c27b0;
+              font-weight: bold;
+          }
+          
+          #fav-icon{
+              color: gold;
           }
       </style>        
         
@@ -30,51 +52,140 @@
             equal-to="{{user.uid}}"
             data={{addressData}}>
         </firebase-query>
+        <modal-delete 
+           id="modalDeleteAddress"
+           title="Remover Endereço"
+           msg="Deseja Realmente Excluir Este Endereço?"           
+           on-confirm="_fireDeleteAddress">
+        </modal-delete>
+        
+        <modal-address id="modalEditAddress" on-confirm="_fireEditAddress">
+            <div class="row">
+                <paper-input id="inputName" label="Nome" value="{{itemAddress.name}}" class="col-12 col-sm-6"></paper-input>
+                <paper-input id="inputSurname" label="Sobrenome" value="{{itemAddress.surname}}" class="col-12 col-sm-6"></paper-input>
+                <paper-input id="inputCEP" label="CEP" value="{{itemAddress.cep}}" class="col-12 col-sm-3"></paper-input>
+                <paper-input id="inputStreet" label="Rua" value="{{itemAddress.street}}" class="col-12 col-sm-7"></paper-input>
+                <paper-input id="inputNumber" label="Numero" value="{{itemAddress.number}}" class="col-12 col-sm-2"></paper-input>
+                <paper-input id="inputComplement" label="Complemento" value="{{itemAddress.complement}}" class="col-12 col-sm-8"></paper-input>
+                <paper-input id="inputDistrict" label="Bairro" value="{{itemAddress.district}}" class="col-12 col-sm-4"></paper-input>
+                <paper-input id="inputLandmark" label="Ponto de Referência" value="{{itemAddress.landmark}}" class="col-12 col-sm-12"></paper-input>
+                <paper-input id="inputCity" label="Cidade" value="{{itemAddress.city}}" class="col-10 col-sm-10"></paper-input>
+                <paper-input id="inputState" label="UF" value="{{itemAddress.state}}" class="col-2 col-sm-2"></paper-input>
+<!--                <paper-button id="bt-save-address" class="btn btn-block" on-tap="_createNewAddress">Salvar</paper-button>-->
+            </div>
+        </modal-address>
         
         <div class="card text-white mb-3">
-            <div class="card-header">Endereço de Entrega <paper-icon-button icon="more-vert" on-tap="_showModalAddress"></paper-icon-button></div>
+            <div class="card-header">
+                <span>Endereço</span>
+                <paper-icon-button icon="delete" on-tap="_showModalDeleteAddress"></paper-icon-button>                
+            </div>
             <div class="card-body">
-                <h4 class="card-title">{{title}}</h4>
-                <p class="card-text"><slot></slot></p>                
+                <div class="row">
+                <h4 class="card-title col-8">{{itemAddress.name}} {{itemAddress.surname}}</h4>
+<!--
+                <iron-icon 
+                    icon="star" 
+                    class="offset-2 col-2" 
+                    id="fav-icon" 
+                    hidden$="{{!itemAddress.main}}"
+                    on-tap="_fireFavoriteAddress">
+                    </iron-icon>
+-->
+                </div>
+                
+                <p class="card-text">
+<!--                    <slot></slot>-->                      
+                    {{itemAddress.street}}, {{itemAddress.number}} - {{itemAddress.district}}, <br>
+                    {{itemAddress.cep}}, {{itemAddress.complement}}<br>
+                    {{itemAddress.city}} - {{itemAddress.state}} <br>
+                    {{itemAddress.landmark}}   
+                </p>                
+            </div>
+            <div class="card-bottom">
+                <paper-button on-tap="_showModalEditAddress">Editar</paper-button>
             </div>
         </div>
-        
-        
-        <modal-element id="modalAddress">
-            <template is="dom-repeat" items="{{addressData}}" as="address">
-            <h3>Endereço de Entrega</h3>
-            <div class="card text-white mb-3">
-                <div class="card-header">Endereço de Entrega</div>
-                <div class="card-body">
-                    <h4 class="card-title">{{user.displayName}}</h4>
-                    <p class="card-text">{{address.street}}, {{address.number}} - {{address.district}} <br>
-                                            {{address.city}} - {{address.state}} <br>
-                                            {{address.landmark}} <br></p>
-                </div>
-            </div>
-            </template>
-        </modal-element>
-        
   </template>
   <script>
     class ItemAddress extends Polymer.Element {
         static get is() { return 'item-address'; }
         static get properties() { return {
                 title:{
-                    type: Object,
-                    observer:'_observerTest'
+                    type: String                    
                 },
                 user:{
                     type: Object,
                     value: ""
+                },
+                itemAddress:{
+                    type: Object
                 }
             }
         }
-        
-        _observerTest(){            
+                                        
+        _computeOrderAddress(addressList){
+            let address = null;
+            addressList.forEach(function(item){
+//                console.log("_computeMainAddress = " + item);
+                if(item.main){
+                    address = item;
+                }
+            });
+
+            return address;
         }
-        _showModalAddress(){
-            this.$.modalAddress.ativa();
+             
+        _computeOrderAddressMock(){
+//            let produto = new Object();                
+//                produto["id"] = this.$.route.data.idItem;
+//                produto["name"] = this.$.productData.data.name;
+//                produto["description"] = this.$.productData.data.description;
+//                produto["qtd"] = this.qtdProduct;
+//                produto["price"] = this.$.productData.data.price;
+            let address = new Object;
+            
+            
+        }         
+        
+        _showModalDeleteAddress(){
+            this.$.modalDeleteAddress.ativa();
+        }
+        
+        _showModalEditAddress(){
+            this.$.modalEditAddress.ativa();
+        }        
+        
+        _fireDeleteAddress(){
+            this.dispatchEvent(new CustomEvent('delete', {
+                bubbles: true, composed: true, detail:{
+                    address: this.itemAddress
+                }
+                }
+              )
+            );
+            this.$.modalDeleteAddress.desativa();
+        }
+        
+        _fireEditAddress(){
+            let address = Object.assign({}, this.itemAddress);
+            this.dispatchEvent(new CustomEvent('edit', {
+                bubbles: true, composed: true, detail:{
+                    address: address
+                }
+                }
+              )
+            );
+        }
+        
+        _fireFavoriteAddress(){
+            this.dispatchEvent(new CustomEvent('favorite', {
+                bubbles: true, composed: true, detail:{
+                    address: this.itemAddress
+                }
+                }
+              )
+            );
         }
     }    
     customElements.define(ItemAddress.is, ItemAddress);

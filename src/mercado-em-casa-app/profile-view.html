@@ -2,10 +2,11 @@
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/my-components/modal-delete.html">
+<link rel="import" href="address-view.html">
 <dom-module id="profile-view">
     <template>
-        <style include="flaty-bootstrap">
-            
+        <style include="flaty-bootstrap">            
             :host{                
             }
             h1{
@@ -20,27 +21,39 @@
             .info-perfil{                
                 width: 85%;
                 float: right;
-            }
-            
-            .info-new-address{
-                display: block;
-                margin-top: 120px;
-            }
+            }                        
             
             img{                
                 width: 60px;
                 height: 60px;
                 float: left;
             }
+            address-view{
+                width: 100%;
+            }
             
-            #bt-save-address{
-                background: teal;
-                color: white;
+            paper-fab{
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background-color: #9c27b0;
+            }
+            
+            .card-bottom{
+              background: white;
+              color: #9c27b0;
+              font-weight: bold;
+              text-align: right;        
+            }
+            
+            .card-header{
+                font-weight: bold;
             }
         </style>
         <firebase-auth
             id="auth"
-            user={{user}}>            
+            user={{user}}
+            signed-in="{{signedIn}}">
         </firebase-auth>
         
         <firebase-query
@@ -48,44 +61,32 @@
            path="/userOwner/{{user.uid}}/address"
            data="{{addressData}}"> 
         </firebase-query>
-        
-<!--
-        <firebase-query
-            id="query"
-            path="/categories/{{routeData.id}}/products"
-            order-by-child="name"
-            equal-to="{{inputSearch}}"
-            data="{{productsList}}">
-        </firebase-query>
--->
-        
-        <h1>Profile</h1>        
-            <img src="{{user.photoURL}}" alt="foto perfil">
-            <div class="info-perfil">
-                Nome: {{user.displayName}} <br>
-                Id: {{user.uid}} <br>
-                Email: {{user.email}} <br>
-                Email Verificado: {{user.emailVerified}} <br>                
+           
+        <modal-delete 
+           id="modalSignOut"
+           title="Remover Endereço"
+           msg="Deseja Realmente Sair?"           
+           on-confirm="_signOut">
+        </modal-delete>
+                     
+<!--            <img src="{{user.photoURL}}" alt="foto perfil">-->
+            <div class="card">
+                <div class="card-header">
+                      Dados Pessoais
+                </div>
+                <div class="card-body">
+                    Nome: Rummenigge Duarte <br>
+                    Email: {{user.email}} <br>
+                    CPF: 062.804.273.66 <br>
+                    Telefone: (88) 9724-3592 <br>
+                </div>
+                <div class="card-bottom">
+                    <paper-button on-tap="_showModalEditAddress">Editar</paper-button>
+                </div>
             </div>
-            
-            <div class="info-new-address">
-                <paper-input id="inputStreet" label="Rua" value="Tabelião João Machado"></paper-input>
-                <paper-input id="inputNumber" label="Numero" value="38"></paper-input>
-                <paper-input id="inputDistrict" label="Bairro" value="Santa Tereza"></paper-input>
-                <paper-input id="inputCity" label="Cidade" value="Juazeiro do Norte"></paper-input>
-                <paper-input id="inputState" label="Estado" value="CE"></paper-input>
-                <paper-input id="inputLandmark" label="Ponto de Referência" value="Ao Lado do Colégio Polivalente"></paper-input>
-                <paper-button id="bt-save-address" class="btn btn-block" on-tap="_createNewAddress">Salvar</paper-button>
-            </div>
-            
-            <div class="info-address">
-                <template is="dom-repeat" items="{{addressData}}" as="item">
-                    {{item.street}} - {{item.number}} <br>
-                    {{item.district}} <br>
-                    {{item.city}} - {{item.state}} <br>
-                    {{item.landmark}} <br>
-                </template>                
-            </div>                
+<!--            <paper-button class="btn btn-danger" on-tap="_showModalSignOut" hidden$="{{!signedIn}}">Sair</paper-button>-->
+            <paper-fab icon="exit-to-app" on-tap="_showModalSignOut" hidden$="true"></paper-fab>
+<!--        <address-view></address-view>-->
     </template>
     <script>
         class ProfileView extends Polymer.Element{
@@ -105,18 +106,13 @@
 //                console.log("Observer Called");
             }
             
-            _createNewAddress(){
-                var newAddress = new Object();
-                newAddress["idUser"] = this.$.auth.user.uid;
-                newAddress["street"] = this.$.inputStreet.value;
-                newAddress["number"] = this.$.inputNumber.value;
-                newAddress["district"] = this.$.inputDistrict.value;
-                newAddress["city"] = this.$.inputCity.value;
-                newAddress["state"] = this.$.inputState.value;
-                newAddress["landmark"] = this.$.inputLandmark.value;
-                newAddress["main"] = true;
-                
-                this.$.addressQuery.ref.push(newAddress);
+            _showModalSignOut(){
+                this.$.modalSignOut.ativa();   
+            }
+            
+            _signOut(){
+                this.$.auth.signOut();
+                this.$.modalSignOut.desativa();
             }
         }
         window.customElements.define(ProfileView.is, ProfileView);

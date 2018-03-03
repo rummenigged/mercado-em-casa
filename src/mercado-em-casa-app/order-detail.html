@@ -1,0 +1,96 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="order-detail">
+
+  <template>
+    <style include="flaty-bootstrap">        
+        :host{
+            display: block;
+        }
+         
+        .card{            
+            margin-bottom: 15px;
+        }
+    </style>
+                
+        <app-route
+          route="{{route}}"
+          pattern="/:orderId"
+          data="{{orderData}}">
+        </app-route>
+        
+        <firebase-query
+          id="itensCartQuery"
+          path="/userOwner/{{user.uid}}/cart"
+          data="{{cartData}}">
+        </firebase-query>
+        
+        <h4>Pedido #{{orderData.orderId}}</h4>
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        Dados do Pedido
+                    </div>
+                    <div class="card-body row">
+                       <div class="col-6">Status: Entregue</div>
+                       <div class="col-6">Quantidade: 132 Itens</div>
+                       <div class="col-6">Produtos: R$345,90</div>
+                       <div class="col-6">Serviço: R$30,00</div>
+                       <div class="col-6">Total: R$375,90</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        Endereço de Entrega
+                    </div>
+                    <div class="card-body">
+                        Rua Tabelião João Machado, 38 - Santa Tereza <br>
+                        Juazeiro do Norte-CE
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        Forma de Pagamento
+                    </div>
+                    <div class="card-body">
+                        Dinheiro
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        Lista de Compras
+                    </div>
+                    <div class="card-body">
+                        <template is="dom-repeat" items="{{cartData}}" as="itemCart">
+                            <h4 class="card-title">{{itemCart.name}}</h4>
+                            <p class="card-text">Quantidade: {{itemCart.qtd}}x
+                                <br> Preco: R${{itemCart.price}}
+                            </p>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </template>
+
+  <script>
+    class OrderDetail extends Polymer.Element {
+        static get is() { return 'order-detail'; }
+        static get properties() { 
+            return {                
+            }
+        }
+    }
+    customElements.define(OrderDetail.is, OrderDetail);
+  </script>
+
+</dom-module>

@@ -28,19 +28,31 @@
                   
                   isReady:{
                       type: Boolean,
-                      value: false,
+                      value: true   ,
                       notify: true,
                       readOnly: true
-                  }    
+                  },
+                  mockData:{
+                    type: Array,
+                    value: function(){
+                        let array = ['Alimentos', 'Bebidas', 'Doces'];
+                        return array;
+                    },
+                    observer: '_mockDataChanged',
+                    notify: true  
+                  } 
                 }
             }                           
             
             __dataChanged(){                
-                if(this.data == null || Object.keys(this.data).length === 0){                
-                    this._setIsReady(false);
-                }else{                    
-                    this._setIsReady(true);
-                }
+//                if(this.data == null || Object.keys(this.data).length === 0){                
+//                    this._setIsReady(false);
+//                }else{                    
+//                    this._setIsReady(true);
+//                }
+            }
+            
+            _mockDataChanged(value){                
             }
         }
         window.customElements.define(CategoryData.is, CategoryData);

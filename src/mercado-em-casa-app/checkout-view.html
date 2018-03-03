@@ -1,11 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-<link rel="import" href="item-address.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="item-order-address.html">
 <link rel="import" href="item-form-payment.html">
 <link rel="import" href="item-order-resume.html">
 
 <dom-module id="checkout-view">
   <template>
-      <style>
+      <style include="flaty-bootstrap">
            #bt-finish-order{
             @apply --layout-fixed-bottom;
             position: fixed;
@@ -15,6 +16,22 @@
             color: white;
             font-weight: bold;
             }
+          
+          .order-address{              
+              
+              margin-bottom: 20px;
+          }                    
+          
+          .item-label{
+              text-align: center;
+              color : #868686;
+              
+              margin-bottom: 20px;
+          }
+          
+          .item-order-resume{
+              margin-bottom: 70px;
+          }
       </style>  
       
       <firebase-auth
@@ -22,32 +39,60 @@
           user="{{user}}">          
       </firebase-auth>
       
+      <!--Lista de Endereços do Usuário-->
       <firebase-query
           id="addressQuery"
-          path="/address"
-          order-by-child="idUser"
-          equal-to="{{user.uid}}"
+          path="/userOwner/{{user.uid}}/address"
           data="{{addressData}}">          
       </firebase-query>
-         
-     <firebase-query
+              
+      <!--Adicionar Endereço de Entrega ao Carrinho-->                  
+      <firebase-document
+          id="addressCartQuery"
+          path="/userOwner/{{user.uid}}/cart/orderAddress"
+          data="{{orderSelectedAddress}}">
+      </firebase-document>
+      
+      <!--Lista de Produtos do Carrinho-->
+      <firebase-query
           id="itensCartQuery"
           path="/userOwner/{{user.uid}}/cart"
           data="{{cartData}}">
       </firebase-query>
       
-      <item-address title="{{user.displayName}}">          
-            <template is="dom-repeat" items="{{addressData}}" as="item">                       
-                <div hidden$={{!item.main}}>
-                    {{item.street}}, {{item.number}} - {{item.district}} <br>
-                    {{item.city}} - {{item.state}} <br>
-                    {{item.landmark}} <br>
-                </div>
+<!--############################### UI Components ###############################-->
+       <div class="order-address">
+            <div class="item-label">
+                <span>Onde Devemos Entregar?</span>
+            </div>
+            <template is="dom-repeat" items="{{addressData}}" as="address">
+    <!--
+              <item-order-address 
+                    title="{{address.name}}"
+                    address-list="{{addressData}}" 
+                    order-address="{{selectedAddress}}">
+              </item-order-address>
+    -->
+               <item-order-address address={{address}} selected-address="{{selectedAddress}}"></item-order-address>
             </template>            
-      </item-address>
-      <item-form-payment></item-form-payment>
-      <item-order-resume item="[[cartData]]"></item-order-resume>
-      <paper-button id="bt-finish-order" style="display: none;"><a href="/checkout">Finalizar Pedido</a></paper-button> 
+        </div>
+        
+        <div class="item-form-payment">
+            <div class="item-label">
+                <span>Como Desejar Pagar?</span>
+            </div>
+            <item-form-payment></item-form-payment>
+        </div>
+        
+      
+      <div class="item-order-resume">
+         <div class="item-label">
+                <span>Revise Seu Pedido</span>
+            </div>
+          <item-order-resume item="[[cartData]]"></item-order-resume>
+      </div>
+      
+      <a href="/checkout"><paper-button id="bt-finish-order" hidden$="{{!addressData}}">Finalizar Pedido</paper-button> </a>
   </template>
   <script>
     class CheckoutView extends Polymer.Element {
@@ -61,6 +106,29 @@
                     type: Object,
                     value:""
                 },
+            
+                selectedAddress:{
+                    type: Object,
+                    observer: '_selectedChanged'
+                },
+                orderAddress:{
+                    type: Object,
+                    observer: '_orderAddressChanged'
+                }
+            }
+        }               
+        
+        _selectedChanged(currentaAddress){
+            console.log(currentaAddress);
+            let queryRef = this.$.addressCartQuery.ref;
+            if(queryRef != null){
+                queryRef.set(currentaAddress);
+            }                        
+        }
+        
+        _orderAddressChanged(address){
+            if(address != null){
+                console.log(address);
             }
         }
     }    

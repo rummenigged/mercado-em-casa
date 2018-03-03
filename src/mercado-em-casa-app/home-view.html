@@ -71,8 +71,13 @@
             }
             
             a{
-                color: yellow;
-                background-color: white;
+                color: white;                
+            }
+            
+            a:hover{
+                text-decoration: none;
+                text-decoration-line: none;
+                color: white;
             }
             
     /*        Small devices (landscape phones, 576px and up)*/
@@ -111,8 +116,9 @@
             }
         </style>
         
+<!--mock-data="{{categories}}"-->
         <category-data
-            id="categories-data"
+            id="categories-data"            
             data="{{categories}}"
             is-ready="{{isReady}}">
         </category-data>
@@ -122,18 +128,14 @@
             user={{user}}>                
         </firebase-auth>
        <div>
-            <p class="text-center align-middle text-welcome">Boa Noite, {{user.displayName}}</p>
+            <p class="text-center align-middle text-welcome" hidden$="{{!user.displayName}}">Boa Noite, {{user.displayName}}</p>
             <div class="header-banner">                
-<!--                <iron-image id="image-banner" src="../../data/images/none.jpg"></iron-image>-->
-<!--                <iron-image id="image-banner" src="http://lorempixel.com/500/300"></iron-image>-->
                 <div class="search-field" style="display: none">
                     <paper-input class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-4" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
                         <iron-icon icon="search" slot="suffix"></iron-icon>
                     </paper-input>
                 </div>                
-            </div>
-            
-<!--            <iron-list items="{{categories}}" as="cat"> -->
+            </div>            
             <div class="row mx-auto">
                 <template is="dom-repeat" items="{{categories}}" as="cat">
                     <div class="col-6 col-sm-6 col-md-4 col-lg-3">
@@ -143,7 +145,6 @@
                     </div>
                 </template>
             </div>
-<!--            </iron-list>-->
         </div>
         <progress-dialog id="progressDialog" visible={{!isReady}}>
             Só Um Minuto, Estamos Carregando as Categorias Para Você...

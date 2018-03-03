@@ -1,0 +1,137 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="item-order.html">
+
+<dom-module id="orders-view">
+
+  <template>
+    <style include="flaty-bootstrap">
+        
+        :host{
+            text-decoration: none;
+        }
+        
+        .subtitle{
+            position: fixed;
+            width: 100%;
+            height: 50px;
+            bottom: 0;
+            
+            z-index: 2;
+            background-color: white;
+            text-align: center;            
+        }
+        
+        .order-list{
+            margin-bottom: 55px;    
+        }
+        
+        .subtitle iron-icon{
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .subtitle span{
+            font-weight: bold;
+        }
+        
+        .sts-recebido{
+            color: #ffab00;
+        }
+        
+        .sts-aceito{
+            color: #283593;
+        }
+        
+        .sts-recusado{
+            color: #e53935;
+        }
+        
+        .sts-entregue{
+            color: teal;
+        }
+    </style>
+            <div class="subtitle row">
+                <div class="status-recebido col-3">
+                    <iron-icon icon="fiber-manual-record" class="sts-recebido"></iron-icon>
+                    <span>Recebido</span> 
+                </div>
+                <div class="status-aceito col-3">
+                    <iron-icon icon="fiber-manual-record" class="sts-aceito"></iron-icon>
+                    <span>Aceito</span>
+                </div>
+                <div class="status-recusado col-3">
+                    <iron-icon icon="fiber-manual-record" class="sts-recusado"></iron-icon>
+                    <span>Recusado</span>
+                </div>
+                <div class="status-entregue col-3">
+                    <iron-icon icon="fiber-manual-record" class="sts-entregue"></iron-icon>
+                    <span>Entregue</span>
+                </div>
+            </div>
+            <div class="order-list">
+                <template is="dom-repeat" items="{{orderList}}" as="order">
+                    <a href="/order/[[order.idOrder]]">
+                        <item-order order="{{order}}"></item-order>
+                    </a>
+                </template>
+            </div>
+  </template>
+
+  <script>
+    class OrdersView extends Polymer.Element {
+        static get is() { return 'orders-view'; }
+        static get properties() { 
+            return {
+                orderList:{
+                    type: Array,
+                    computed: '_orderListComputed()',
+                    observer: '_orderListChanged'
+                }
+            }
+        }
+        
+        _orderListComputed(){
+            let list = new Array();
+            let order;
+            let numberRandom;
+            for(let i = 0 ; i < 10 ; i++){                
+                order = new Object();
+                order['idOrder'] = this._getRandomNumber(20000, 50000);
+                order['dateOrder'] = "19 de Fevereiro de 2018";
+                order['valueOrder'] =  (250.23 + (i*10)).toFixed(2);
+                order['qtdItensOrder'] = "234 Itens";
+                switch(this._getRandomNumber(1,4)){
+                    case 1:
+                        order['status'] = 'recebido'            
+                    break;
+                    
+                    case 2:
+                        order['status'] = 'aceito'            
+                    break;
+                    
+                    case 3:
+                        order['status'] = 'recusado'            
+                    break;
+                    
+                    case 4:
+                        order['status'] = 'entregue'            
+                    break;
+                }                
+                list.push(order);
+            }            
+            return list;
+        }
+        
+        _orderListChanged(value){            
+        }
+        
+        _getRandomNumber(start, end){
+            let result = Math.floor(Math.random() * end) + start;            
+            return result;
+        }
+    }
+    customElements.define(OrdersView.is, OrdersView);
+  </script>
+
+</dom-module>

@@ -5,12 +5,18 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-auth.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="../../bower_components/my-components/modal-error.html">
 <link rel="import" href="cart-data.html">
 
 
 <dom-module id="login-view">
     <template>
-        <style>
+        <style include="flaty-bootstrap">
+            :host{
+                display: block;
+                height: 100%;                
+            }
+/*
             :host{
                 position: absolute;
                 top: 64px;
@@ -48,6 +54,101 @@
             th {
                 text-align: right;
             }
+*/
+            .top-half{
+                width: 100%;
+                height: 40vh;
+                background-color: red;
+                background-image: url(../../data/images/food-background.jpg);
+                background-size: cover;
+            }
+
+            .bottom-half{
+                width: 100%;
+                height: 50vh;
+                background-color: black;
+                color: white;                               
+                text-align: center;
+                padding-top: 60%;
+            }
+            
+            .bottom-half span{
+                font-size: 14pt;                
+            }
+            
+            .card-login{
+                position: absolute;
+                top: 30%;
+                left: 15%;
+                
+                width: 70%;
+                height: 45%;
+                background-color: white;
+                border-radius: 8px;
+                padding-left: 20px;
+                padding-right: 20px;
+                padding-top: 20px;
+            }
+            
+            .card-login a{
+                text-decoration: none;
+                font-size: 12pt;
+                color: #9c27b0;
+                cursor: pointer;
+            }
+            .card-title{                
+                margin-bottom: 10px;
+                
+                text-align: center;
+                font-size: 22pt;
+                color: #9c27b0;
+            }
+            
+            .card-content{
+                color: #9c27b0;
+            }
+            
+            .card-options{
+                margin-top: 40px;
+                margin-bottom: 70px;
+                
+                font-size: 12pt;
+            }
+            
+            .card-options .right{
+                float: right;
+            }
+            
+            .card-options .left{
+                float: left;
+            }
+            
+            .btn-login{                
+                background-color: #9c27b0;
+                box-shadow: 3px 5px 10px gray;
+                color: black;
+                
+                margin-top: 20px;
+            }
+            
+            .social{
+                margin-top: 20px;
+            }
+            
+            .wrapper-social{                
+            }
+            
+            .btn-google{
+                width: 50%;
+                display: block;
+                background:#db4a39;
+                box-shadow:0px 3px 0px #b93f31;
+                text-shadow:1px 1px 0px rgba(0,0,0,.1);
+                font-size: 14pt;
+                font-weight: bold;
+                
+                margin: 0 auto;
+            }
         </style>
         
         <firebase-auth 
@@ -58,6 +159,10 @@
             on-error="_showError">
         </firebase-auth>
         
+        <modal-error
+            id="modalError">                
+            </modal-error>
+<!--
         <firebase-query
            id="cartKeyQuery"           
            path="/carts"
@@ -65,7 +170,9 @@
            equal-to="{{user.uid}}"
            data="{{cartData}}"> 
         </firebase-query>
+-->
         
+<!--
         <div>           
             <form on-submit="_signInWithEmailAndPassword" hidden$="[[signedIn]]">
                 <input value="{{email::input}}" type="email" placeholder="Email">
@@ -81,7 +188,63 @@
             <paper-button on-tap="_signOut" hidden$="[[!signedIn]]">
                 <iron-icon icon="account-circle"></iron-icon>
                 <span>Log Out</span>
-            </paper-button>                        
+            </paper-button>
+        </div>
+-->
+   
+       
+        <progress-dialog id="progressDialog">
+            Carregando...
+        </progress-dialog>
+
+        <div class="top-half">        
+        </div>
+             
+        <div class="card-login" hidden$="[[signedIn]]">
+            <div class="card-title">
+                Login
+            </div>
+            <div class="card-content">
+                <form on-submit="_signInWithEmailAndPassword">
+                    <paper-input label="Email" type="email" value="{{email::input}}" required>
+                        <iron-icon icon="account-circle" slot="prefix"></iron-icon>
+                    </paper-input>
+                    <paper-input label="Senha" type="password" value="{{password::input}}" required>
+                        <iron-icon icon="lock" slot="prefix"></iron-icon>
+                    </paper-input>
+                    <paper-button 
+                        id="btLogin" 
+                        class="btn btn-lg btn-block btn-login"
+                        on-tap= "_signInWithEmailAndPassword"
+                        type="submit">
+                            Entrar
+                    </paper-button>
+                </form>
+            </div>
+            <div class="card-options">
+<!--
+                <div class="right">
+                    <a href="">Esqueceu Sua Senha?</a>
+                </div>
+-->
+                <div class="left">
+                    <span>Ainda Não é Cadastrado? <a href="">Cadastre-se</a></span>
+                </div>                
+            </div>            
+        </div>            
+        <div class="bottom-half">          
+           <div class="wrapper-social">
+            <span>Ou Entre Com</span>
+            
+            <div class="social">
+                <paper-button 
+                    id="btLoginGoogle" 
+                    class="btn btn-google"
+                    on-tap="_signInWithGoogle">
+                        Google+
+                </paper-button>
+            </div>
+            </div>
         </div>
     </template>
     <script>
@@ -91,6 +254,10 @@
         
         static get properties(){
             return{
+                route:{
+                    type: Object,                    
+                    notify: true
+                },
                 disabled:{
                     type: Boolean,
                     reflectToAttribute: true,
@@ -115,11 +282,10 @@
 //                '_userNameChanged(user)'
             ];
         }
-        
+                
         _cartDataChanged(value){            
             if(value != null && value.length > 0){
-                let keyCart = value[0].$key;
-                localStorage.setItem("cartKey", keyCart);
+                let keyCart = value[0].$key;                
             }
         }
         
@@ -129,24 +295,23 @@
         
         _userObserver(user){
             this.user = user;            
-            if(user){                
-                localStorage.setItem("username", this.user.displayName);
+            if(user){                                
             }
         }
         
          _signInWithEmailAndPassword(e){
-          if (e) { e.preventDefault(); }
-          this.error = null;
-          this.$.auth.signInWithEmailAndPassword(this.email, this.password);
-          this.email = null;
-          this.password = null;            
+            if (e) { e.preventDefault(); }
+            this.error = null;
+            this.$.auth.signInWithEmailAndPassword(this.email, this.password);
+            this.email = null;
+            this.password = null;
+             this.route.prefix = '/profile'
         };
 
         _createUserWithEmailAndPassword() {
-          this.error = null;
-          this.$.auth.createUserWithEmailAndPassword(this.email, this.password);
-          this.email = null;
-          this.password = null;
+            this.$.progressDialog.ativa();
+            this.$.auth.createUserWithEmailAndPassword(this.email, this.password);
+            this.$.progressDialog.desativa();
 //          let ref = this.$.cartKeyQuery.ref;
 //            ref.push({
 //                idUser: this.user.uid
@@ -155,13 +320,12 @@
 
         
         _signOut(){
-            this.$.auth.signOut();
-            localStorage.removeItem("username");
-            localStorage.removeItem("cartKey");
+            this.$.auth.signOut();            
         }
         
         _showError(e){
-            console.log("Auth Error = " + e.detail);
+            this.$.progressDialog.desativa();
+            this.$.modalError.show(e.detail.code);            
         }                
     }    
     window.customElements.define(LoginView.is, LoginView);
