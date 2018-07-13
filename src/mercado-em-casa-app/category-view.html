@@ -39,13 +39,21 @@
             </paper-input>            
         </div>
         
-        <iron-list items="[[productsList]]" as="product">
-            <template>                
-                <a href="/detail/{{routeData.id}}/{{routeData.category}}/[[product.$key]]/[[product.name]]">
-                    <item-product item="{{product}}"></item-product>
-                </a>
-            </template>                  
-        </iron-list>                        
+<!--        <iron-list items="[[productsList]]" as="product">-->
+            <div class="row">
+                <template is="dom-repeat" items="{{productsList}}" as="product">
+
+    <!--                    <template> -->
+                            <div class="col-12 col-sm-6 col-md-6 col-lg-4">               
+                                <a href="/detail/{{routeData.id}}/{{routeData.category}}/[[product.$key]]/[[product.name]]">
+                                    <item-product item="{{product}}"></item-product>
+                                </a>
+                            </div>
+    <!--                    </template>-->
+
+    <!--        </iron-list>-->
+                </template>
+            </div>
     </template>
 
     <script>

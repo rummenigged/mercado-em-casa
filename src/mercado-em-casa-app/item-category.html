@@ -9,20 +9,30 @@
             background-color: #fff;
         }
         .card{
-            margin-bottom: 50px;        
+            margin-bottom: 50px;
+            height: 100px;
+            
         }
         
-        .card-img{
-            background-color: #000;
-            opacity: 0.7;
-            filter: alpha(opacity=50);  /* For IE8 and earlier */
+        .carf:after{
+            
+        }
+        
+        .card-img{            
+            height: 100px;
+        }
+        
+        .card-title{            
+        }
+        
+        .card-img-overlay{
+            background-color:rgba(0,0,0,0.4);
         }
     </style>
         <div class="card text-black">
-            <img class="card-img" src="../../data/images/food-background.jpg" alt="Card image">
+            <img class="card-img" src="{{item.image}}" alt="Card image">
             <div class="card-img-overlay">
                 <h5 class="card-title text-center">[[item.name]]</h5>
-<!--                <h5 class="card-title text-center">[[item]]</h5>-->
             </div>
         </div>
   </template>

@@ -1,0 +1,8 @@
+{
+  "name": "mercado-em-casa",
+  "description": "Supermarket Delivery App",
+  "dependencies": {
+    "firebase-admin": "^4.1.1",
+    "firebase-functions": "^0.8.2"
+  }
+}

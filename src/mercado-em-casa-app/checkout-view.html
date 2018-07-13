@@ -61,30 +61,35 @@
       </firebase-query>
       
 <!--############################### UI Components ###############################-->
-       <div class="order-address">
-            <div class="item-label">
-                <span>Onde Devemos Entregar?</span>
+        <div class="row">
+            <div class="order-address col-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="item-label">
+                    <span>Onde Devemos Entregar?</span>
+                </div>
+                <div class="row">
+                    <template is="dom-repeat" items="{{addressData}}" as="address">
+            <!--
+                      <item-order-address 
+                            title="{{address.name}}"
+                            address-list="{{addressData}}" 
+                            order-address="{{selectedAddress}}">
+                      </item-order-address>
+            -->
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                            <item-order-address address={{address}} selected-address="{{selectedAddress}}"></item-order-address>
+                        </div>
+                    </template>
+                </div>      
             </div>
-            <template is="dom-repeat" items="{{addressData}}" as="address">
-    <!--
-              <item-order-address 
-                    title="{{address.name}}"
-                    address-list="{{addressData}}" 
-                    order-address="{{selectedAddress}}">
-              </item-order-address>
-    -->
-               <item-order-address address={{address}} selected-address="{{selectedAddress}}"></item-order-address>
-            </template>            
-        </div>
-        
-        <div class="item-form-payment">
-            <div class="item-label">
-                <span>Como Desejar Pagar?</span>
+
+            <div class="item-form-payment col-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="item-label">
+                    <span>Como Desejar Pagar?</span>
+                </div>
+                <item-form-payment></item-form-payment>
             </div>
-            <item-form-payment></item-form-payment>
-        </div>
         
-      
+      </div>
       <div class="item-order-resume">
          <div class="item-label">
                 <span>Revise Seu Pedido</span>
@@ -92,7 +97,7 @@
           <item-order-resume item="[[cartData]]"></item-order-resume>
       </div>
       
-      <a href="/checkout"><paper-button id="bt-finish-order" hidden$="{{!addressData}}">Finalizar Pedido</paper-button> </a>
+      <a href="/checkout"><paper-button id="bt-finish-order" hidden$="{{!addressData}}" on-click="_finishorder">Finalizar Pedido</paper-button> </a>
   </template>
   <script>
     class CheckoutView extends Polymer.Element {
@@ -130,6 +135,11 @@
             if(address != null){
                 console.log(address);
             }
+        }
+        
+        _finishorder(){
+            queryRef.child(address.key).update(e.detail.address);
+            console.log("Order Finished");
         }
     }    
     customElements.define(CheckoutView.is, CheckoutView);

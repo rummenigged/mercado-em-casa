@@ -61,7 +61,7 @@
     </firebase-query>
             
     <div>
-        <div class="info-new-address row">
+<!--        <div class="info-new-address row">-->
 <!--
             <div class="col-12 col-sm-6 col-md-6 col-lg-12">
                 <item-address                     
@@ -92,19 +92,20 @@
                 </item-address>
             </div>
 -->
-            <template is="dom-repeat" items="{{addressList}}" as="address">            
-                <div class="col-12 col-sm-6 col-md-6 col-lg-12">
-<!--                    <item-address title="{{address.name}}" item-address="{{address}}" on-edit="_editAddress"></item-address>-->
-                    <item-address                     
-                        title="{{address.name}}"                         
-                        item-address="{{address}}"                         
-                        on-edit="_editAddress"                        
-                        on-delete="_deleteAddress"
-                        on-favorite="_setFavoriteAddress">
-                    </item-address>
+            <div class="row">
+                <template is="dom-repeat" items="{{addressList}}" as="address">
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                        <item-address                     
+                            title="{{address.name}}"                         
+                            item-address="{{address}}"                         
+                            on-edit="_editAddress"                        
+                            on-delete="_deleteAddress"
+                            on-favorite="_setFavoriteAddress">
+                        </item-address>
+                    </div>
+                </template>
             </div>
-            </template>
-        </div>
+<!--        </div>-->
 <!--
             <div class="info-address">
                 <template is="dom-repeat" items="{{addressList}}" as="item">
@@ -117,6 +118,7 @@
 -->
     <modal-address id="modalNewAddress" on-confirm="_createNewAddress">
             <div class="row">
+                <div class="col-06 mx-auto"><h3>Novo Endereço</h3></div>
                 <paper-input id="inputName" label="Nome" value="" class="col-12 col-sm-6"></paper-input>
                 <paper-input id="inputSurname" label="Sobrenome" value="" class="col-12 col-sm-6"></paper-input>
                 <paper-input id="inputCEP" label="CEP" value="" class="col-12 col-sm-3"></paper-input>
@@ -139,7 +141,7 @@
     </modal-address>
        
     </div>
-<!--    <paper-fab icon="add" on-tap="_showModalNewAddres" hidden$="true"></paper-fab>-->
+    <paper-fab icon="add" on-tap="_showModalNewAddres" hidden$="true"></paper-fab>
   </template>
 
   <script>
@@ -183,20 +185,7 @@
         }
         
         _createNewAddress(){            
-            let queryRef = this.$.addressQuery.ref;
-//            var newAddress = new Object();
-//            newAddress["street"] = this.$.inputStreet.value;
-//            newAddress["number"] = this.$.inputNumber.value;
-//            newAddress["district"] = this.$.inputDistrict.value;
-//            newAddress["city"] = this.$.inputCity.value;
-//            newAddress["state"] = this.$.inputState.value;
-//            newAddress["name"] = this.$.inputName.value;
-//            newAddress["surname"] = this.$.inputSurname.value;
-//            newAddress["cep"] = this.$.inputCEP.value;
-//            newAddress["complement"] = this.$.inputComplement.value;
-//            newAddress["landmark"] = this.$.inputLandmark.value;
-//            newAddress["main"] = this.$.inputFavorite.checked;
-            
+            let queryRef = this.$.addressQuery.ref;            
             var newAddress = {};
             newAddress.street = this.$.inputStreet.value;
             newAddress.number = this.$.inputNumber.value;

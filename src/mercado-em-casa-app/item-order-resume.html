@@ -18,12 +18,19 @@
       </style>        
         <div class="card text-white mb-3">
             <div class="card-header">Resumo do Pedido</div>
-            <div class="card-body">
-               <template is="dom-repeat" items="{{item}}" as="itemCart">
-                    <h4 class="card-title">{{itemCart.name}}</h4>
-                    <p class="card-text">Quantidade: {{itemCart.qtd}}x
-                        <br> Preco: R${{itemCart.price}}
-                    </p>
+            <div class="card-body">                
+                <template is="dom-repeat" items="{{item}}" as="itemCart">
+<!--
+                    <div class="row">
+                        <div class="col-12 col-sm-1">
+-->
+                            <h4 class="card-title">{{itemCart.name}}</h4>
+<!--                        </div>-->
+                        <p class="card-text">Quantidade: {{itemCart.qtd}}x
+                            <br> Preco: R${{itemCart.price}}
+                        </p>
+                        
+<!--                    </div>-->
                 </template>
             </div>
         </div>        

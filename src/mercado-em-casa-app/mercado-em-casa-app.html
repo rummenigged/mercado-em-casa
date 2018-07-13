@@ -266,9 +266,9 @@
     </firebase-auth>
     
     <firebase-app
-            auth-domain="mercado-em-casa-v1.firebaseapp.com"
-            database-url="https://mercado-em-casa-v1.firebaseio.com"
-            api-key="AIzaSyBSbjYUrW7XDbpouusVifmw1di5JyKcSVE"> 
+        auth-domain="mercado-em-casa-v1.firebaseapp.com"
+        database-url="https://mercado-em-casa-v1.firebaseio.com"
+        api-key="AIzaSyBSbjYUrW7XDbpouusVifmw1di5JyKcSVE"> 
     </firebase-app>
     
     <cart-data id="cartData"></cart-data>
@@ -303,14 +303,18 @@
                     <div main-title>
                       Mercado em Casa
                     </div>
+<!--
                     <span id="current">Current</span>
                     <span id="small">Small</span>
                     <span id="medium">Medium</span>
                     <span id="large">Large</span>
                     <span id="x-large">Extra Large</span> 
+-->
+<!--
                     <template is="dom-if" if="{{_isListPage(routeData.page)}}">                   
                         <a href=""><paper-icon-button icon="filter-list" on-tap="_showModalOrder"></paper-icon-button></a>
                     </template>
+-->
                     <a href="/cart" hidden$="[[!signedIn]]" id="item-cart">
                         <paper-icon-button icon="shopping-cart">
                             <span class="badge badge-light">9</span>

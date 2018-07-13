@@ -20,7 +20,8 @@
     "paper-menu-button": "PolymerElements/paper-menu-button#^2.0.0",
     "paper-input": "PolymerElements/paper-input#^2.0.4",
     "paper-spinner": "PolymerElements/paper-spinner#^2.0.0",
-    "paper-fab": "PolymerElements/paper-fab#^2.0.0"
+    "paper-fab": "PolymerElements/paper-fab#^2.0.0",
+    "platinum-sw": "PolymerElements/platinum-sw#^2.1.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

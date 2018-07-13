@@ -70,11 +70,15 @@
                 </div>
             </div>
             <div class="order-list">
-                <template is="dom-repeat" items="{{orderList}}" as="order">
-                    <a href="/order/[[order.idOrder]]">
-                        <item-order order="{{order}}"></item-order>
-                    </a>
-                </template>
+                <div class="row">
+                    <template is="dom-repeat" items="{{orderList}}" as="order">                
+                            <div class="item col-sm-12 col-md-6 col-lg-4">
+                                <a href="/order/[[order.idOrder]]">
+                                    <item-order order="{{order}}"></item-order>
+                                </a>
+                            </div>                
+                    </template>
+                </div>
             </div>
   </template>
 
@@ -99,7 +103,7 @@
                 order = new Object();
                 order['idOrder'] = this._getRandomNumber(20000, 50000);
                 order['dateOrder'] = "19 de Fevereiro de 2018";
-                order['valueOrder'] =  (250.23 + (i*10)).toFixed(2);
+                order['valueOrder'] =  (250.23 + (i*10 + this._getRandomNumber(40, 600)) + this._getRandomNumber(0.2, 0.9)).toFixed(2);
                 order['qtdItensOrder'] = "234 Itens";
                 switch(this._getRandomNumber(1,4)){
                     case 1:

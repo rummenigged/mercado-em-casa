@@ -7,13 +7,14 @@
 
 <dom-module id="product-detail">
     <template>
-        <style include="flaty-bootstrap"> 
+        <style include="flaty-bootstrap">
             :host{
                 display: block;
                 color: black;
             }
+            
             .container{
-                color: black;                
+                color: black;
             }
             
             .price{
@@ -169,12 +170,12 @@
         <div class="container">           
             <div class="row content-item">
 <!--            <div class="row">-->
-<!--                <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7">-->
+                <div class="col-12 col-xs-12 col-sm-12 col-md-6 col-lg-7">
                     <iron-image
                        src="{{product.image}}" 
                        sizing="cover" preload fade>                    
                     </iron-image>
-<!--                </div>-->
+                </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 offset-lg-1">
                     <div class="row">
                         <h3 class="col-8">{{product.name}}</h3>
@@ -194,8 +195,7 @@
                     </div>
                     <div class="row">
                         <h4 class="col-12">Descriçao</h4>
-                        <p class="product-description col-12">{{product.description}}
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nisi, maxime consectetur. Assumenda quo veniam delectus modi tempore expedita sed illum molestiae dolorem, nobis quod illo, eius, laborum maxime nesciunt corporis!</p>
+                        <p class="product-description col-12">{{product.description}}</p>
                     </div>
 
 <!--                    <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>-->
@@ -257,6 +257,7 @@
                 produto.description =  this.$.productData.data.description;
                 produto.qtd =  this.qtdProduct;
                 produto.price = this.$.productData.data.price;
+                produto.image = this.$.productData.data.image;
                 cartRef.push(produto);
                 this.qtdProduct = 1;
             }
@@ -267,8 +268,8 @@
             
             _removeQuantity(){
                 if(this.qtdProduct > 1){
-                    this.qtdProduct--;    
-                }                
+                    this.qtdProduct--;
+                }
             }
             
             _formatItemPrice(price, qtd){

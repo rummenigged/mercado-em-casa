@@ -114,7 +114,22 @@
 
 /*        Large devices (desktops, 992px and up)*/
         @media (min-width: 992px) {
+            .item-description{                
+                left: 19%;
+                top: 59%;                                
+                max-width: 25%;
+            }
             
+            .item-name{                                
+                left: 0;
+                margin-top: 2%;
+                margin-left: 2%;
+                margin-right: 5%;
+            }
+            
+            .item-qtd-picker{
+                
+            }
         }
 
 /*        Extra large devices (large desktops, 1200px and up)*/
@@ -124,7 +139,8 @@
     </style>
     <div class="item">  
 <!--       <iron-image src="http://lorempixel.com/70/70" class="col-2" class="product-image"></iron-image>-->
-       <iron-image src="../../data/images/food-background.jpg" class="col-2 product-image" class="product-image"></iron-image>
+<!--       <iron-image src="[[item.image]]" class="col-2 product-image"></iron-image>-->
+       <img src="[[item.image]]" class="col-2 product-image" />
         <div class="item-name">[[item.name]]</div>
         <div class="item-description text-truncate">[[item.description]]</div>
         <div class="item-icon-delete">

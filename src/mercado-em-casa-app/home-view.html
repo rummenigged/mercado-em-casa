@@ -82,10 +82,7 @@
             
     /*        Small devices (landscape phones, 576px and up)*/
             @media (min-width: 576px) {
-                a{
-                    color: red;
-                    
-                }
+                
                 #image-banner{        
                     max-height: 300px;
                 }
@@ -93,9 +90,7 @@
 
     /*        Medium devices (tablets, 768px and up)*/
             @media (min-width: 768px) {    
-                a{
-                    color: black;
-                }
+                
                 #image-banner{        
                     max-height: 500px;
                 }
@@ -103,16 +98,12 @@
 
     /*        Large devices (desktops, 992px and up)*/
             @media (min-width: 992px) {
-                a{
-                    color: blue;
-                }
+                
             }
 
     /*        Extra large devices (large desktops, 1200px and up)*/
             @media (min-width: 1200px) {
-                a{
-                    color: green;
-                }
+                
             }
         </style>
         
@@ -128,7 +119,8 @@
             user={{user}}>                
         </firebase-auth>
        <div>
-            <p class="text-center align-middle text-welcome" hidden$="{{!user.displayName}}">Boa Noite, {{user.displayName}}</p>
+<!--            <p class="text-center align-middle text-welcome">Seja Bem Vindo <span hidden$="{{!user.displayName}}">, {{user.displayName}}</span></p>-->
+           <p class="text-center align-middle text-welcome">Seja Bem Vindo Rummenigge Duarte</p>
             <div class="header-banner">                
                 <div class="search-field" style="display: none">
                     <paper-input class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-4" id="inputSearch" label="Buscar" type="search" on-input="_search" value="{{inputSearch}}">
@@ -138,7 +130,7 @@
             </div>            
             <div class="row mx-auto">
                 <template is="dom-repeat" items="{{categories}}" as="cat">
-                    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-2">
                         <a on-tap="_setKey" category="[[cat]]" href="/list/[[cat.$key]]/[[cat.name]]">
                             <item-category item={{cat}}></item-category>
                         </a>

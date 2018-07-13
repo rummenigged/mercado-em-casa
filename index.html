@@ -11,9 +11,35 @@
     <link rel="manifest" href="/manifest.json">    
     
     <link rel="import" href="/src/mercado-em-casa-app/mercado-em-casa-app.html">
+    <link rel="import" href="bower_components/platinum-sw/platinum-sw-elements.html">
+    <link rel="import" href="bower_components/platinum-sw/platinum-sw-register.html">
+    <link rel="import" href="bower_components/platinum-sw/platinum-sw-cache.html">
+    
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Mercado em Casa">
+<!--    <link rel="icon" sizes="192x192" href="bower_components/note-app/common/images/icon-4x.png">-->
 <!--    <link rel="import" href="src/style/flaty-bootstrap.html">-->
   </head>
   <body>
+    <platinum-sw-register
+        auto-register
+        skip-waiting
+        clients-claim
+        reload-on-install
+        href="sw-import.js">
+        <platinum-sw-cache
+            default-cache-strategy="networkFirst"
+            precache="["src/mercado-em-casa/mercado-em-casa-app.html"]">
+        </platinum-sw-cache>
+    </platinum-sw-register>
+    
+    <firebase-app
+            auth-domain="mercado-em-casa-v1.firebaseapp.com"
+            database-url="https://mercado-em-casa-v1.firebaseio.com"
+            api-key="AIzaSyBSbjYUrW7XDbpouusVifmw1di5JyKcSVE"> 
+    </firebase-app>
+    
+    
     <mercado-em-casa-app></mercado-em-casa-app>
   </body>
 
