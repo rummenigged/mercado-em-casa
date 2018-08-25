@@ -1,0 +1,23 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="order-error-finished">
+  <template>
+      <style include="flaty-bootstrap">
+      </style>
+      <h3>Problemas ao Finalizar Seu Pedido</h3>
+      <p>Desculpas Pelo Ocorrido, Encontramos um Problema ao Realizar o Seu Pedido, Por Favor Tente Novamente. 
+          se o Problema Persistir Entre Em Contato Conosco.
+      </p>
+      <input type="button" value="Tentar Novamente">
+  </template>
+  <script>
+    class OrderErrorFinished extends Polymer.Element {
+        static get is() { return 'order-error-finished'; }
+        static get properties() { 
+            return { }
+        }
+    }    
+    customElements.define(OrderErrorFinished.is, OrderErrorFinished);
+  </script>
+
+</dom-module>

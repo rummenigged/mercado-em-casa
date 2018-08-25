@@ -2,38 +2,32 @@
 
 <dom-module id="item-order-resume">
   <template>
-      <style include="flaty-bootstrap">
+        <style include="flaty-bootstrap">
           :host{
               margin-bottom: 40px;
           }
           .card{
-/*              max-width: 20rem;*/
+        /*              max-width: 20rem;*/
               background: #9c27b0;              
             }
-          
+
           .card-body{
               background-color: white;
               color: black;
           }
-      </style>        
+        </style>        
         <div class="card text-white mb-3">
             <div class="card-header">Resumo do Pedido</div>
             <div class="card-body">                
-                <template is="dom-repeat" items="{{item}}" as="itemCart">
-<!--
-                    <div class="row">
-                        <div class="col-12 col-sm-1">
--->
-                            <h4 class="card-title">{{itemCart.name}}</h4>
-<!--                        </div>-->
-                        <p class="card-text">Quantidade: {{itemCart.qtd}}x
-                            <br> Preco: R${{itemCart.price}}
-                        </p>
-                        
-<!--                    </div>-->
+                <template is="dom-repeat" items="{{item}}" as="itemCart">        
+                    <h4 class="card-title">{{itemCart.name}}</h4>
+                    <p class="card-text">
+                        Quantidade: {{itemCart.qtd}}x<br>
+                        Preco: R${{itemCart.price}}
+                    </p>
                 </template>
             </div>
-        </div>        
+        </div>
   </template>
   <script>
     class ItemOrderResume extends Polymer.Element {
@@ -45,22 +39,18 @@
                 },
                 item:{
                     type: Array,
-                    value: "",
-                    observer:'_itemChangeObserver'
+                    value: ""                    
                 }
             }
         }
         
-        _cartDataChanged(value){            
+        _cartDataChanged(value){  
+            console.log("Cart Data Changed");
             if(value != null && value.length > 0){                
-                for(var i = 0 ; i < value.length ; i++){
-                    console.log("Item Order Resume = " + value[i].$key);
+                for(var i = 0 ; i < value.length ; i++){                    
                     this.pathItensCart = '/carts/' + value[i].$key + '/itensCart';                    
                 }    
-            }                    
-        }
-        
-        _itemChangeObserver(value){            
+            }
         }
     }    
     customElements.define(ItemOrderResume.is, ItemOrderResume);

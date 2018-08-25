@@ -1,0 +1,22 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="order-finished">
+  <template>
+      <style include="flaty-bootstrap">
+      </style>
+      <h3>Pedido Realizado Com Sucesso</h3>
+      <p>Seu Pedido Foi Realizado Com Sucesso, Suas Compras Serão Entregues o Mais Rápido Possível
+          , Por Favor Fique Atento as Suas Notificações.</p>
+      <input type="button" value="Ok">    
+  </template>
+  <script>
+    class OrderFinished extends Polymer.Element {
+        static get is() { return 'order-finished'; }
+        static get properties() { 
+            return { }
+        }
+    }    
+    customElements.define(OrderFinished.is, OrderFinished);
+  </script>
+
+</dom-module>

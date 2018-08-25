@@ -219,10 +219,11 @@
         }                                          
         
         _addressSelected(e){
-            let checked = e.path[0].checked;
+            let checked = e.target.checked;
+            console.log(checked);
             if(checked){                
                 delete this.address.$key;
-                this.selectedAddress = this.address;                
+                this.selectedAddress = this.address;
             }else{
                 this.selectedAddress = null;
             }

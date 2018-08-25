@@ -38,6 +38,8 @@
 <link rel="import" href="address-view.html">
 <link rel="import" href="orders-view.html">
 <link rel="import" href="order-detail.html">
+<link rel="import" href="order-finished.html">
+<link rel="import" href="order-error-finished.html">
 <link rel="import" href="view-404.html">
 
 <dom-module id="mercado-em-casa-app">
@@ -340,6 +342,8 @@
           <login-view name="login" route="[[subroute]]"></login-view>
           <orders-view name="orders"></orders-view>
           <order-detail name="order" route=[[subroute]]></order-detail>
+          <order-finished name="order-finished"></order-finished>
+          <order-error-finished name="order-error-finished"></order-error-finished>
           <view-404 name="view-404"></view-404>
         </iron-pages>
   </template>

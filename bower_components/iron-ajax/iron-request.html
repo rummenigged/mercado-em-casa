@@ -85,8 +85,8 @@ iron-request can be used to perform XMLHttpRequests.
        * if there is an error before the `xhr` completes.
        * The resolve callback is called with the original request as an argument.
        * By default, the reject callback is called with an `Error` as an argument.
-       * If `rejectWithRequest` is true, the reject callback is called with an 
-       * object with two keys: `request`, the original request, and `error`, the 
+       * If `rejectWithRequest` is true, the reject callback is called with an
+       * object with two keys: `request`, the original request, and `error`, the
        * error object.
        *
        * @type {Promise}
@@ -215,7 +215,10 @@ iron-request can be used to perform XMLHttpRequests.
           loaded: progress.loaded,
           total: progress.total
         });
-      }.bind(this));
+
+        // Webcomponents v1 spec does not fire *-changed events when not connected
+        this.fire('iron-request-progress-changed', { value: this.progress });
+      }.bind(this))
 
       xhr.addEventListener('error', function(error) {
         this._setErrored(true);
@@ -267,10 +270,11 @@ iron-request can be used to perform XMLHttpRequests.
       }.bind(this));
 
       this.url = options.url;
+      var isXHRAsync = options.async !== false;
       xhr.open(
         options.method || 'GET',
         options.url,
-        options.async !== false
+        isXHRAsync
       );
 
       var acceptType = {
@@ -300,10 +304,8 @@ iron-request can be used to perform XMLHttpRequests.
         );
       }, this);
 
-      if (options.async !== false) {
-        if (options.async) {
-          xhr.timeout = options.timeout;
-        }
+      if (isXHRAsync) {
+        xhr.timeout = options.timeout;
 
         var handleAs = options.handleAs;
 
@@ -365,6 +367,7 @@ iron-request can be used to perform XMLHttpRequests.
               try {
                 return JSON.parse(xhr.responseText);
               } catch (_) {
+                console.warn('Failed to parse JSON sent from ' + xhr.responseURL);
                 return null;
               }
             }
@@ -386,6 +389,7 @@ iron-request can be used to perform XMLHttpRequests.
               try {
                 return JSON.parse(xhr.responseText.substring(prefixLen));
               } catch (_) {
+                console.warn('Failed to parse JSON sent from ' + xhr.responseURL);
                 return null;
               }
             }

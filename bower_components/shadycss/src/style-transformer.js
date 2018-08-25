@@ -40,31 +40,68 @@ class StyleTransformer {
   get SCOPE_NAME() {
     return SCOPE_NAME;
   }
-  // Given a node and scope name, add a scoping class to each node
-  // in the tree. This facilitates transforming css into scoped rules.
+  /**
+   * Given a node and scope name, add a scoping class to each node
+   * in the tree. This facilitates transforming css into scoped rules.
+   * @param {!Node} node
+   * @param {string} scope
+   * @param {boolean=} shouldRemoveScope
+   * @deprecated
+   */
   dom(node, scope, shouldRemoveScope) {
     // one time optimization to skip scoping...
     if (node['__styleScoped']) {
       node['__styleScoped'] = null;
     } else {
-      this._transformDom(node, scope || '', shouldRemoveScope);
+      const fn = (node) => {
+        this.element(node, scope || '', shouldRemoveScope);
+      };
+      this._transformDom(node, fn);
     }
   }
 
-  _transformDom(node, selector, shouldRemoveScope) {
-    if (node.nodeType === Node.ELEMENT_NODE) {
-      this.element(node, selector, shouldRemoveScope);
+  /**
+   * Given a node and scope name, add a scoping class to each node in the tree.
+   * @param {!Node} node
+   * @param {string} scope
+   */
+  domAddScope(node, scope) {
+    // one time optimization to skip scoping...
+    if (node['__styleScoped']) {
+      node['__styleScoped'] = null;
+    } else {
+      const fn = (node) => {
+        this.element(node, scope || '');
+      };
+      this._transformDom(node, fn);
     }
-    let c$ = (node.localName === 'template') ?
-      (node.content || node._content).childNodes :
-      node.children || node.childNodes;
+  }
+
+  /**
+   * @param {!Node} startNode
+   * @param {!function(!Node)} transformer
+   */
+  _transformDom(startNode, transformer) {
+    if (startNode.nodeType === Node.ELEMENT_NODE) {
+      transformer(startNode)
+    }
+    let c$ = (startNode.localName === 'template') ?
+      // In case the template is in svg context, fall back to the node
+      // since it won't be an HTMLTemplateElement with a .content property
+      (startNode.content || startNode._content || startNode).childNodes :
+      startNode.children || startNode.childNodes;
     if (c$) {
       for (let i=0; i<c$.length; i++) {
-        this._transformDom(c$[i], selector, shouldRemoveScope);
+        this._transformDom(c$[i], transformer);
       }
     }
   }
 
+  /**
+   * @param {?} element
+   * @param {?} scope
+   * @param {?=} shouldRemoveScope
+   */
   element(element, scope, shouldRemoveScope) {
     // note: if using classes, we add both the general 'style-scope' class
     // as well as the specific scope. This enables easy filtering of all
@@ -94,6 +131,46 @@ class StyleTransformer {
     }
   }
 
+  /**
+   * Given a node, replace the scoping class to each subnode in the tree.
+   * @param {!Node} node
+   * @param {string} oldScope
+   * @param {string} newScope
+   */
+  domReplaceScope(node, oldScope, newScope) {
+    // one time optimization to skip scoping...
+    if (node['__styleScoped']) {
+      node['__styleScoped'] = null;
+    } else {
+      const fn = (node) => {
+        this.element(node, oldScope, true);
+        this.element(node, newScope);
+      };
+      this._transformDom(node, fn);
+    }
+  }
+  /**
+   * Given a node, remove the scoping class to each subnode in the tree.
+   * @param {!Node} node
+   * @param {string} oldScope
+   */
+  domRemoveScope(node, oldScope) {
+    // one time optimization to skip scoping...
+    if (node['__styleScoped']) {
+      node['__styleScoped'] = null;
+    } else {
+      const fn = (node) => {
+        this.element(node, oldScope || '', true);
+      };
+      this._transformDom(node, fn);
+    }
+  }
+
+  /**
+   * @param {?} element
+   * @param {?} styleRules
+   * @param {?=} callback
+   */
   elementStyles(element, styleRules, callback) {
     let cssBuildType = element['__cssBuild'];
     // no need to shim selectors if settings.useNativeShadow, also

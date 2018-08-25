@@ -1,0 +1,30 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+
+<dom-module id="category-repository">
+    <template>
+        <style></style>
+
+        <firebase-query
+            id="query"
+            path="[[path]]"
+            data="{{data}}">
+        </firebase-query>
+        
+    </template>
+    <script>
+        class CategoryRepository extends Polymer.Element{
+            static get is(){ return 'category-repository'}
+
+            static get properties(){
+                return{                   
+                    itemKey:{
+                        type: String,
+                        notify: true
+                    }
+                };
+            }
+        }
+        window.customElements.define(CategoryRepository.is, CategoryRepository);
+    </script>
+</dom-module>

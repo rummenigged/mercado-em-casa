@@ -1,5 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/promise-polyfill/promise-polyfill-lite.html">
+
 <link rel="import" href="item-order-address.html">
 <link rel="import" href="item-form-payment.html">
 <link rel="import" href="item-order-resume.html">
@@ -34,6 +37,8 @@
           }
       </style>  
       
+      <app-location route='{{route}}'></app-location>
+
       <firebase-auth
           id="auth"
           user="{{user}}">          
@@ -45,7 +50,14 @@
           path="/userOwner/{{user.uid}}/address"
           data="{{addressData}}">          
       </firebase-query>
-              
+
+      <!--Lista de Formas de Pagamento-->
+      <firebase-query
+        id="paymentFormQuery"
+        path="/paymentForms"
+        data="{{paymentFormData}}">
+      </firebase-query>              
+
       <!--Adicionar Endereço de Entrega ao Carrinho-->                  
       <firebase-document
           id="addressCartQuery"
@@ -60,6 +72,16 @@
           data="{{cartData}}">
       </firebase-query>
       
+      <iron-ajax
+        id="api"
+        url="http://localhost:5001/mercado-em-casa-v1/us-central1/finishOrder"
+        method="POST"
+        content-type="application/json"
+        handle-as="json"
+        on-response="_handleResponse"
+        on-error="_handleError">      
+      </iron-ajax>
+      
 <!--############################### UI Components ###############################-->
         <div class="row">
             <div class="order-address col-12 col-sm-12 col-md-6 col-lg-6">
@@ -68,15 +90,11 @@
                 </div>
                 <div class="row">
                     <template is="dom-repeat" items="{{addressData}}" as="address">
-            <!--
-                      <item-order-address 
-                            title="{{address.name}}"
-                            address-list="{{addressData}}" 
-                            order-address="{{selectedAddress}}">
-                      </item-order-address>
-            -->
                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                            <item-order-address address={{address}} selected-address="{{selectedAddress}}"></item-order-address>
+                            <item-order-address 
+                                address={{address}} 
+                                selected-address="{{selectedAddress}}">
+                            </item-order-address>                        
                         </div>
                     </template>
                 </div>      
@@ -85,11 +103,11 @@
             <div class="item-form-payment col-12 col-sm-12 col-md-6 col-lg-6">
                 <div class="item-label">
                     <span>Como Desejar Pagar?</span>
+                    Payment form = {{paymentFormData}}
                 </div>
-                <item-form-payment></item-form-payment>
+                <item-form-payment payment-forms={{paymentFormData}}></item-form-payment>
             </div>
-        
-      </div>
+        </div>
       <div class="item-order-resume">
          <div class="item-label">
                 <span>Revise Seu Pedido</span>
@@ -97,7 +115,7 @@
           <item-order-resume item="[[cartData]]"></item-order-resume>
       </div>
       
-      <a href="/checkout"><paper-button id="bt-finish-order" hidden$="{{!addressData}}" on-click="_finishorder">Finalizar Pedido</paper-button> </a>
+      <a href="/checkout"><paper-button id="bt-finish-order" hidden$="{{!addressData}}" on-click="_finishOrder">Finalizar Pedido</paper-button> </a>
   </template>
   <script>
     class CheckoutView extends Polymer.Element {
@@ -114,21 +132,24 @@
             
                 selectedAddress:{
                     type: Object,
-                    observer: '_selectedChanged'
+                    observer: ''
                 },
                 orderAddress:{
                     type: Object,
                     observer: '_orderAddressChanged'
+                },
+                cartData:{
+                    type: Object
                 }
             }
         }               
         
-        _selectedChanged(currentaAddress){
+        _selectedAddressChanged(currentaAddress){
             console.log(currentaAddress);
             let queryRef = this.$.addressCartQuery.ref;
-            if(queryRef != null){
+            if(queryRef != null && currentaAddress != null){
                 queryRef.set(currentaAddress);
-            }                        
+            }
         }
         
         _orderAddressChanged(address){
@@ -137,9 +158,42 @@
             }
         }
         
-        _finishorder(){
-            queryRef.child(address.key).update(e.detail.address);
-            console.log("Order Finished");
+        _finishOrder(){
+            let order = this._removeItemKey(this.cartData);
+            let address = this.selectedAddress;
+            let paymentForm = {}
+            paymentForm.name = "dinheiro"
+            let request = {};
+            request.products = order;
+            if(address != null){
+                request.orderAddress = address
+            }
+            request.paymentForm = paymentForm;
+            this.$.api.body = request;
+            this.$.api.generateRequest();
+        }
+        
+        _handleResponse(response){
+            let responseCode = response.detail.__data.status;
+            if(responseCode == 200){
+                this.set('route.path','/order-finished');
+            }else{
+                this.set('route.path','/order-error-finished');
+            }
+        }
+        
+        _handleError(error){
+            console.log(error.detail);
+        }
+        
+        _removeItemKey(list){
+            let resultList = list;
+            if(resultList != null && resultList.length > 0){
+                for(var i = 0 ; i < resultList.length ; i++){
+                    delete resultList[i].$key;
+                }
+            }
+            return resultList;
         }
     }    
     customElements.define(CheckoutView.is, CheckoutView);

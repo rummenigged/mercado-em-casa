@@ -107,13 +107,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // as well, on the off chance that the polyfills aren't loaded.
         // Fallback to './' as a default, though current browsers that don't support
         // document.currentScript also don't support service workers.
-//          bug code Rummenigge Duarte
-//        value: document._currentScript ? document._currentScript.baseURI :
-//          (HTMLImports.importForElement ? HTMLImports.importForElement(document.currentScript).baseURI :
-//          (document.currentScript ? document.currentScript.baseURI : './'))
-          
-          value: document._currentScript ? document._currentScript.baseURI :
-            (document.currentScript ? document.currentScript.baseURI : './')
+        value: document._currentScript ? document._currentScript.baseURI :
+          (HTMLImports.importForElement ? HTMLImports.importForElement(document.currentScript).baseURI :
+          (document.currentScript ? document.currentScript.baseURI : './'))
       },
 
       /**
