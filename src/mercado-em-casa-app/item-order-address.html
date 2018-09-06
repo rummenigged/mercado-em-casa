@@ -159,7 +159,6 @@
         </modal-element>
 -->
         
-        
         <div class="item">           
             <div class="row">                               
                 <div class="col-1">
@@ -209,19 +208,19 @@
 //                }
             
                 address:{
-                    type: Object,                    
+                    type: Object
                 },
                 selectedAddress:{
                     type: Object,
-                    notify: true
+                    notify: true                    
                 }
             }
-        }                                          
+        }
         
         _addressSelected(e){
             let checked = e.target.checked;
-            console.log(checked);
-            if(checked){                
+            console.log("checked");
+            if(checked){
                 delete this.address.$key;
                 this.selectedAddress = this.address;
             }else{
@@ -229,11 +228,11 @@
             }
         }
         
-        
-        
-        
-        
-        
+        ready(){
+            super.ready();        
+            this.selectedAddress = this.address;            
+        }
+
 //        _computeOrderAddress(addressList){
 //            let address = null;
 //            addressList.forEach(function(item){

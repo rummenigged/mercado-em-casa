@@ -22,12 +22,13 @@ exports.createOrder = functions.database.ref('/userOwner/{userId}/cart').onUpdat
 
 let finishOrderFn = function finishOrderFn(req, res){
     let body = req.body;
+    let userId = body.userId;
+    delete body.userId;
     return admin.database()
-        .ref('userOwner/' + body.userId + '/orders')
+        .ref('userOwner/' + userId + '/orders')
         .push(req.body)
         .then((snapshot) =>{
-            console.log(snapshot);
-            res.status(200).end();
+            res.status(200).send("ok");
         });
     
 }

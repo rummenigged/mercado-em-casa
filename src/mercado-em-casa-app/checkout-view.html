@@ -89,12 +89,12 @@
                     <span>Onde Devemos Entregar?</span>
                 </div>
                 <div class="row">
-                    <template is="dom-repeat" items="{{addressData}}" as="address">
+                    <template is="dom-repeat" items="{{addressData}}" as="address">                        
                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                            <item-order-address 
-                                address={{address}} 
+                            <item-order-address
+                                address={{address}}
                                 selected-address="{{selectedAddress}}">
-                            </item-order-address>                        
+                            </item-order-address>
                         </div>
                     </template>
                 </div>      
@@ -103,7 +103,6 @@
             <div class="item-form-payment col-12 col-sm-12 col-md-6 col-lg-6">
                 <div class="item-label">
                     <span>Como Desejar Pagar?</span>
-                    Payment form = {{paymentFormData}}
                 </div>
                 <item-form-payment payment-forms={{paymentFormData}}></item-form-payment>
             </div>
@@ -120,23 +119,14 @@
   <script>
     class CheckoutView extends Polymer.Element {
         static get is() { return 'checkout-view'; }
-        static get properties() { return {
-                addressData: {
-                    type: String
-                },
-            
+        static get properties() { return {            
                 user:{
                     type: Object,
                     value:""
                 },
-            
                 selectedAddress:{
                     type: Object,
                     observer: ''
-                },
-                orderAddress:{
-                    type: Object,
-                    observer: '_orderAddressChanged'
                 },
                 cartData:{
                     type: Object
@@ -145,35 +135,34 @@
         }               
         
         _selectedAddressChanged(currentaAddress){
-            console.log(currentaAddress);
+            console.log("CurrentAddress" + currentaAddress);
             let queryRef = this.$.addressCartQuery.ref;
             if(queryRef != null && currentaAddress != null){
                 queryRef.set(currentaAddress);
             }
         }
-        
-        _orderAddressChanged(address){
-            if(address != null){
-                console.log(address);
-            }
-        }
-        
+            
         _finishOrder(){
+            let address = this.selectedAddress;            
+            if(address == null){
+                alert("O Endereço de Entrega Deve Ser Selecionado");
+            }else{
+            delete address.$key;
             let order = this._removeItemKey(this.cartData);
-            let address = this.selectedAddress;
             let paymentForm = {}
-            paymentForm.name = "dinheiro"
             let request = {};
+            paymentForm.name = "dinheiro"
+            request.userId = this.$.auth.user.uid;
             request.products = order;
-            if(address != null){
-                request.orderAddress = address
-            }
+            request.orderAddress = address
             request.paymentForm = paymentForm;
             this.$.api.body = request;
             this.$.api.generateRequest();
+            }
         }
         
         _handleResponse(response){
+            console.log(response.detail.response);
             let responseCode = response.detail.__data.status;
             if(responseCode == 200){
                 this.set('route.path','/order-finished');
@@ -183,7 +172,8 @@
         }
         
         _handleError(error){
-            console.log(error.detail);
+            console.log(error);
+            this.set('route.path','/order-error-finished');
         }
         
         _removeItemKey(list){
