@@ -36,10 +36,10 @@
                                 <!-- <div class="col-10">Dinheiro</div> -->
                                 <div class="col-1">
                                     <input type="radio" 
-                                        class="form-check-input" 
-                                        name="optionsRadios" 
-                                        id="optionsRadio" 
-                                        value="option1" 
+                                        class="form-check-input"
+                                        name="formPayment"                                    
+                                        value=[[form.name]] 
+                                        on-change="_paymentFormSelected"
                                         checked>
                                 </div>
                             <!-- </div> -->
@@ -55,9 +55,32 @@
         static get properties() { 
             return {
                 paymentForms:{
-                    type: Array
+                    type: Array,
+                    observer: '_paymentFormsChanged'
+                },
+                selectedPaymentForm:{
+                    type: String,
+                    notify: true
                 }
             }
+        }
+
+        ready(){
+            super.ready();
+            console.log(this.paymentForms);
+        }
+
+        _paymentFormsChanged(newValue, oldValue){
+            console.log(oldValue);
+            console.log(newValue);
+            if(newValue != undefined && newValue.length > 0){
+                this.selectedPaymentForm = newValue[newValue.length - 1].name;
+            }
+        }
+
+        _paymentFormSelected(value){
+            console.log(value.model.__data.form.name);
+            this.selectedPaymentForm = value.model.__data.form.name
         }
     }    
     customElements.define(ItemFormPayment.is, ItemFormPayment);

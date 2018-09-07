@@ -217,6 +217,11 @@
             }
         }
         
+        ready(){
+            super.ready();        
+            this.selectedAddress = this.address;
+        }
+
         _addressSelected(e){
             let checked = e.target.checked;
             console.log("checked");
@@ -227,12 +232,6 @@
                 this.selectedAddress = null;
             }
         }
-        
-        ready(){
-            super.ready();        
-            this.selectedAddress = this.address;            
-        }
-
 //        _computeOrderAddress(addressList){
 //            let address = null;
 //            addressList.forEach(function(item){

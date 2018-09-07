@@ -104,7 +104,10 @@
                 <div class="item-label">
                     <span>Como Desejar Pagar?</span>
                 </div>
-                <item-form-payment payment-forms={{paymentFormData}}></item-form-payment>
+                <item-form-payment 
+                    payment-forms={{paymentFormData}}
+                    selected-payment-form={{selectedPaymentForm}}
+                ></item-form-payment>
             </div>
         </div>
       <div class="item-order-resume">
@@ -127,6 +130,9 @@
                 selectedAddress:{
                     type: Object,
                     observer: ''
+                },
+                selectedPaymentForm:{
+                    type: String
                 },
                 cartData:{
                     type: Object
@@ -151,7 +157,8 @@
             let order = this._removeItemKey(this.cartData);
             let paymentForm = {}
             let request = {};
-            paymentForm.name = "dinheiro"
+            paymentForm.name = this.selectedPaymentForm;
+            console.log(paymentForm.name);
             request.userId = this.$.auth.user.uid;
             request.products = order;
             request.orderAddress = address
