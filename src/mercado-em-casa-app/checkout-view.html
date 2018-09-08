@@ -135,7 +135,7 @@
                     type: String
                 },
                 cartData:{
-                    type: Object
+                    type: Array
                 }
             }
         }               
@@ -155,15 +155,16 @@
             }else{
             delete address.$key;
             let order = this._removeItemKey(this.cartData);
-            let paymentForm = {}
+            let paymentForm = {};
             let request = {};
-            paymentForm.name = this.selectedPaymentForm;
-            console.log(paymentForm.name);
+            paymentForm.name = this.selectedPaymentForm.name;
             request.userId = this.$.auth.user.uid;
             request.products = order;
-            request.orderAddress = address
+            request.orderAddress = address;
             request.paymentForm = paymentForm;
+            console.log(this.$.itensCartQuery.data);
             this.$.api.body = request;
+
             this.$.api.generateRequest();
             }
         }
