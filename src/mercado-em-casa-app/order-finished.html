@@ -3,17 +3,60 @@
 <dom-module id="order-finished">
   <template>
       <style include="flaty-bootstrap">
+
+            .text_centered{
+                width: 100%;
+                text-align: center;
+            }
+
+            .centered{
+                margin: auto;
+                max-width: 50%;                
+            }
+
+            .btn-success{                
+                cursor: pointer;
+            }
+
+            #imgOrderSuccess{
+                /* display: block; */
+                width: 50%;
+                height: 50%;
+                /* margin-left: auto;
+                margin-right: auto; */
+                margin-top: 5%;
+                margin-bottom: 5%;
+            }
       </style>
-      <h3>Pedido Realizado Com Sucesso</h3>
-      <p>Seu Pedido Foi Realizado Com Sucesso, Suas Compras Serão Entregues o Mais Rápido Possível
+      <h3 class="text_centered">Pedido Realizado Com Sucesso</h3>
+      <div class="row">
+        <img id="imgOrderSuccess" 
+            src="../../data/images/success.svg" 
+            alt="Icone Pedido Realizado com Sucesso"
+            class="col-6 offset-3 col-lg-2 offset-lg-5">
+      </div>
+      
+      <app-location route='{{route}}'></app-location>
+
+      <p class="text_centered">Seu Pedido Foi Realizado Com Sucesso, Suas Compras Serão Entregues o Mais Rápido Possível
           , Por Favor Fique Atento as Suas Notificações.</p>
-      <input type="button" value="Ok">    
+    <div class="row">
+        <button type="button"             
+            class="btn btn-success col-4 col-sm-4 col-md-4 col-lg-2 offset-4 offset-sm-4 offset-md-4 col-lg-4"
+            on-click="_continue">
+            Continue
+        </button>
+    </div>
   </template>
   <script>
     class OrderFinished extends Polymer.Element {
         static get is() { return 'order-finished'; }
         static get properties() { 
             return { }
+        }
+
+        _continue(){
+            this.set('route.path','/home');
         }
     }    
     customElements.define(OrderFinished.is, OrderFinished);
