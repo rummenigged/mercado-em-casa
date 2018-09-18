@@ -3,18 +3,63 @@
 <dom-module id="order-error-finished">
   <template>
       <style include="flaty-bootstrap">
+
+            .text_centered{
+                width: 100%;
+                text-align: center;
+            }
+
+            .centered{
+                margin: auto;
+                max-width: 50%;                
+            }
+
+            .btn-danger{                
+                cursor: pointer;                
+            }
+
+            #imgOrderError{
+                /* display: block; */
+                width: 50%;
+                height: 50%;
+                /* margin-left: auto;
+                margin-right: auto; */
+                margin-top: 5%;
+                margin-bottom: 5%;
+            }
       </style>
-      <h3>Problemas ao Finalizar Seu Pedido</h3>
-      <p>Desculpas Pelo Ocorrido, Encontramos um Problema ao Realizar o Seu Pedido, Por Favor Tente Novamente. 
-          se o Problema Persistir Entre Em Contato Conosco.
-      </p>
-      <input type="button" value="Tentar Novamente">
+      <h3 class="text_centered">Tivemos um Problema ao Finalizar Seu Pedido</h3>
+      <div class="row">
+        <img id="imgOrderError" 
+            src="../../data/images/error.svg" 
+            alt="Icone Error ao Finalizar Pedido"
+            class="col-6 offset-3 col-lg-2 offset-lg-5">
+      </div>
+      
+      <app-location route='{{route}}'></app-location>
+
+      <p class="text_centered">Por Favor Tente Novamente.</p>
+    <div class="row">
+        <button type="button"             
+            class="btn btn-danger col-4 col-sm-4 col-md-4 col-lg-2 offset-4 offset-sm-4 offset-md-4 col-lg-4"
+            on-click="_tryAgain">
+            Tente Novamente
+        </button>
+    </div>
   </template>
   <script>
     class OrderErrorFinished extends Polymer.Element {
         static get is() { return 'order-error-finished'; }
         static get properties() { 
-            return { }
+            return { 
+                order:{
+                    type: Object
+                }
+            }
+        }
+
+        _tryAgain(){
+            this.set('route.path','/checkout');
         }
     }    
     customElements.define(OrderErrorFinished.is, OrderErrorFinished);

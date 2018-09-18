@@ -39,7 +39,7 @@ let finishOrderFn = function finishOrderFn(req, res){
                 console.log(error);
                 orderRef.remove()
                 .then((snap) => {
-                    res.status(500).send("error ao apagar carrinho");
+                    res.status(500).send("error ao limpar carrinho");
                 }).catch((error) => {
                     res.status(500).send("error ao apagar pedido");
                 });

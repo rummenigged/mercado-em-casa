@@ -1,0 +1,50 @@
+[debug] [2018-09-17T23:49:36.221Z] ----------------------------------------------------------------------
+[debug] [2018-09-17T23:49:36.223Z] Command:       /usr/local/Cellar/node/8.9.1/bin/node /usr/local/bin/firebase serve
+[debug] [2018-09-17T23:49:36.224Z] CLI Version:   4.0.3
+[debug] [2018-09-17T23:49:36.224Z] Platform:      darwin
+[debug] [2018-09-17T23:49:36.224Z] Node Version:  v8.9.1
+[debug] [2018-09-17T23:49:36.225Z] Time:          Mon Sep 17 2018 20:49:36 GMT-0300 (-03)
+[debug] [2018-09-17T23:49:36.225Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-17T23:49:36.326Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-17T23:49:36.326Z] > authorizing via signed-in user
+[debug] [2018-09-17T23:49:36.329Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-17T23:49:36.329Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/eP2nIkygY5QgBuwVV0GboAxn8SaXLGrmDHr8F1qKPVE',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Mon Sep 17 2018 20:49:36 GMT-0300 (-03)
+[debug] [2018-09-17T23:49:36.821Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-17T23:49:36.952Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/mercado-em-casa-v1  
+  
+ Mon Sep 17 2018 20:49:36 GMT-0300 (-03)
+[debug] [2018-09-17T23:49:38.438Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-17T23:49:38.439Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/mercado-em-casa-v1/tokens  
+  
+ Mon Sep 17 2018 20:49:38 GMT-0300 (-03)
+[debug] [2018-09-17T23:49:39.232Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-17T23:49:39.233Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/mercado-em-casa-v1  
+  
+ Mon Sep 17 2018 20:49:39 GMT-0300 (-03)
+[debug] [2018-09-17T23:49:40.576Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/rummenigge/dev/web/mercado-em-casa'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-09-17T23:49:47.583Z] Fetching environment
+[debug] [2018-09-17T23:49:47.599Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271:getServerAppConfig  
+  
+ Mon Sep 17 2018 20:49:47 GMT-0300 (-03)
+[debug] [2018-09-17T23:49:47.600Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271/clients/_:getWebAppConfig  
+  
+ Mon Sep 17 2018 20:49:47 GMT-0300 (-03)
+[debug] [2018-09-17T23:49:48.240Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-17T23:49:48.240Z] Starting @google-cloud/functions-emulator
+[debug] [2018-09-17T23:49:48.388Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: /
+[info] ✔  hosting: Local server: http://localhost:5000
+
+[debug] [2018-09-17T23:49:57.131Z] Parsing function triggers
+[info] ✔  functions: finishOrder: http://localhost:5001/mercado-em-casa-v1/us-central1/finishOrder
