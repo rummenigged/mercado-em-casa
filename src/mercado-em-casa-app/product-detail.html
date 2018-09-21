@@ -129,6 +129,8 @@
             }
         </style>        
         
+        <app-location route='{{location}}'></app-location>
+
         <app-route
             id="route"
             route=[[route]]
@@ -250,16 +252,21 @@
             }
                                     
             _addCart(e){
-                let cartRef = this.$.addItemCart.ref;
-                let produto = {};
-                produto.id =  this.$.route.data.idItem;
-                produto.name =  this.$.productData.data.name;
-                produto.description =  this.$.productData.data.description;
-                produto.qtd =  this.qtdProduct;
-                produto.price = this.$.productData.data.price;
-                produto.image = this.$.productData.data.image;
-                cartRef.push(produto);
-                this.qtdProduct = 1;
+                console.log(this.$.auth.signedIn);
+                if(this.$.auth.signedIn){
+                    let cartRef = this.$.addItemCart.ref;
+                    let produto = {};
+                    produto.id =  this.$.route.data.idItem;
+                    produto.name =  this.$.productData.data.name;
+                    produto.description =  this.$.productData.data.description;
+                    produto.qtd =  this.qtdProduct;
+                    produto.price = this.$.productData.data.price;
+                    produto.image = this.$.productData.data.image;
+                    cartRef.push(produto);
+                    this.qtdProduct = 1;
+                }else{
+                    this.set('location.path','/login');
+                }
             }
             
             _setQuantity(){
