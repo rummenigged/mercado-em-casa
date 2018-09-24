@@ -148,6 +148,47 @@
             background-color: lightgray;
         }
          
+        #snackbar{
+            visibility: hidden;
+            min-width: 250px;
+            margin: 0 auto;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;            
+            bottom: 30px;
+        } 
+
+        #snackbar.show{
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 4.5s;
+            animation: fadein 0.5s, fadeout 0.5s 4.5s;
+
+        }
+
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;} 
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;} 
+            to {bottom: 0; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
         #item-cart:hover{
             color: white;
         }
@@ -302,7 +343,7 @@
             <app-header slot="header" fixed>
                 <app-toolbar>
                     <paper-icon-button icon="menu" on-tap="_drawerToggle"></paper-icon-button>
-                    <div main-title>
+                    <div main-title on-click="_onSnackMessageChanged">
                       Mercado em Casa
                     </div>
 <!--
@@ -346,6 +387,7 @@
           <order-error-finished name="order-error-finished"></order-error-finished>
           <view-404 name="view-404"></view-404>
         </iron-pages>
+        <div id="snackbar">{{snackMessage}}</div>
   </template>
 
   <script>
@@ -375,6 +417,11 @@
           user:{
               type: Object,
               value: null
+          },
+          snackMessage:{
+              type: String,
+              value: "",
+              observer: '_onSnackMessageChanged'
           }    
         };
       }
@@ -388,8 +435,24 @@
         ready(){
             super.ready();
             this.addEventListener('add-cart-item', (e)=> this.$.cartData._addCartItem(e.detail));
+            this.addEventListener('show-snackbar', (e)=> {
+                console.log("get Event = " + e.detail.snackMessage );
+                this.snackMessage = e.detail.snackMessage;
+            });
         }
         
+      _onSnackMessageChanged(message){        
+          console.log('message' + message);
+          if(message != ''){              
+            let snackbar = this.$.snackbar;
+            snackbar.className = 'show';
+            setTimeout(function(){                
+                snackbar.className = snackbar.className.replace('show',"");
+                this.snackMessage = "";
+            }, 5000);
+          }
+          
+      }
       _setCartKey(){
           this.cartKey = localStorage.getItem("cartKey");
       }   

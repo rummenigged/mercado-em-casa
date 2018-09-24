@@ -130,15 +130,7 @@
                 
                 margin-top: 20px;
             }
-            
-            .social{
-/*                margin-top: 20px;*/
-            }
-            
-            .wrapper-social{
-                
-            }
-            
+                            
             .btn-google{
                 width: 50%;
                 display: block;
@@ -151,6 +143,8 @@
             }
         </style>
         
+        <app-location route='{{route}}'></app-location>
+
         <firebase-auth 
             id="auth" 
             user="{{user}}"
@@ -159,6 +153,12 @@
             on-error="_showError">
         </firebase-auth>
         
+        <firebase-query
+            id="addItemCart"
+            path="/userOwner/{{user.uid}}/cart"
+            data="{{cartsUserList}}">
+        </firebase-query>
+
         <modal-error
             id="modalError">                
             </modal-error>
@@ -273,6 +273,10 @@
                 cartData:{
                     type: Object,
                     observer: '_cartDataChanged'
+                },
+                signedIn:{
+                    type: Boolean,
+                    observer: '_signedInObserver'
                 }
             };
         }
@@ -295,8 +299,7 @@
         
         _userObserver(user){
             this.user = user;            
-            if(user){                                
-            }
+            if(user){}
         }
         
          _signInWithEmailAndPassword(e){
@@ -305,7 +308,7 @@
             this.$.auth.signInWithEmailAndPassword(this.email, this.password);
             this.email = null;
             this.password = null;
-             this.route.prefix = '/profile'
+            this.route.prefix = '/profile'
         };
 
         _createUserWithEmailAndPassword() {
@@ -318,7 +321,21 @@
 //            });
         };
 
-        
+        _signedInObserver(signedIn){
+            if(signedIn){
+                let product = JSON.parse(localStorage.getItem('cartProduct'));
+                if(product == null){
+                    this.set('route.path','/home');
+                }else{
+                    console.log(product);
+                    let cartRef = this.$.addItemCart.ref;
+                    cartRef.push(product)
+                    localStorage.removeItem('cartProduct');
+                    this.set('route.path','/cart');
+                }
+                
+            }
+        }
         _signOut(){
             this.$.auth.signOut();            
         }

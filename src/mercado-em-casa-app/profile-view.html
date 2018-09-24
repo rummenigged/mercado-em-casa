@@ -50,6 +50,9 @@
                 font-weight: bold;
             }
         </style>
+
+        <app-location route='{{route}}'></app-location>
+
         <firebase-auth
             id="auth"
             user={{user}}
@@ -98,6 +101,10 @@
                         type:Object,
                         value: "",
                         observer:'_testeObserver'
+                    },
+                    signedIn:{
+                        type: Boolean,
+                        observer: '_signedInObserver'
                     }
                 };
             }
@@ -110,9 +117,16 @@
                 this.$.modalSignOut.ativa();   
             }
             
+            _signedInObserver(signedIn){
+                if(signedIn){
+                    this.set('route.path','/home');    
+                }
+            }
+
             _signOut(){
                 this.$.auth.signOut();
                 this.$.modalSignOut.desativa();
+                this.set('route.path','/home');
             }
         }
         window.customElements.define(ProfileView.is, ProfileView);

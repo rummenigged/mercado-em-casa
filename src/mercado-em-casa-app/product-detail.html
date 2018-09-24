@@ -200,7 +200,7 @@
                         <p class="product-description col-12">{{product.description}}</p>
                     </div>
 
-<!--                    <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>-->
+<!--                    <paper-button id="bt-add-product-to-cart" on-tap="_addCart">Adicionar ao Carrinho</paper-button>-->                    
                     <bottom-button button-text="Adicionar ao Carrinho" on-button-clicked="_addCart">
 <!--
                         <div class="wrapper-qtd-btns">
@@ -248,25 +248,36 @@
             }
 
             _routePageChanged(item){
-                this.itemPathName = item;                
+                this.itemPathName = item;
             }
                                     
             _addCart(e){
+                console.log('addCart');
                 console.log(this.$.auth.signedIn);
-                if(this.$.auth.signedIn){
+                
                     let cartRef = this.$.addItemCart.ref;
-                    let produto = {};
+                    console.log(cartRef);
+                    let produto = {};            
                     produto.id =  this.$.route.data.idItem;
                     produto.name =  this.$.productData.data.name;
                     produto.description =  this.$.productData.data.description;
                     produto.qtd =  this.qtdProduct;
                     produto.price = this.$.productData.data.price;
                     produto.image = this.$.productData.data.image;
-                    cartRef.push(produto);
-                    this.qtdProduct = 1;
+                    console.log('produto' + produto);
+                if(this.$.auth.signedIn){
+                    cartRef.push(produto);                    
                 }else{
+                    console.log("Dispatch Event");
+                    this.dispatchEvent(new CustomEvent('show-snackbar', {
+                        bubbles: true, composed: true, detail:{
+                                snackMessage: 'Você Precisar Realizar Sua Autenticação Para Adicionar Produtos ao Seu Carrinho'
+                        }
+                    }));
+                    localStorage.setItem('cartProduct', JSON.stringify(produto));
                     this.set('location.path','/login');
                 }
+                this.qtdProduct = 1;
             }
             
             _setQuantity(){

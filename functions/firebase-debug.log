@@ -1,185 +1,41 @@
-[debug] [2018-09-02T17:42:04.297Z] ----------------------------------------------------------------------
-[debug] [2018-09-02T17:42:04.300Z] Command:       /usr/local/Cellar/node/8.9.1/bin/node /usr/local/bin/firebase serve
-[debug] [2018-09-02T17:42:04.301Z] CLI Version:   4.0.3
-[debug] [2018-09-02T17:42:04.301Z] Platform:      darwin
-[debug] [2018-09-02T17:42:04.301Z] Node Version:  v8.9.1
-[debug] [2018-09-02T17:42:04.302Z] Time:          Sun Sep 02 2018 14:42:04 GMT-0300 (-03)
-[debug] [2018-09-02T17:42:04.302Z] ----------------------------------------------------------------------
+[debug] [2018-09-22T14:31:49.393Z] ----------------------------------------------------------------------
+[debug] [2018-09-22T14:31:49.396Z] Command:       /usr/local/Cellar/node/8.9.1/bin/node /usr/local/bin/firebase serve
+[debug] [2018-09-22T14:31:49.396Z] CLI Version:   4.0.3
+[debug] [2018-09-22T14:31:49.396Z] Platform:      darwin
+[debug] [2018-09-22T14:31:49.396Z] Node Version:  v8.9.1
+[debug] [2018-09-22T14:31:49.397Z] Time:          Sat Sep 22 2018 11:31:49 GMT-0300 (-03)
+[debug] [2018-09-22T14:31:49.397Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2018-09-02T17:42:04.751Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-09-02T17:42:04.752Z] > authorizing via signed-in user
-[debug] [2018-09-02T17:42:04.755Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/mercado-em-casa-v1  
+[debug] [2018-09-22T14:31:49.459Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-22T14:31:49.460Z] > authorizing via signed-in user
+[debug] [2018-09-22T14:31:49.462Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/mercado-em-casa-v1  
   
- Sun Sep 02 2018 14:42:04 GMT-0300 (-03)
-[debug] [2018-09-02T17:42:05.998Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-02T17:42:05.999Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/mercado-em-casa-v1/tokens  
+ Sat Sep 22 2018 11:31:49 GMT-0300 (-03)
+[debug] [2018-09-22T14:31:50.407Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-22T14:31:50.408Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/mercado-em-casa-v1/tokens  
   
- Sun Sep 02 2018 14:42:05 GMT-0300 (-03)
-[debug] [2018-09-02T17:42:06.777Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-02T17:42:06.778Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/mercado-em-casa-v1  
+ Sat Sep 22 2018 11:31:50 GMT-0300 (-03)
+[debug] [2018-09-22T14:31:51.119Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-22T14:31:51.121Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/mercado-em-casa-v1  
   
- Sun Sep 02 2018 14:42:06 GMT-0300 (-03)
-[debug] [2018-09-02T17:42:07.943Z] <<< HTTP RESPONSE 200
+ Sat Sep 22 2018 11:31:51 GMT-0300 (-03)
+[debug] [2018-09-22T14:31:52.336Z] <<< HTTP RESPONSE 200
 [info] 
 [info] === Serving from '/Users/rummenigge/dev/web/mercado-em-casa'...
 [info] 
 [info] i  functions: Preparing to emulate functions.
-[debug] [2018-09-02T17:42:45.156Z] Fetching environment
-[debug] [2018-09-02T17:42:45.292Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271:getServerAppConfig  
+[debug] [2018-09-22T14:31:59.063Z] Fetching environment
+[debug] [2018-09-22T14:31:59.086Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271:getServerAppConfig  
   
- Sun Sep 02 2018 14:42:45 GMT-0300 (-03)
-[debug] [2018-09-02T17:42:45.293Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271/clients/_:getWebAppConfig  
+ Sat Sep 22 2018 11:31:59 GMT-0300 (-03)
+[debug] [2018-09-22T14:31:59.086Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271/clients/_:getWebAppConfig  
   
- Sun Sep 02 2018 14:42:45 GMT-0300 (-03)
-[debug] [2018-09-02T17:42:46.079Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-02T17:42:46.080Z] Starting @google-cloud/functions-emulator
-[debug] [2018-09-02T17:42:47.303Z] <<< HTTP RESPONSE 200
-[warn] ⚠  hosting: Port 5000 is not available. Trying another port...
-[debug] [2018-09-02T17:42:48.005Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271/clients/_:getWebAppConfig  
-  
- Sun Sep 02 2018 14:42:48 GMT-0300 (-03)
-[debug] [2018-09-02T17:42:48.537Z] <<< HTTP RESPONSE 200
-[info] i  hosting: Serving hosting files from: /
-[info] ✔  hosting: Local server: http://localhost:5004
-
-[warn] ⚠  functions: Error from emulator. Error: Timeout waiting for emulator start
-[debug] [2018-09-02T17:43:07.706Z] Error: Timeout waiting for emulator start
-    at client.testConnection.catch (/usr/local/lib/node_modules/firebase-tools/node_modules/@google-cloud/functions-emulator/src/cli/controller.js:219:17)
-    at <anonymous>
-    at process._tickDomainCallback (internal/process/next_tick.js:228:7)
-[debug] [2018-09-03T01:57:26.935Z] Error: getWindowSize Unknown system error -25
-    at _errnoException (util.js:1024:11)
-    at WriteStream._refreshSize (tty.js:105:24)
-    at process.on (internal/process/stdio.js:22:43)
-    at emitNone (events.js:111:20)
-    at process.emit (events.js:208:7)
-    at Signal.wrap.onsignal (internal/process.js:208:44)
-[error] 
-[error] Error: An unexpected error has occurred.
-[debug] [2018-09-03T01:57:30.247Z] Error: write EIO
-    at _errnoException (util.js:1024:11)
-    at WriteWrap.afterWrite [as oncomplete] (net.js:867:14)
-[error] 
-[error] Error: An unexpected error has occurred.
-[debug] [2018-09-04T01:40:51.590Z] ----------------------------------------------------------------------
-[debug] [2018-09-04T01:40:51.593Z] Command:       /usr/local/Cellar/node/8.9.1/bin/node /usr/local/bin/firebase serve
-[debug] [2018-09-04T01:40:51.594Z] CLI Version:   4.0.3
-[debug] [2018-09-04T01:40:51.594Z] Platform:      darwin
-[debug] [2018-09-04T01:40:51.594Z] Node Version:  v8.9.1
-[debug] [2018-09-04T01:40:51.629Z] Time:          Mon Sep 03 2018 22:40:51 GMT-0300 (-03)
-[debug] [2018-09-04T01:40:51.630Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-09-04T01:40:52.092Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-09-04T01:40:52.092Z] > authorizing via signed-in user
-[debug] [2018-09-04T01:40:52.095Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2018-09-04T01:40:52.095Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
- { refresh_token: '1/eP2nIkygY5QgBuwVV0GboAxn8SaXLGrmDHr8F1qKPVE',
-  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
-  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
-  grant_type: 'refresh_token',
-  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
- Mon Sep 03 2018 22:40:52 GMT-0300 (-03)
-[debug] [2018-09-04T01:40:52.917Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-04T01:40:53.577Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/mercado-em-casa-v1  
-  
- Mon Sep 03 2018 22:40:53 GMT-0300 (-03)
-[debug] [2018-09-04T01:40:55.942Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-04T01:40:55.943Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/mercado-em-casa-v1/tokens  
-  
- Mon Sep 03 2018 22:40:55 GMT-0300 (-03)
-[debug] [2018-09-04T01:40:56.791Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-04T01:40:56.792Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/mercado-em-casa-v1  
-  
- Mon Sep 03 2018 22:40:56 GMT-0300 (-03)
-[debug] [2018-09-04T01:40:58.092Z] <<< HTTP RESPONSE 200
-[info] 
-[info] === Serving from '/Users/rummenigge/dev/web/mercado-em-casa'...
-[info] 
-[info] i  functions: Preparing to emulate functions.
-[debug] [2018-09-04T01:41:35.124Z] Fetching environment
-[debug] [2018-09-04T01:41:35.366Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271:getServerAppConfig  
-  
- Mon Sep 03 2018 22:41:35 GMT-0300 (-03)
-[debug] [2018-09-04T01:41:35.367Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271/clients/_:getWebAppConfig  
-  
- Mon Sep 03 2018 22:41:35 GMT-0300 (-03)
-[debug] [2018-09-04T01:41:37.006Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-04T01:41:37.007Z] Starting @google-cloud/functions-emulator
-[debug] [2018-09-04T01:41:38.106Z] <<< HTTP RESPONSE 200
-[warn] ⚠  hosting: Port 5000 is not available. Trying another port...
-[debug] [2018-09-04T01:41:38.848Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271/clients/_:getWebAppConfig  
-  
- Mon Sep 03 2018 22:41:38 GMT-0300 (-03)
-[debug] [2018-09-04T01:41:39.463Z] <<< HTTP RESPONSE 200
-[info] i  hosting: Serving hosting files from: /
-[info] ✔  hosting: Local server: http://localhost:5004
-
-[warn] ⚠  functions: Error from emulator. Error: Timeout waiting for emulator start
-[debug] [2018-09-04T01:41:58.544Z] Error: Timeout waiting for emulator start
-    at client.testConnection.catch (/usr/local/lib/node_modules/firebase-tools/node_modules/@google-cloud/functions-emulator/src/cli/controller.js:219:17)
-    at <anonymous>
-    at process._tickDomainCallback (internal/process/next_tick.js:228:7)
-[debug] [2018-09-04T02:30:44.980Z] Error: getWindowSize Unknown system error -25
-    at _errnoException (util.js:1024:11)
-    at WriteStream._refreshSize (tty.js:105:24)
-    at process.on (internal/process/stdio.js:22:43)
-    at emitNone (events.js:111:20)
-    at process.emit (events.js:208:7)
-    at Signal.wrap.onsignal (internal/process.js:208:44)
-[error] 
-[error] Error: An unexpected error has occurred.
-[debug] [2018-09-04T02:30:46.591Z] Error: write EIO
-    at _errnoException (util.js:1024:11)
-    at WriteWrap.afterWrite [as oncomplete] (net.js:867:14)
-[error] 
-[error] Error: An unexpected error has occurred.
-[debug] [2018-09-06T00:16:50.615Z] ----------------------------------------------------------------------
-[debug] [2018-09-06T00:16:50.626Z] Command:       /usr/local/Cellar/node/8.9.1/bin/node /usr/local/bin/firebase serve
-[debug] [2018-09-06T00:16:50.627Z] CLI Version:   4.0.3
-[debug] [2018-09-06T00:16:50.627Z] Platform:      darwin
-[debug] [2018-09-06T00:16:50.627Z] Node Version:  v8.9.1
-[debug] [2018-09-06T00:16:50.628Z] Time:          Wed Sep 05 2018 21:16:50 GMT-0300 (-03)
-[debug] [2018-09-06T00:16:50.628Z] ----------------------------------------------------------------------
-[debug] 
-[debug] [2018-09-06T00:16:50.709Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2018-09-06T00:16:50.710Z] > authorizing via signed-in user
-[debug] [2018-09-06T00:16:50.712Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2018-09-06T00:16:50.713Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
- { refresh_token: '1/eP2nIkygY5QgBuwVV0GboAxn8SaXLGrmDHr8F1qKPVE',
-  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
-  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
-  grant_type: 'refresh_token',
-  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
- Wed Sep 05 2018 21:16:50 GMT-0300 (-03)
-[debug] [2018-09-06T00:16:51.544Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-06T00:16:51.648Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/mercado-em-casa-v1  
-  
- Wed Sep 05 2018 21:16:51 GMT-0300 (-03)
-[debug] [2018-09-06T00:16:52.997Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-06T00:16:52.997Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/mercado-em-casa-v1/tokens  
-  
- Wed Sep 05 2018 21:16:52 GMT-0300 (-03)
-[debug] [2018-09-06T00:16:53.762Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-06T00:16:53.763Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/mercado-em-casa-v1  
-  
- Wed Sep 05 2018 21:16:53 GMT-0300 (-03)
-[debug] [2018-09-06T00:16:55.054Z] <<< HTTP RESPONSE 200
-[info] 
-[info] === Serving from '/Users/rummenigge/dev/web/mercado-em-casa'...
-[info] 
-[info] i  functions: Preparing to emulate functions.
-[debug] [2018-09-06T00:17:00.884Z] Fetching environment
-[debug] [2018-09-06T00:17:00.916Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271:getServerAppConfig  
-  
- Wed Sep 05 2018 21:17:00 GMT-0300 (-03)
-[debug] [2018-09-06T00:17:00.917Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271/clients/_:getWebAppConfig  
-  
- Wed Sep 05 2018 21:17:00 GMT-0300 (-03)
-[debug] [2018-09-06T00:17:01.547Z] <<< HTTP RESPONSE 200
-[debug] [2018-09-06T00:17:01.548Z] Starting @google-cloud/functions-emulator
-[debug] [2018-09-06T00:17:01.683Z] <<< HTTP RESPONSE 200
+ Sat Sep 22 2018 11:31:59 GMT-0300 (-03)
+[debug] [2018-09-22T14:31:59.626Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-22T14:31:59.627Z] Starting @google-cloud/functions-emulator
+[debug] [2018-09-22T14:31:59.868Z] <<< HTTP RESPONSE 200
 [info] i  hosting: Serving hosting files from: /
 [info] ✔  hosting: Local server: http://localhost:5000
 
-[debug] [2018-09-06T00:17:07.715Z] Parsing function triggers
+[debug] [2018-09-22T14:32:00.623Z] Parsing function triggers
 [info] ✔  functions: finishOrder: http://localhost:5001/mercado-em-casa-v1/us-central1/finishOrder

@@ -48,3 +48,63 @@
 
 [debug] [2018-09-17T23:49:57.131Z] Parsing function triggers
 [info] ✔  functions: finishOrder: http://localhost:5001/mercado-em-casa-v1/us-central1/finishOrder
+[debug] [2018-09-21T00:01:20.842Z] ----------------------------------------------------------------------
+[debug] [2018-09-21T00:01:20.852Z] Command:       /usr/local/Cellar/node/8.9.1/bin/node /usr/local/bin/firebase serve
+[debug] [2018-09-21T00:01:20.853Z] CLI Version:   4.0.3
+[debug] [2018-09-21T00:01:20.853Z] Platform:      darwin
+[debug] [2018-09-21T00:01:20.853Z] Node Version:  v8.9.1
+[debug] [2018-09-21T00:01:20.854Z] Time:          Thu Sep 20 2018 21:01:20 GMT-0300 (-03)
+[debug] [2018-09-21T00:01:20.854Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-21T00:01:20.936Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-21T00:01:20.936Z] > authorizing via signed-in user
+[debug] [2018-09-21T00:01:20.939Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-21T00:01:20.939Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/eP2nIkygY5QgBuwVV0GboAxn8SaXLGrmDHr8F1qKPVE',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Thu Sep 20 2018 21:01:20 GMT-0300 (-03)
+[debug] [2018-09-21T00:01:21.395Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-21T00:01:21.450Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/mercado-em-casa-v1  
+  
+ Thu Sep 20 2018 21:01:21 GMT-0300 (-03)
+[debug] [2018-09-21T00:01:22.860Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-21T00:01:22.861Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/mercado-em-casa-v1/tokens  
+  
+ Thu Sep 20 2018 21:01:22 GMT-0300 (-03)
+[debug] [2018-09-21T00:01:23.881Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-21T00:01:23.883Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/mercado-em-casa-v1  
+  
+ Thu Sep 20 2018 21:01:23 GMT-0300 (-03)
+[debug] [2018-09-21T00:01:25.256Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/rummenigge/dev/web/mercado-em-casa'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-09-21T00:01:31.586Z] Fetching environment
+[debug] [2018-09-21T00:01:31.643Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271:getServerAppConfig  
+  
+ Thu Sep 20 2018 21:01:31 GMT-0300 (-03)
+[debug] [2018-09-21T00:01:31.644Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1046210348271/clients/_:getWebAppConfig  
+  
+ Thu Sep 20 2018 21:01:31 GMT-0300 (-03)
+[debug] [2018-09-21T00:01:32.252Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-21T00:01:32.252Z] Starting @google-cloud/functions-emulator
+[debug] [2018-09-21T00:01:33.248Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: /
+[info] ✔  hosting: Local server: http://localhost:5000
+
+[debug] [2018-09-21T00:01:41.243Z] Parsing function triggers
+[info] ✔  functions: finishOrder: http://localhost:5001/mercado-em-casa-v1/us-central1/finishOrder
+[debug] [2018-09-22T14:31:08.249Z] Error: write EIO
+    at _errnoException (util.js:1024:11)
+    at WriteWrap.afterWrite [as oncomplete] (net.js:867:14)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2018-09-22T14:31:08.253Z] Error: write EIO
+    at _errnoException (util.js:1024:11)
+    at WriteWrap.afterWrite [as oncomplete] (net.js:867:14)
+[error] 
+[error] Error: An unexpected error has occurred.
